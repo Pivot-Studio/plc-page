@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import Link from '@/components/link.vue';
-
-defineProps<{ msg: string }>();
 </script>
 
 <template>
