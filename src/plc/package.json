@@ -1,0 +1,19 @@
+{
+  "name": "pivot-lang",
+  "collaborators": [
+    "The pivot-lang Authors"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "plc_bg.wasm",
+    "plc.js",
+    "plc_bg.js",
+    "plc.d.ts"
+  ],
+  "module": "plc.js",
+  "types": "plc.d.ts",
+  "sideEffects": [
+    "./plc.js",
+    "./snippets/*"
+  ]
+}

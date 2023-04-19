@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), wasm(),topLevelAwait()],
   css: {
     preprocessorOptions: {
       less: {
@@ -20,4 +22,5 @@ export default defineConfig({
       '@': path.join(__dirname, 'src'),
     },
   },
+
 });
