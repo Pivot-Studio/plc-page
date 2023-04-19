@@ -1,0 +1,23 @@
+name: Build Vue
+on:
+  push:
+    branches:
+    - master
+    - release/*
+jobs:
+  build_vue:
+    runs-on: ubuntu-latest
+    name: Build Vue
+    steps:
+    - uses: actions/checkout@v2
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 6.0.2
+    - id: Build-Vue
+      run: |
+        pnpm install
+        pnpm build
+    - uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist

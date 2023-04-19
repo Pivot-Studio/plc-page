@@ -22,5 +22,5 @@ export default defineConfig({
       '@': path.join(__dirname, 'src'),
     },
   },
-
+  base: process.env.NODE_ENV === "production" ? "/plc-page/" : "/",
 });
