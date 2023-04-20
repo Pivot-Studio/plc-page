@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@pivot-lang/pivot-lang':
+    specifier: ^0.1.0
+    version: 0.1.0
   monaco-editor:
     specifier: ^0.37.1
     version: 0.37.1
@@ -232,6 +235,10 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@pivot-lang/pivot-lang@0.1.0:
+    resolution: {integrity: sha512-Vr6fBcLOsK3Ud32ypGhGxJyiFpu/5mEaqL35r6BmV4/qPFa4Qc0HinGUIFEDiNa1flcDyx6cB4ND2vT4TqwCjg==}
+    dev: false
 
   /@rollup/plugin-virtual@3.0.1:
     resolution: {integrity: sha512-fK8O0IL5+q+GrsMLuACVNk2x21g3yaw+sG2qn16SnUd3IlBsQyvWxLMGHmCmXRMecPjGRSZ/1LmZB4rjQm68og==}

@@ -1,4 +1,4 @@
-import * as pl from '../plc';
+import * as pl from '@pivot-lang/pivot-lang';
 import * as monaco from 'monaco-editor';
 import * as tp from 'vscode-languageserver-types';
 
@@ -28,27 +28,54 @@ interface End {
 
 export const useCreateMonaco = () => {
   // Register a new language
-  monaco.languages.register({ id: 'mySpecialLanguage' });
+  monaco.languages.register({ id: 'pivot-lang' });
 
   // Register a tokens provider for the language
-  monaco.languages.setMonarchTokensProvider('mySpecialLanguage', {
+  monaco.languages.setMonarchTokensProvider('pivot-lang', {
     tokenizer: {
       root: [
         // [/if|while|for|return|else|break|continue|struct|fn|let|use|const|true|false|impl|self|trait|pub|where|macro|type|as|is*/, "keyword"],
-        [/if|while|for|return|else|break|continue|struct|fn|let|use|const|true|false|impl|self|trait|pub|where|macro|type|as|is/, 'keyword'],
+        [/struct|fn|let|use|const|true|false|impl|self|trait|pub|macro|type|as|is/, 'keyword'],
+        [/if|while|for|return|else|break|continue|where/, 'keyword.control'],
         [/\".*\"/, 'string'],
         [/\[[a-zA-Z 0-9:]+\]/, 'custom-date'],
       ],
     },
   });
-
+  monaco.languages.setLanguageConfiguration('pivot-lang', {
+    surroundingPairs: [
+      { open: '{', close: '}' },
+      { open: '[', close: ']' },
+      { open: '(', close: ')' },
+      { open: '<', close: '>' },
+      // { open: "'", close: "'" },
+      { open: '"', close: '"' },
+    ],
+    autoClosingPairs: [
+      { open: '{', close: '}' },
+      { open: '[', close: ']' },
+      { open: '(', close: ')' },
+      // { open: "'", close: "'", notIn: ['string', 'comment'] },
+      { open: '"', close: '"', notIn: ['string', 'comment'] },
+    ],
+    comments: {
+      lineComment: '//',
+    },
+    brackets: [
+      ['{', '}'],
+      ['[', ']'],
+      ['(', ')'],
+      ['<', '>'],
+    ],
+  });
   // Define a new theme that contains only rules that match this language
-  monaco.editor.defineTheme('myCoolTheme', {
+  monaco.editor.defineTheme('pltheme', {
     base: 'vs-dark',
     inherit: true,
     colors: {},
     rules: [
-      { token: 'keyword', foreground: 'ce63eb' },
+      { token: 'keyword', foreground: '63a7eb' },
+      { token: 'keyword.control', foreground: 'ce63eb' },
       { token: 'operator', foreground: '000000' },
       { token: 'namespace', foreground: '66afce' },
 
@@ -71,11 +98,12 @@ export const useCreateMonaco = () => {
       { token: 'type.static', fontStyle: 'bold' },
       { token: 'class.static', foreground: 'ff0000', fontStyle: 'bold' },
     ],
+
   });
 
   let created = false;
 
-  monaco.languages.registerInlayHintsProvider('mySpecialLanguage', {
+  monaco.languages.registerInlayHintsProvider('pivot-lang', {
     provideInlayHints(model, range, token) {
       // console.log(JSON.parse(pl.get_inlay_hints()))
       let hints: tp.InlayHint[] = JSON.parse(pl.get_inlay_hints());
@@ -94,9 +122,15 @@ export const useCreateMonaco = () => {
       } as any;
     },
   });
+
+  // monaco.languages.registerDocumentSymbolProvider('pivot-lang', {
+
+  // });
+
   // Register a completion item provider for the new language
-  monaco.languages.registerCompletionItemProvider('mySpecialLanguage', {
-    provideCompletionItems: (model, position) => {
+  monaco.languages.registerCompletionItemProvider('pivot-lang', {
+    triggerCharacters: ['.', ':'],
+    provideCompletionItems: (model, position, ctx) => {
       var word = model.getWordUntilPosition(position);
       var range = {
         startLineNumber: position.lineNumber,
@@ -105,6 +139,7 @@ export const useCreateMonaco = () => {
         endColumn: word.endColumn,
       };
       let dynamic_suggestions = JSON.parse(pl.get_completions());
+      console.warn(dynamic_suggestions);
       for (let sug of dynamic_suggestions) {
         sug.insertTextRules = 0;
         switch (sug.kind) {
@@ -144,7 +179,6 @@ export const useCreateMonaco = () => {
           sug.insertText = sug.label;
         }
       }
-      console.warn(dynamic_suggestions);
       var suggestions = [
         {
           label: 'for',
@@ -219,6 +253,9 @@ export const useCreateMonaco = () => {
           range: range,
         },
       ];
+      if (ctx.triggerKind == monaco.languages.CompletionTriggerKind.TriggerCharacter) {
+        suggestions = [];
+      }
       suggestions = suggestions.concat(...dynamic_suggestions);
       return { suggestions: suggestions };
     },
@@ -423,11 +460,12 @@ export const useCreateMonaco = () => {
     }
     created = true;
     let editor = monaco.editor.create(document.getElementById('container')!, {
-      theme: 'myCoolTheme',
+      theme: 'pltheme',
       value: getCode(),
-      language: 'mySpecialLanguage',
+      language: 'pivot-lang',
       'semanticHighlighting.enabled': true,
       automaticLayout: true,
+      suggestOnTriggerCharacters: true,
     });
     let resp: Diags = JSON.parse(pl.set_init_content(getCode()));
     let markers = resp.diagnostics.map((d, n, a) => {
@@ -445,8 +483,8 @@ export const useCreateMonaco = () => {
       };
     });
 
-    monaco.editor.setModelMarkers(editor.getModel()!, 'mySpecialLanguage', markers);
-    monaco.languages.registerDocumentSemanticTokensProvider('mySpecialLanguage', {
+    monaco.editor.setModelMarkers(editor.getModel()!, 'pivot-lang', markers);
+    monaco.languages.registerDocumentSemanticTokensProvider('pivot-lang', {
       provideDocumentSemanticTokens: (m, id, token) => {
         if (first) {
           first = false;
@@ -470,7 +508,7 @@ export const useCreateMonaco = () => {
         console.error(legend);
         return JSON.parse(legend);
       },
-      releaseDocumentSemanticTokens: () => {},
+      releaseDocumentSemanticTokens: () => { },
     });
     editor.getModel()?.onDidChangeContent((e) => {
       let re = e.changes.map((change) => {
@@ -508,7 +546,7 @@ export const useCreateMonaco = () => {
         };
       });
 
-      monaco.editor.setModelMarkers(editor.getModel()!, 'mySpecialLanguage', markers);
+      monaco.editor.setModelMarkers(editor.getModel()!, 'pivot-lang', markers);
     });
   }
   return create;
