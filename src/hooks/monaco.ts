@@ -2,11 +2,6 @@ import * as pl from '@pivot-lang/pivot-lang';
 import * as monaco from 'monaco-editor';
 import * as tp from 'vscode-languageserver-types';
 
-interface Diags {
-  diagnostics: Diagnostic[];
-  uri: string;
-}
-
 interface Diagnostic {
   code: number;
   message: string;
@@ -14,6 +9,11 @@ interface Diagnostic {
   relatedInformation: any[];
   severity: number;
   source: string;
+}
+
+interface Diags {
+  diagnostics: Diagnostic[];
+  uri: string;
 }
 
 interface Range {
@@ -26,7 +26,7 @@ interface End {
   line: number;
 }
 
-export const useCreateMonaco = () => {
+export const useCreateMonaco = (select: string) => {
   // Register a new language
   monaco.languages.register({ id: 'pivot-lang' });
 
@@ -98,7 +98,6 @@ export const useCreateMonaco = () => {
       { token: 'type.static', fontStyle: 'bold' },
       { token: 'class.static', foreground: 'ff0000', fontStyle: 'bold' },
     ],
-
   });
 
   let created = false;
@@ -459,7 +458,7 @@ export const useCreateMonaco = () => {
       return;
     }
     created = true;
-    let editor = monaco.editor.create(document.getElementById('container')!, {
+    let editor = monaco.editor.create(document.querySelector(select)!, {
       theme: 'pltheme',
       value: getCode(),
       language: 'pivot-lang',
@@ -508,7 +507,7 @@ export const useCreateMonaco = () => {
         console.error(legend);
         return JSON.parse(legend);
       },
-      releaseDocumentSemanticTokens: () => { },
+      releaseDocumentSemanticTokens: () => {},
     });
     editor.getModel()?.onDidChangeContent((e) => {
       let re = e.changes.map((change) => {

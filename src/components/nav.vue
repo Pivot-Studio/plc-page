@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import Link from '@/components/link.vue';
+import { inject } from 'vue';
+const isMobile = inject('isMobile') as boolean;
+const isPc = inject('isPc') as boolean;
 </script>
 
 <template>
   <div class="nav">
     <div class="left">
-      <Link :newWindow="true" :arrowShow="false" href="https://github.com/Pivot-Studio/pivot-lang">
-        <span>Pivot Lang</span>
-      </Link>
+      <Link :newWindow="true" :arrowShow="false" href="https://github.com/Pivot-Studio/pivot-lang"> Pivot Lang </Link>
     </div>
     <div class="right">
-      <Link :newWindow="true" href="https://github.com/Pivot-Studio/pivot-lang">
+      <Link :arrowShow="isPc" :newWindow="true" href="https://github.com/Pivot-Studio/pivot-lang">
         <div class="github">
           <a href="https://github.com/Pivot-Studio/pivot-lang" target="_blank">
             <img alt="Github" src="https://d33wubrfki0l68.cloudfront.net/43f2732eec420aa8a930fc3239ef0469c3d760a8/5d500/community/github.svg" />
@@ -20,13 +21,13 @@ import Link from '@/components/link.vue';
           </a>
         </div>
       </Link>
-      <Link :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
         <div class="txt">Get Started</div>
       </Link>
-      <Link :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
         <div class="txt">Use Cases</div>
       </Link>
-      <Link :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link :arrowShow="isPc" v-show="!isMobile" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
         <div class="txt">Community</div>
       </Link>
     </div>
@@ -38,27 +39,39 @@ import Link from '@/components/link.vue';
   position: fixed;
   z-index: 1;
   top: 0;
-  width: calc(100vw - 100px);
+  left: 0;
+  right: 0;
   display: flex;
   margin: 20px 50px;
   justify-content: space-between;
+  font-size: 16px;
+
+  @media screen and (max-width: 600px) {
+    margin: 10px 20px 10px 30px;
+    font-size: 14px;
+  }
   .left {
+    display: flex;
+    align-items: center;
+    margin-top: -2px;
     span {
-      font-size: 16px;
       color: #fff;
       cursor: pointer;
     }
   }
   .right {
     display: flex;
+    align-items: center;
+
     div {
       display: flex;
       align-items: center;
       margin: 0 15px 0 10px;
+      @media screen and (max-width: 600px) {
+        margin: 0 3px;
+      }
     }
     .txt {
-      font-size: 16px;
-      line-height: 28px;
       text-decoration: none;
     }
     .github {
