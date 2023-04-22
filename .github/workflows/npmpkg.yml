@@ -2,23 +2,26 @@ name: Publish Package to npmjs
 on:
   push:
     tags:
-      - master
+      - 'm*'
 jobs:
   build:
     runs-on: ubuntu-latest
     name: publish @pivot-lang/create-monaco
     steps:
-      - uses: actions/checkout@v3 
-          override: true
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.0.2
+      - run: |
+          cd src/hooks/monaco && pnpm i
+          pnpm build
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: install pck
-        run: cd /src/hooks/monaco && npm i
-      - name: transform index.ts
-        run:  tsc
       # Setup .npmrc file to publish to npm
-      - run: npm version patch && npm publish --access public
+
+      - run: |
+          cd src/hooks/monaco && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

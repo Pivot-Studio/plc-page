@@ -15,7 +15,7 @@ const isMobile = inject('isMobile') as Ref<boolean>;
       <img src="https://s3.bmp.ovh/imgs/2023/04/20/1b0fa098ad9a1b7d.png" />
     </div>
     <div class="bottom">
-      <div @click="create" class="start-button" style="cursor: pointer">Try It</div>
+      <div class="start-button" style="cursor: pointer">Try It</div>
     </div>
   </div>
 </template>

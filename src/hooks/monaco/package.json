@@ -1,8 +1,8 @@
 {
   "name": "lang-create-monaco",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "create monaco to show pivot lang",
-  "main": "./dist/index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",

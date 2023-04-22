@@ -6,13 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "cd src/hooks/monaco && npm install"
   },
   "dependencies": {
-    "@pivot-lang/pivot-lang": "^0.1.0",
-    "lang-create-monaco": "^0.0.6",
-    "monaco-editor": "^0.37.1",
-    "monaco-editor-textmate": "^4.0.0",
+    "lang-create-monaco": "link:src/hooks/monaco",
     "vite-plugin-top-level-await": "^1.3.0",
     "vite-plugin-wasm": "^3.2.2",
     "vscode-languageserver-types": "^3.17.3",

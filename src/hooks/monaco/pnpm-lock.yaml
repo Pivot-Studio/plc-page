@@ -1,0 +1,44 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  '@pivot-lang/pivot-lang':
+    specifier: ^0.1.0
+    version: 0.1.0
+  monaco-editor:
+    specifier: ^0.37.1
+    version: 0.37.1
+  vscode-languageserver-types:
+    specifier: ^3.17.3
+    version: 3.17.3
+
+devDependencies:
+  tslib:
+    specifier: ^2.5.0
+    version: 2.5.0
+  typescript:
+    specifier: ^5.0.4
+    version: 5.0.4
+
+packages:
+
+  /@pivot-lang/pivot-lang@0.1.0:
+    resolution: {integrity: sha512-Vr6fBcLOsK3Ud32ypGhGxJyiFpu/5mEaqL35r6BmV4/qPFa4Qc0HinGUIFEDiNa1flcDyx6cB4ND2vT4TqwCjg==}
+    dev: false
+
+  /monaco-editor@0.37.1:
+    resolution: {integrity: sha512-jLXEEYSbqMkT/FuJLBZAVWGuhIb4JNwHE9kPTorAVmsdZ4UzHAfgWxLsVtD7pLRFaOwYPhNG9nUCpmFL1t/dIg==}
+    dev: false
+
+  /tslib@2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
+    dev: true
+
+  /typescript@5.0.4:
+    resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
+    engines: {node: '>=12.20'}
+    hasBin: true
+    dev: true
+
+  /vscode-languageserver-types@3.17.3:
+    resolution: {integrity: sha512-SYU4z1dL0PyIMd4Vj8YOqFvHu7Hz/enbWtpfnVbJHU4Nd1YNYx8u0ennumc6h48GQNeOLxmwySmnADouT/AuZA==}
+    dev: false

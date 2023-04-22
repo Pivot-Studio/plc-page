@@ -1,4 +1,4 @@
-export { default as FirstPage } from './index/FirstPage.vue';
+export { default as FirstPage } from './index/firstPage.vue';
 
 export { default as Link } from './link.vue';
 export { default as Nav } from './nav.vue';
