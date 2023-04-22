@@ -1,6 +1,6 @@
 {
-  "name": "lang-create-monaco",
-  "version": "0.0.11",
+  "name": "@pivot-lang/create-monaco",
+  "version": "0.0.2",
   "description": "create monaco to show pivot lang",
   "main": "./dist/index.js",
   "types": "./index.ts",

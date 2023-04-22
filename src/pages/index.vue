@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Nav, FirstPage, TabList } from '@/components';
 import { ref, onMounted } from 'vue';
-import useCreateMonaco from 'lang-create-monaco';
+import useCreateMonaco from '@pivot-lang/create-monaco';
 const createMonaco = useCreateMonaco('#container');
 const tabVal = ref('hello,world');
 const tabList = ['hello,world', 'nishisha'];
