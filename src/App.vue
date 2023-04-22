@@ -14,11 +14,4 @@ provide('isPc', toRef(deviceInfo, 'isPc'));
 </template>
 
 <style scoped>
-.app {
-  background-color: black;
-  width: 100vw;
-  height: 100vh;
-  padding: 0;
-  margin: 0;
-}
 </style>

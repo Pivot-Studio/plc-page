@@ -37,14 +37,15 @@ const isPc = inject('isPc') as boolean;
 <style lang="scss" scoped>
 .nav {
   position: fixed;
-  z-index: 1;
+  z-index: 3;
   top: 0;
   left: 0;
   right: 0;
   display: flex;
-  margin: 20px 50px;
+  padding: 10px 50px;
   justify-content: space-between;
   font-size: 16px;
+  background-color: rgba(0,0,0,.9);
 
   @media screen and (max-width: 600px) {
     margin: 10px 20px 10px 30px;

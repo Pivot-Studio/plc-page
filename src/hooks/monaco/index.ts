@@ -26,7 +26,7 @@ interface End {
   line: number;
 }
 
-export const useCreateMonaco = (select: string) => {
+const useCreateMonaco = (select: string) => {
   // Register a new language
   monaco.languages.register({ id: 'pivot-lang' });
 
@@ -106,7 +106,7 @@ export const useCreateMonaco = (select: string) => {
     provideInlayHints(model, range, token) {
       // console.log(JSON.parse(pl.get_inlay_hints()))
       let hints: tp.InlayHint[] = JSON.parse(pl.get_inlay_hints());
-      console.warn(hints);
+      // console.warn(hints);
       return {
         hints: hints.map((h) => {
           return {
@@ -138,7 +138,7 @@ export const useCreateMonaco = (select: string) => {
         endColumn: word.endColumn,
       };
       let dynamic_suggestions = JSON.parse(pl.get_completions());
-      console.warn(dynamic_suggestions);
+      // console.warn(dynamic_suggestions);
       for (let sug of dynamic_suggestions) {
         sug.insertTextRules = 0;
         switch (sug.kind) {
@@ -458,6 +458,7 @@ export const useCreateMonaco = (select: string) => {
       return;
     }
     created = true;
+    // console.log(document.querySelector(select));
     let editor = monaco.editor.create(document.querySelector(select)!, {
       theme: 'pltheme',
       value: getCode(),
@@ -488,7 +489,7 @@ export const useCreateMonaco = (select: string) => {
         if (first) {
           first = false;
           let tokens = pl.get_semantic_tokens_full();
-          console.log(tokens);
+          // console.log(tokens);
           let a: any = {
             resultId: null,
             data: JSON.parse(tokens).data,
@@ -496,7 +497,7 @@ export const useCreateMonaco = (select: string) => {
           return a;
         }
         let tokens = pl.get_semantic_tokens();
-        console.error(tokens);
+        // console.error(tokens);
         return {
           resultId: null,
           edits: JSON.parse(tokens).edits,
@@ -504,7 +505,7 @@ export const useCreateMonaco = (select: string) => {
       },
       getLegend: () => {
         let legend = pl.get_legend();
-        console.error(legend);
+        // console.error(legend);
         return JSON.parse(legend);
       },
       releaseDocumentSemanticTokens: () => {},
@@ -528,7 +529,7 @@ export const useCreateMonaco = (select: string) => {
           })
         )
       );
-      console.log(resp);
+      // console.log(resp);
 
       let markers = resp.diagnostics.map((d, n, a) => {
         let sev = monaco.MarkerSeverity.Warning;
@@ -550,3 +551,5 @@ export const useCreateMonaco = (select: string) => {
   }
   return create;
 };
+
+export default useCreateMonaco;

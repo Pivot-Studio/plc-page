@@ -4,6 +4,9 @@ dependencies:
   '@pivot-lang/pivot-lang':
     specifier: ^0.1.0
     version: registry.npmjs.org/@pivot-lang/pivot-lang@0.1.0
+  lang-create-monaco:
+    specifier: ^0.0.6
+    version: registry.npmjs.org/lang-create-monaco@0.0.6
   monaco-editor:
     specifier: ^0.37.1
     version: registry.npmmirror.com/monaco-editor@0.37.1
@@ -64,6 +67,16 @@ packages:
     resolution: {integrity: sha512-Vr6fBcLOsK3Ud32ypGhGxJyiFpu/5mEaqL35r6BmV4/qPFa4Qc0HinGUIFEDiNa1flcDyx6cB4ND2vT4TqwCjg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmjs.org/@pivot-lang/pivot-lang/-/pivot-lang-0.1.0.tgz}
     name: '@pivot-lang/pivot-lang'
     version: 0.1.0
+    dev: false
+
+  registry.npmjs.org/lang-create-monaco@0.0.6:
+    resolution: {integrity: sha512-aumfwMGPhUzh7GYiXgc0TeK2G/z44Uot++siNwPG5Iu3Z4O8FLB/lGrgxQbr7NsgsQutYTYlbID9hPTtfuus2g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmjs.org/lang-create-monaco/-/lang-create-monaco-0.0.6.tgz}
+    name: lang-create-monaco
+    version: 0.0.6
+    dependencies:
+      '@pivot-lang/pivot-lang': registry.npmmirror.com/@pivot-lang/pivot-lang@0.1.0
+      monaco-editor: registry.npmmirror.com/monaco-editor@0.37.1
+      vscode-languageserver-types: registry.npmmirror.com/vscode-languageserver-types@3.17.3
     dev: false
 
   registry.npmmirror.com/@babel/code-frame@7.21.4:
@@ -438,6 +451,12 @@ packages:
       mkdirp: registry.npmmirror.com/mkdirp@1.0.4
       rimraf: registry.npmmirror.com/rimraf@3.0.2
     dev: true
+
+  registry.npmmirror.com/@pivot-lang/pivot-lang@0.1.0:
+    resolution: {integrity: sha512-Vr6fBcLOsK3Ud32ypGhGxJyiFpu/5mEaqL35r6BmV4/qPFa4Qc0HinGUIFEDiNa1flcDyx6cB4ND2vT4TqwCjg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@pivot-lang/pivot-lang/-/pivot-lang-0.1.0.tgz}
+    name: '@pivot-lang/pivot-lang'
+    version: 0.1.0
+    dev: false
 
   registry.npmmirror.com/@rollup/plugin-virtual@3.0.1:
     resolution: {integrity: sha512-fK8O0IL5+q+GrsMLuACVNk2x21g3yaw+sG2qn16SnUd3IlBsQyvWxLMGHmCmXRMecPjGRSZ/1LmZB4rjQm68og==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rollup/plugin-virtual/-/plugin-virtual-3.0.1.tgz}
