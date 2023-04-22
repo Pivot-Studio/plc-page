@@ -2,11 +2,12 @@
 import { Nav, FirstPage, TabList } from '@/components';
 import { ref, onMounted } from 'vue';
 import useCreateMonaco from '@pivot-lang/create-monaco';
-const createMonaco = useCreateMonaco('#container');
-const tabVal = ref('hello,world');
+import { basicCode } from "@/hooks";
+const createMonaco = useCreateMonaco();
+const tabVal = ref('hello world');
 const tabList = ['hello,world', 'nishisha'];
 onMounted(() => {
-  createMonaco();
+  createMonaco(document.getElementById("container")!,basicCode);
 });
 </script>
 

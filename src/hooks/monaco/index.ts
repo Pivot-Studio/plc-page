@@ -26,7 +26,7 @@ interface End {
   line: number;
 }
 
-const useCreateMonaco = (select: string) => {
+const useCreateMonaco = () => {
   // Register a new language
   monaco.languages.register({ id: 'pivot-lang' });
 
@@ -263,211 +263,22 @@ const useCreateMonaco = (select: string) => {
 
   let first = true;
 
-  function getCode() {
-    return [
-      'fn main() i64 {',
-      '    let x = &A{};',
-      '    let y = A{};',
-      '    let z = &&A{};',
-      '    let dd: TestTrait;',
-      '    dd = x;',
-      '    dd = y;',
-      '    dd = z;',
-      '    let re = dd.set(100);',
-      '    test_generic();',
-      '',
-      '    return 0;',
-      '}',
-      '',
-      '',
-      'trait TestTrait {',
-      '    fn name() void;',
-      '',
-      '    fn set(i: i64) i64;',
-      '',
-      '}',
-      '',
-      'pub struct A {',
-      '    x: i64;',
-      '}',
-      '',
-      'impl TestTrait for A {',
-      '    fn name() void {',
-      '        return;',
-      '    }',
-      '',
-      '    fn set(i: i64) i64 {',
-      '        self.x = i;',
-      '        return i;',
-      '    }',
-      '',
-      '}',
-      '',
-      '',
-      'pub struct GenericType<S|T> {',
-      '    x: S;',
-      '    y: *T;',
-      '}',
-      '',
-      'pub struct GenericOutter<S> {',
-      '    x: GenericInner<S>;',
-      '}',
-      '',
-      'pub struct GenericInner<T> {',
-      '    x: T;',
-      '}',
-      '',
-      'pub struct One<T> {',
-      '    a: T;',
-      '}',
-      '',
-      'pub struct Two<T> {',
-      '    b: One<T>;',
-      '}',
-      '',
-      'pub struct Three<S> {',
-      '    c: Two<S>;',
-      '}',
-      '',
-      'pub struct GenericSelfRef<T|S> {',
-      '    x: *GenericSelfRef<T|S>;',
-      '}',
-      '',
-      'pub fn ret_generic1<T>() Three<T> {',
-      '    return Three<T>{};',
-      '}',
-      '',
-      'pub fn ret_generic2<T>(x: T) Three<T> {',
-      '    let two = Two{',
-      '        b: One{',
-      '            a: x',
-      '        }',
-      '    };',
-      '    return Three{',
-      '        c: two',
-      '    };',
-      '}',
-      '',
-      'pub fn get_field<T>(x: Three<T>) T {',
-      '    return x.c.b.a;',
-      '}',
-      '',
-      'pub fn generic<T>(x: T) T {',
-      '    let y = x;',
-      '    return y;',
-      '}',
-      '',
-      'pub fn simple<T>(x: i64) i64 {',
-      '    if x == 0 {',
-      '        return 0;',
-      '    }',
-      '    if x == 1 {',
-      '        return 1;',
-      '    }',
-      '    if x == 2 {',
-      '        return 1;',
-      '    }',
-      '    return simple<T>(x - 1) + simple<T>(x - 2);',
-      '}',
-      '',
-      'pub fn complex<A|B|C>(a: i64, x: A, y: B, z: C) i64 {',
-      '    if a == 0 {',
-      '        return 0;',
-      '    }',
-      '    if a == 1 {',
-      '        return 1;',
-      '    }',
-      '    if a == 2 {',
-      '        return 1;',
-      '    }',
-      '    return complex<B|_|C>(a - 1, y, x, z) + complex<C|A|_>(a - 2, z, x, y);',
-      '}',
-      '',
-      'pub fn test_generic_simple() void {',
-      '    let x = generic(114514);',
-      '    let y = generic(true);',
-      '    let t = true;',
-      '    let a = GenericType{',
-      '        x: 999,',
-      '        y: &t',
-      '    };',
-      '    let b = GenericType{',
-      '        x: 888,',
-      '        y: &a',
-      '    };',
-      '    let g = GenericOutter{',
-      '        x: GenericInner{',
-      '            x: 998',
-      '        }',
-      '    };',
-      '    let half_infer = GenericType<i64|_>{',
-      '        x: 999,',
-      '        y: &a',
-      '    };',
-      '',
-      '    return;',
-      '}',
-      '',
-      'pub fn test_generic_same_name() void {',
-      '    let t = Three{',
-      '        c: Two{',
-      '            b: One{',
-      '                a: 9999',
-      '            }',
-      '        }',
-      '    };',
-      '    let b = Three<bool>{};',
-      '    b.c.b.a = true;',
-      '    return;',
-      '}',
-      '',
-      'pub fn test_ret_generic() void {',
-      '    let x = ret_generic1<i64>();',
-      '    let y = ret_generic2(true);',
-      '    let z = ret_generic2([1, 2, 3]);',
-      '    let i = ret_generic2(&z);',
-      '    x.c.b.a = 999;',
-      '    return;',
-      '}',
-      '',
-      'pub fn test_self_ref_generic() void {',
-      '    let x = GenericSelfRef<i64|bool>{};',
-      '    return;',
-      '}',
-      '',
-      'pub fn test_generic_fn() void {',
-      '    let res = simple<bool>(10);',
-      '',
-      '    res = complex(10, true, [1, 23], &res);',
-      '',
-      '    return;',
-      '}',
-      '',
-      'pub fn test_generic() void {',
-      '    test_generic_simple();',
-      '    test_generic_same_name();',
-      '    test_ret_generic();',
-      '    test_self_ref_generic();',
-      '    test_generic_fn();',
-      '    return;',
-      '}',
-    ].join('\n');
-  }
-  async function create() {
+
+  async function create(container: HTMLElement,code:string) {
     if (created) {
       return;
     }
     created = true;
     // console.log(document.querySelector(select));
-    let editor = monaco.editor.create(document.querySelector(select)!, {
+    let editor = monaco.editor.create(container, {
       theme: 'pltheme',
-      value: getCode(),
+      value: code,
       language: 'pivot-lang',
       'semanticHighlighting.enabled': true,
       automaticLayout: true,
       suggestOnTriggerCharacters: true,
     });
-    let resp: Diags = JSON.parse(pl.set_init_content(getCode()));
+    let resp: Diags = JSON.parse(pl.set_init_content(code));
     let markers = resp.diagnostics.map((d, n, a) => {
       let sev = monaco.MarkerSeverity.Warning;
       if (d.severity === 1) {
@@ -553,3 +364,24 @@ const useCreateMonaco = (select: string) => {
 };
 
 export default useCreateMonaco;
+
+// find <code>s with class language-pl, and create a monaco editors for them
+export function createMonacoEditors() {
+  let codes = document.querySelectorAll('code.language-pl');
+  for (let i = 0; i < codes.length; i++) {
+    let code = codes[i];
+    let parent = code.parentElement;
+    if (!parent) {
+      continue;
+    }
+
+    let create = useCreateMonaco();
+    let height = parent.clientHeight;
+    parent.removeChild(code);
+    // set its height to the parent's height
+    parent.style.height = height + 'px';
+    create(parent,code.textContent!);
+    console.log("create");
+  }
+}
+(window as any).createMonacoEditors = createMonacoEditors;

@@ -4,7 +4,7 @@
   "description": "create monaco to show pivot lang",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "build": "tsc -d",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -35,7 +35,12 @@
     "vscode-languageserver-types": "^3.17.3"
   },
   "devDependencies": {
+    "ts-loader": "^9.4.2",
     "tslib": "^2.5.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "webpack-cli": "^5.0.2",
+    "webpack-dev-server": "^4.13.3",
+    "style-loader": "^3.3.2",
+    "css-loader": "^6.7.3"
   }
 }
