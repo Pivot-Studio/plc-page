@@ -10,7 +10,7 @@ jobs:
     name: Build Vue
     steps:
     - uses: actions/checkout@v2
-    - uses: pnpm/action-setup@v2cd 
+    - uses: pnpm/action-setup@v2
       with:
         version: 6.0.2
     - id: Build-Vue
