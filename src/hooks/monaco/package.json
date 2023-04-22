@@ -1,11 +1,12 @@
 {
   "name": "lang-create-monaco",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "create monaco to show pivot lang",
-  "main": "index.ts",
+  "main": "./dist/index.js",
+  "types": "./index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
