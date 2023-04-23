@@ -13,11 +13,8 @@ const isPc = inject('isPc') as boolean;
     <div class="right">
       <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
         <div class="github">
-          <a href="https://github.com/Pivot-Studio/pivot-lang" target="_blank">
+          <a>
             <img alt="Github" src="https://d33wubrfki0l68.cloudfront.net/43f2732eec420aa8a930fc3239ef0469c3d760a8/5d500/community/github.svg" />
-            <!-- <div>
-          <img alt="stars" src="../assets/star.svg" />
-          </div> -->
           </a>
         </div>
       </Link>
