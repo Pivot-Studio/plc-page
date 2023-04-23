@@ -10,7 +10,7 @@ function updateVal(val: string) {
 </script>
 <template>
   <div class="tab-list">
-    <tab @click="updateVal(tab)" v-for="tab in props.tablist" :key="tab" :class="{ selected: props.val === tab }"> {{ tab }} </tab>
+    <div @click="updateVal(tab)" v-for="tab in props.tablist" :key="tab" :class="{ selected: props.val == tab }"> {{ tab }} </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -19,7 +19,7 @@ function updateVal(val: string) {
   background-color: #080808;
   border-radius: 10px 10px 0 0;
   padding: 0 10px;
-  tab {
+  div {
     margin-top: 5px;
     padding: 10px 15px;
     color: #7d8590;

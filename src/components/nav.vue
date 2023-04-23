@@ -11,7 +11,7 @@ const isPc = inject('isPc') as boolean;
       <Link :newWindow="true" :arrowShow="false" href="https://github.com/Pivot-Studio/pivot-lang"> Pivot Lang </Link>
     </div>
     <div class="right">
-      <Link :arrowShow="isPc" :newWindow="true" href="https://github.com/Pivot-Studio/pivot-lang">
+      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
         <div class="github">
           <a href="https://github.com/Pivot-Studio/pivot-lang" target="_blank">
             <img alt="Github" src="https://d33wubrfki0l68.cloudfront.net/43f2732eec420aa8a930fc3239ef0469c3d760a8/5d500/community/github.svg" />
@@ -21,7 +21,7 @@ const isPc = inject('isPc') as boolean;
           </a>
         </div>
       </Link>
-      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
         <div class="txt">Get Started</div>
       </Link>
       <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
@@ -45,10 +45,10 @@ const isPc = inject('isPc') as boolean;
   padding: 10px 50px;
   justify-content: space-between;
   font-size: 16px;
-  background-color: rgba(0,0,0,.9);
+  background-color: rgba(0, 0, 0, 0.9);
 
   @media screen and (max-width: 600px) {
-    margin: 10px 20px 10px 30px;
+    padding: 10px 20px;
     font-size: 14px;
   }
   .left {

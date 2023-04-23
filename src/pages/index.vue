@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { Nav, FirstPage, TabList } from '@/components';
+import { Nav, FirstPage, TabList, GcEcharts, MemberCard } from '@/components';
 import { ref, onMounted } from 'vue';
 import useCreateMonaco from '@pivot-lang/create-monaco';
-import { basicCode } from "@/hooks";
+import { basicCode } from '@/hooks';
+import { memberList } from '@/constant';
 const createMonaco = useCreateMonaco();
 const tabVal = ref('hello world');
-const tabList = ['hello,world', 'nishisha'];
+const tabList = ['hello world'];
 onMounted(() => {
-  createMonaco(document.getElementById("container")!,basicCode);
+  createMonaco(document.getElementById('container')!, basicCode);
 });
 </script>
 
@@ -15,13 +16,28 @@ onMounted(() => {
   <div class="container">
     <Nav></Nav>
     <FirstPage @createMonaco="createMonaco"></FirstPage>
-    <div class="code-show">
+    <div id="code-show">
       <div class="gradient-font title">Enjoy coding pivot lang now!</div>
       <div class="detail-describe">We already support for LSP,you can code in the page just like in VSC,enjoying the hightlight and prompt when coding.</div>
       <div class="code-box">
         <TabList @updateVal="(val) => (tabVal = val)" :tablist="tabList" :val="tabVal"></TabList>
         <div class="code-container">
           <div id="container"></div>
+        </div>
+      </div>
+    </div>
+    <div id="advantage">
+      <div class="gradient-font title">Immix Garbage Collection</div>
+      <div class="detail-describe">
+        We build an immix GC for pivot-lang to ease developers' burden.What's more,our gc is specially built for multithreading language,which is five times faster than gdwGC using 10thread.
+      </div>
+      <GcEcharts></GcEcharts>
+    </div>
+    <div id="team">
+      <div class="gradient-font title">Meet The Team</div>
+      <div class="team-card">
+        <div class="card-container">
+          <MemberCard v-for="member in memberList" :key="member.name" :name="member.name" :github="member.github" :avatar="member.avatar" :identity="member.identity"></MemberCard>
         </div>
       </div>
     </div>
@@ -32,11 +48,12 @@ onMounted(() => {
 .container {
   position: relative;
 
-  .code-show {
+  #code-show,
+  #advantage,
+  #team {
     position: relative;
     left: 0;
     right: 0;
-    height: 1000px;
     .title {
       text-align: center;
       margin: 50px;
@@ -47,19 +64,33 @@ onMounted(() => {
       color: #7d8590;
       margin-bottom: 30px;
     }
-    .code-box {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%);
-      .code-container {
-        border-bottom: 10px #1e1e1e solid;
-        border-radius: 10px;
-      }
-      #container {
-        height: 600px;
-        width: 800px;
-        width: 800px;
-      }
+  }
+  #code-show {
+    min-height: calc(100vh - 60px);
+  }
+  .code-box {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    .code-container {
+      border-bottom: 10px #1e1e1e solid;
+      border-radius: 10px;
+    }
+    #container {
+      height: 600px;
+      width: 800px;
+      max-height: calc(100vh - 400px);
+      max-width: 80vw;
+    }
+  }
+  .team-card {
+    display: flex;
+    justify-content: center;
+    .card-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 1152px;
     }
   }
 }
@@ -92,7 +123,7 @@ onMounted(() => {
   width: 800px;
   max-width: 90vw;
   @media screen and (max-width: 600px) {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 </style>

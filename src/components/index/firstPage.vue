@@ -1,7 +1,15 @@
 <script lang="ts" setup>
 import Link from '@/components/link.vue';
-import { inject, Ref, onMounted } from 'vue';
+import { inject, Ref, onMounted, vShow, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const isMobile = inject('isMobile') as Ref<boolean>;
+function scrollToCode() {
+  window.scrollTo({
+    top: window.innerHeight - 10,
+    behavior: 'smooth',
+  });
+}
 </script>
 <template>
   <div class="first-page">
@@ -15,7 +23,7 @@ const isMobile = inject('isMobile') as Ref<boolean>;
       <img src="https://s3.bmp.ovh/imgs/2023/04/20/1b0fa098ad9a1b7d.png" />
     </div>
     <div class="bottom">
-      <div class="start-button" style="cursor: pointer">Try It</div>
+      <div class="start-button" @click="scrollToCode" style="cursor: pointer">Try It</div>
     </div>
   </div>
 </template>
@@ -61,8 +69,6 @@ const isMobile = inject('isMobile') as Ref<boolean>;
     align-items: center;
 
     .start-button {
-      // position: absolute;
-      // right: 60px;
       padding: 10px 70px;
       border-radius: 12px;
       font-weight: 600;
