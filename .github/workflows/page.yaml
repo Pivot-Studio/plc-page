@@ -44,4 +44,4 @@ jobs:
         # Default: true
         ignore_source_map: true
 
-        refresh_urls: "['https://lang.pivotstudio.cn/']"
+        refresh_urls: '["https://lang.pivotstudio.cn/"]'
