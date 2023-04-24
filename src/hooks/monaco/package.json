@@ -30,17 +30,17 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@pivot-lang/pivot-lang": "^0.1.0",
+    "@pivot-lang/pivot-lang": "^0.1.1",
     "monaco-editor": "^0.37.1",
     "vscode-languageserver-types": "^3.17.3"
   },
   "devDependencies": {
+    "css-loader": "^6.7.3",
+    "style-loader": "^3.3.2",
     "ts-loader": "^9.4.2",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4",
     "webpack-cli": "^5.0.2",
-    "webpack-dev-server": "^4.13.3",
-    "style-loader": "^3.3.2",
-    "css-loader": "^6.7.3"
+    "webpack-dev-server": "^4.13.3"
   }
 }
