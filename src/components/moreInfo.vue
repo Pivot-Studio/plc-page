@@ -1,5 +1,5 @@
-<script setup>
-import Link from '@/components/link.vue';
+<script lang="ts" setup>
+import { Link } from '@/components';
 </script>
 <template>
   <div class="out-container">
