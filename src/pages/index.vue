@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Nav, FirstPage, TabList, GcEcharts, MemberCard } from '@/components';
+import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo } from '@/components';
 import { ref, onMounted } from 'vue';
 import useCreateMonaco from '@pivot-lang/create-monaco';
 import { basicCode } from '@/hooks';
@@ -41,6 +41,8 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <MoreInfo></MoreInfo>
+    <Bottom></Bottom>
   </div>
 </template>
 

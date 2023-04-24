@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import { inject } from 'vue';
+const isMobile = inject('isMobile') as boolean;
+const isPc = inject('isPc') as boolean;
 const props = defineProps({
   newWindow: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   href: {
     type: String,
@@ -21,7 +24,7 @@ function navigate() {
 <template>
   <div class="link" @click="navigate">
     <slot></slot>
-    <img v-if="props.arrowShow" src="../assets/rightArrow.svg" />
+    <img v-if="props.arrowShow && isPc" src="../assets/rightArrow.svg" />
   </div>
 </template>
 <style lang="scss" scoped>
@@ -29,10 +32,13 @@ function navigate() {
   cursor: pointer;
   line-height: 28px;
   color: #fff;
+  display: flex;
+  align-items: center;
   img {
+    margin: 0 15px 0 10px;
     width: 12px;
     height: 12px;
-    transform: translate(-20px);
+    transform: translate(-20px, 3px);
     opacity: 0;
     transition: all 0.4s ease-out;
   }

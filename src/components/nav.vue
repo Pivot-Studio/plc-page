@@ -2,29 +2,28 @@
 import Link from '@/components/link.vue';
 import { inject } from 'vue';
 const isMobile = inject('isMobile') as boolean;
-const isPc = inject('isPc') as boolean;
 </script>
 
 <template>
   <div class="nav">
     <div class="left">
-      <Link :newWindow="true" :arrowShow="false" href="https://github.com/Pivot-Studio/pivot-lang"> Pivot Lang </Link>
+      <Link :newWindow="false" :arrowShow="false" href="https://github.com/Pivot-Studio/pivot-lang"> <img src="../assets/logo_dark.svg" /> Pivot Lang </Link>
     </div>
     <div class="right">
-      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
+      <Link href="https://github.com/Pivot-Studio/pivot-lang">
         <div class="github">
           <a>
             <img alt="Github" src="https://d33wubrfki0l68.cloudfront.net/43f2732eec420aa8a930fc3239ef0469c3d760a8/5d500/community/github.svg" />
           </a>
         </div>
       </Link>
-      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
+      <Link :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
         <div class="txt">Get Started</div>
       </Link>
-      <Link :arrowShow="isPc" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
         <div class="txt">Use Cases</div>
       </Link>
-      <Link :arrowShow="isPc" v-show="!isMobile" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link v-show="!isMobile" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
         <div class="txt">Community</div>
       </Link>
     </div>
@@ -52,6 +51,11 @@ const isPc = inject('isPc') as boolean;
     display: flex;
     align-items: center;
     margin-top: -2px;
+    img {
+      transform: translate(0, 4px);
+      width: 30px;
+      height: 30px;
+    }
     span {
       color: #fff;
       cursor: pointer;
@@ -64,7 +68,6 @@ const isPc = inject('isPc') as boolean;
     div {
       display: flex;
       align-items: center;
-      margin: 0 15px 0 10px;
       @media screen and (max-width: 600px) {
         margin: 0 3px;
       }
