@@ -16,11 +16,11 @@ function scrollToCode() {
     <div class="describe">
       <div class="gradient-font">Pivot Lang</div>
       <div class="gradient-font">High-performance</div>
-      <div class="gradient-font">New Generation Language</div>
-      <div class="detail-describe">Pivot Lang language server was compiled to web assembly to provide your language supports, right from your browser.</div>
+      <div class="gradient-font">New General Purpose Language</div>
+      <div class="detail-describe">Rust-like grammar with GC. First class syntax support for VSCode.</div>
     </div>
     <div v-show="isMobile" class="background-container">
-      <img src="https://s3.bmp.ovh/imgs/2023/04/20/1b0fa098ad9a1b7d.png" />
+      <img src="https://lang.pivotstudio.cn/1b0fa098ad9a1b7d.png" />
     </div>
     <div class="bottom">
       <div class="start-button" @click="scrollToCode" style="cursor: pointer">Try It</div>

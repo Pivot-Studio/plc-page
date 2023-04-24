@@ -18,7 +18,7 @@ onMounted(() => {
     <FirstPage @createMonaco="createMonaco"></FirstPage>
     <div id="code-show">
       <div class="gradient-font title">Enjoy coding pivot lang now!</div>
-      <div class="detail-describe">We already support for LSP,you can code in the page just like in VSC,enjoying the hightlight and prompt when coding.</div>
+      <div class="detail-describe">With the help of Web Assembly technology, we are able to provide support for some of the Pivot Lang syntax in the browser for you to experience. </div>
       <div class="code-box">
         <TabList @updateVal="(val) => (tabVal = val)" :tablist="tabList" :val="tabVal"></TabList>
         <div class="code-container">
@@ -27,9 +27,10 @@ onMounted(() => {
       </div>
     </div>
     <div id="advantage">
-      <div class="gradient-font title">Immix Garbage Collection</div>
+      <div class="gradient-font title">Immix Garbage Collector</div>
       <div class="detail-describe">
-        We build an immix GC for pivot-lang to ease developers' burden.What's more,our gc is specially built for multithreading language,which is five times faster than gdwGC using 10thread.
+        Significantly outperforming the well known Boehm-Demers-Weiser (BDW) collector in the multi-thread environment, the Immix collector is a state-of-the-art garbage collector for modern hardware. 
+        It is designed to be highly concurrent and to exploit the locality of reference patterns in modern programs.
       </div>
       <GcEcharts></GcEcharts>
     </div>
