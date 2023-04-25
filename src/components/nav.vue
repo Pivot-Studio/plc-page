@@ -52,7 +52,7 @@ const isMobile = inject('isMobile') as boolean;
     align-items: center;
     margin-top: -2px;
     img {
-      transform: translate(0, 4px);
+      transform: translate(-5px, -4px);
       width: 30px;
       height: 30px;
     }

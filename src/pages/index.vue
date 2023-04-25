@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo } from '@/components';
 import { ref, onMounted } from 'vue';
-import useCreateMonaco from '@pivot-lang/create-monaco';
-import { basicCode } from '@/hooks';
+import { basicCode } from '@/constant';
 import { memberList } from '@/constant';
-const createMonaco = useCreateMonaco();
+import createMonaco, { PlMonaco } from '@pivot-lang/create-monaco';
 const tabVal = ref('hello world');
 const tabList = ['hello world'];
-onMounted(() => {
-  createMonaco(document.getElementById('container')!, basicCode);
+let monaco: PlMonaco;
+onMounted(async () => {
+  monaco = await createMonaco(document.getElementById('container')!, basicCode);
 });
 </script>
 
 <template>
   <div class="container">
     <Nav></Nav>
-    <FirstPage @createMonaco="createMonaco"></FirstPage>
+    <FirstPage :monaco="monaco"></FirstPage>
     <div id="code-show">
       <div class="gradient-font title">Enjoy coding pivot lang now!</div>
-      <div class="detail-describe">With the help of Web Assembly technology, we are able to provide support for some of the Pivot Lang syntax in the browser for you to experience. </div>
+      <div class="detail-describe">With the help of Web Assembly technology, we are able to provide support for some of the Pivot Lang syntax in the browser for you to experience.</div>
       <div class="code-box">
         <TabList @updateVal="(val) => (tabVal = val)" :tablist="tabList" :val="tabVal"></TabList>
         <div class="code-container">
@@ -29,7 +29,7 @@ onMounted(() => {
     <div id="advantage">
       <div class="gradient-font title">Immix Garbage Collector</div>
       <div class="detail-describe">
-        Significantly outperforming the well known Boehm-Demers-Weiser (BDW) collector in the multi-thread environment, the Immix collector is a state-of-the-art garbage collector for modern hardware. 
+        Significantly outperforming the well known Boehm-Demers-Weiser (BDW) collector in the multi-thread environment, the Immix collector is a state-of-the-art garbage collector for modern hardware.
         It is designed to be highly concurrent and to exploit the locality of reference patterns in modern programs.
       </div>
       <GcEcharts></GcEcharts>

@@ -29,7 +29,7 @@ import { Link } from '@/components';
       <div class="line">
         <div class="title">Contact</div>
         <Link href="https://github.com/Pivot-Studio/pivot-lang"><div>Github</div></Link>
-        <Link href="https://github.com/Pivot-Studio/pivot-lang/issues"><div>QQ group</div></Link>
+        <Link href="https://jq.qq.com/?_wv=1027&k=wcaoBAmg"><div>QQ group</div></Link>
       </div>
     </div>
   </div>

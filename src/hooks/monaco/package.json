@@ -7,6 +7,7 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc -d",
+    "dev": "pnpm i && tsc -d --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
