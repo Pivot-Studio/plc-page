@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "cd src/hooks/monaco && pnpm build && cd ../../../ && vite",
+    "watchMonaco": "cd src/hooks/monaco && pnpm dev",
     "build": "cd src/hooks/monaco && pnpm build && cd ../../../ && vue-tsc && vite build",
     "preview": "vite preview",
     "postinstall": "cd src/hooks/monaco && pnpm install"

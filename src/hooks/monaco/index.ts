@@ -27,10 +27,10 @@ interface End {
   line: number;
 }
 
-let model = monaco.editor.createModel('', 'pivot-lang', monaco.Uri.parse('http://www.test.com/main.pi'));
-
 export class PlMonaco {
-  constructor(container: HTMLElement, code: string = '') {
+  constructor(container: HTMLElement, code: string = '', uri: string) {
+    this.model = monaco.editor.createModel('', 'pivot-lang', monaco.Uri.parse(uri));
+    initializeDocumentSemanticTokensProvider();
     // console.log(document.querySelector(select));
     this.editor = monaco.editor.create(container, {
       theme: 'pltheme',
@@ -39,8 +39,98 @@ export class PlMonaco {
       'semanticHighlighting.enabled': true,
       automaticLayout: true,
       suggestOnTriggerCharacters: true,
+      model: this.model,
     });
-    let resp: Diags = JSON.parse(pl.set_init_content(code));
+    initializeEditor(this.editor, code, uri);
+    this.setContent(code);
+  }
+  editor: monaco.editor.IStandaloneCodeEditor;
+  private model: monaco.editor.ITextModel;
+  setContent(code: string) {
+    this.model.setValue(code);
+  }
+}
+
+// 暂不支持同时创建多个Monaco的DOM
+let created = false;
+let plMonaco: PlMonaco;
+export default async function createPlMonaco(container: HTMLElement, code: string = '') {
+  if (!created) {
+    plMonaco = new PlMonaco(container, code, `http://www.test.com/main.pi`);
+    created = true;
+  }
+  return plMonaco;
+}
+
+// 需放在model创建之后
+let first = true;
+function initializeDocumentSemanticTokensProvider() {
+  monaco.languages.registerDocumentSemanticTokensProvider('pivot-lang', {
+    provideDocumentSemanticTokens: (m, id, token) => {
+      if (first) {
+        first = false;
+        let tokens = pl.get_semantic_tokens_full();
+        // console.log(tokens);
+        let a: any = {
+          resultId: null,
+          data: JSON.parse(tokens).data,
+        };
+        return a;
+      }
+      let tokens = pl.get_semantic_tokens();
+      // console.error(tokens);
+      return {
+        resultId: null,
+        edits: JSON.parse(tokens).edits,
+      };
+    },
+    getLegend: () => {
+      let legend = pl.get_legend();
+      // console.error(legend);
+      return JSON.parse(legend);
+    },
+    releaseDocumentSemanticTokens: () => {},
+  });
+}
+
+function initializeEditor(editor: monaco.editor.IStandaloneCodeEditor, code: string, uri: string) {
+  let resp: Diags = JSON.parse(pl.set_init_content(code));
+  let markers = resp.diagnostics.map((d, n, a) => {
+    let sev = monaco.MarkerSeverity.Warning;
+    if (d.severity === 1) {
+      sev = monaco.MarkerSeverity.Error;
+    }
+    return {
+      severity: sev,
+      startLineNumber: d.range.start.line + 1,
+      startColumn: d.range.start.character + 1,
+      endLineNumber: d.range.end.line + 1,
+      endColumn: d.range.end.character + 1,
+      message: d.message,
+    };
+  });
+  monaco.editor.setModelMarkers(editor.getModel()!, 'pivot-lang', markers);
+  editor.getModel()?.onDidChangeContent((e) => {
+    let re = e.changes.map((change) => {
+      return {
+        range: tp.Range.create(change.range.startLineNumber - 1, change.range.startColumn - 1, change.range.endLineNumber - 1, change.range.endColumn - 1),
+        text: change.text,
+        rangeLength: change.rangeLength,
+      };
+    });
+    let resp: Diags = JSON.parse(
+      pl.on_change_doc(
+        JSON.stringify({
+          textDocument: {
+            version: 0,
+            uri,
+          },
+          contentChanges: re,
+        })
+      )
+    );
+    // console.log(resp);
+
     let markers = resp.diagnostics.map((d, n, a) => {
       let sev = monaco.MarkerSeverity.Warning;
       if (d.severity === 1) {
@@ -55,81 +145,9 @@ export class PlMonaco {
         message: d.message,
       };
     });
-    let first = true;
-    monaco.editor.setModelMarkers(this.editor.getModel()!, 'pivot-lang', markers);
-    monaco.languages.registerDocumentSemanticTokensProvider('pivot-lang', {
-      provideDocumentSemanticTokens: (m, id, token) => {
-        if (first) {
-          first = false;
-          let tokens = pl.get_semantic_tokens_full();
-          // console.log(tokens);
-          let a: any = {
-            resultId: null,
-            data: JSON.parse(tokens).data,
-          };
-          return a;
-        }
-        let tokens = pl.get_semantic_tokens();
-        // console.error(tokens);
-        return {
-          resultId: null,
-          edits: JSON.parse(tokens).edits,
-        };
-      },
-      getLegend: () => {
-        let legend = pl.get_legend();
-        // console.error(legend);
-        return JSON.parse(legend);
-      },
-      releaseDocumentSemanticTokens: () => {},
-    });
-    this.editor.getModel()?.onDidChangeContent((e) => {
-      let re = e.changes.map((change) => {
-        return {
-          range: tp.Range.create(change.range.startLineNumber - 1, change.range.startColumn - 1, change.range.endLineNumber - 1, change.range.endColumn - 1),
-          text: change.text,
-          rangeLength: change.rangeLength,
-        };
-      });
-      let resp: Diags = JSON.parse(
-        pl.on_change_doc(
-          JSON.stringify({
-            textDocument: {
-              version: 0,
-              uri: 'http://www.test.com/main.pi',
-            },
-            contentChanges: re,
-          })
-        )
-      );
-      // console.log(resp);
 
-      let markers = resp.diagnostics.map((d, n, a) => {
-        let sev = monaco.MarkerSeverity.Warning;
-        if (d.severity === 1) {
-          sev = monaco.MarkerSeverity.Error;
-        }
-        return {
-          severity: sev,
-          startLineNumber: d.range.start.line + 1,
-          startColumn: d.range.start.character + 1,
-          endLineNumber: d.range.end.line + 1,
-          endColumn: d.range.end.character + 1,
-          message: d.message,
-        };
-      });
-
-      monaco.editor.setModelMarkers(this.editor.getModel()!, 'pivot-lang', markers);
-    });
-  }
-  editor: monaco.editor.IStandaloneCodeEditor;
-  setContent(code: string) {
-    this.editor.setValue(code);
-  }
-}
-
-export default async function createPlMonaco(container: HTMLElement, code: string = '') {
-  return new PlMonaco(container, code);
+    monaco.editor.setModelMarkers(editor.getModel()!, 'pivot-lang', markers);
+  });
 }
 
 initializeMonaco();
