@@ -29,7 +29,7 @@ interface End {
 
 export class PlMonaco {
   constructor(container: HTMLElement, code: string = '', uri: string) {
-    this.model = monaco.editor.createModel('', 'pivot-lang', monaco.Uri.parse(uri));
+    this.model = monaco.editor.createModel(code, 'pivot-lang', monaco.Uri.parse(uri));
     initializeDocumentSemanticTokensProvider();
     // console.log(document.querySelector(select));
     this.editor = monaco.editor.create(container, {
@@ -42,7 +42,6 @@ export class PlMonaco {
       model: this.model,
     });
     initializeEditor(this.editor, code, uri);
-    this.setContent(code);
   }
   editor: monaco.editor.IStandaloneCodeEditor;
   private model: monaco.editor.ITextModel;
