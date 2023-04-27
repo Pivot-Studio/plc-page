@@ -97,9 +97,9 @@ export const getSunBurstData =  (cov:Coverages): SunBurstData => {
     const element = cov.files[index];
     const path = element.name.split("/");
     const node = tryGetNode(root, path, 0);
-    node.coverage = element.totals.coverage;
     node.value = element.totals.lines;
     node.hits = element.totals.hits;
+    node.coverage =  node.hits / node.value;
     let currentNode:SunBurstData|undefined = node;
     let oldLines = 0;
     let newLines = node.value;
@@ -114,7 +114,7 @@ export const getSunBurstData =  (cov:Coverages): SunBurstData => {
       currentNode.father!.value = (fatherTotalLines - oldLines + newLines) ;
       oldLines = fatherTotalLines;
       newLines = currentNode.father!.value;
-      currentNode.coverage = currentNode.father!.hits / currentNode.father!.value;
+      currentNode.father.coverage = currentNode.father!.hits / currentNode.father!.value;
       currentNode = currentNode.father;
     }
   }

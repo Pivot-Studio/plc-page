@@ -10,6 +10,7 @@ const isMobile = inject("isMobile") as boolean;
 
 onMounted(async () => {
   const data = getSunBurstData(await getTotalCov());
+  console.log(data)
   totalCov.value = data.coverage;
   const option = {
     tooltip: {
