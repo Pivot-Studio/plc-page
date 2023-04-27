@@ -9,32 +9,25 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
-, "src/constant"  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/hooks/monaco/*.ts",
+    "src/**/*.vue",
+    "src/constant",
+    "tests/**/*.ts",
   ],
+  "exclude": ["node_modules", "dist", "src/hooks/monaco/*.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"
     }
-  ],
+  ]
 }

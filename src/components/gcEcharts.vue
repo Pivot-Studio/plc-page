@@ -55,25 +55,9 @@ function gotoBenchmark() {
 }
 </script>
 <template>
-  <div ref="echartsDom" id="echartsDom"></div>
+  <div ref="echartsDom" class="chart-container"></div>
   <div class="button">
     <span @click="gotoBenchmark">👉 See benchmark details</span>
   </div>
 </template>
-<style lang="scss" scoped>
-#echartsDom {
-  height: 400px;
-  width: 900px;
-  margin: 0 auto;
-  max-width: 80vw;
-}
-.button {
-  text-align: center;
-  font-weight: 600;
-  font-size: 20px;
-  color: #7d8590;
-  span {
-    cursor: pointer;
-  }
-}
-</style>
+

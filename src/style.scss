@@ -1,0 +1,47 @@
+:root {
+  --scrollbar: 0px;
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: black;
+  font-family: -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+#app {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.chart-container {
+  height: 400px;
+  width: 900px;
+  margin: 0 auto;
+  max-width: 80vw;
+}
+
+.button {
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  color: #7d8590;
+  span {
+    cursor: pointer;
+  }
+}
+.cov {
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  color: #ebedf1;
+  padding-bottom: 10px;
+}

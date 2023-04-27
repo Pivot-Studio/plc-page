@@ -8,4 +8,5 @@ export { default as GcEcharts } from './gcEcharts.vue';
 export { default as MemberCard } from './memberCard.vue';
 export { default as Bottom } from './bottom.vue';
 export { default as MoreInfo } from './moreInfo.vue';
+export { default as CodeCovEcharts } from './codecovEcharts.vue';
 

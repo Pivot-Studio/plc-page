@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo } from '@/components';
+import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo, CodeCovEcharts } from '@/components';
 import { ref, onMounted } from 'vue';
 import { basicCode } from '@/constant';
 import { memberList } from '@/constant';
@@ -20,7 +20,7 @@ onMounted(async () => {
       <div class="gradient-font title">Enjoy coding pivot lang now!</div>
       <div class="detail-describe">With the help of Web Assembly technology, we are able to provide support for some of the Pivot Lang syntax in the browser for you to experience.</div>
       <div class="code-box">
-        <TabList @updateVal="(val) => (tabVal = val)" :tablist="tabList" :val="tabVal"></TabList>
+        <TabList @updateVal="(val:string) => (tabVal = val)" :tablist="tabList" :val="tabVal"></TabList>
         <div class="code-container">
           <div id="container"></div>
         </div>
@@ -33,6 +33,13 @@ onMounted(async () => {
         It is designed to be highly concurrent and to exploit the locality of reference patterns in modern programs.
       </div>
       <GcEcharts></GcEcharts>
+    </div>
+    <div id="advantage">
+      <div class="gradient-font title">Reliability</div>
+      <div class="detail-describe">
+        Pivot Lang is heavily tested to ensure that it is stable and reliable. We have a large number of unit tests and integration tests to ensure that the coverage of the code is as high as possible.
+      </div>
+      <CodeCovEcharts></CodeCovEcharts>
     </div>
     <div id="team">
       <div class="gradient-font title">Meet The Team</div>
