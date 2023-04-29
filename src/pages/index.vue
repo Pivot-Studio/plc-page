@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo, CodeCovEcharts } from '@/components';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { basicCode } from '@/constant';
 import { memberList } from '@/constant';
 import createMonaco, { PlMonaco } from '@pivot-lang/create-monaco';
 const tabVal = ref('hello world');
-const tabList = ['hello world'];
+const tabList = basicCode.map((item) => item.title);
 let monaco: PlMonaco;
 onMounted(async () => {
-  monaco = await createMonaco(document.getElementById('container')!, basicCode);
+  monaco = await createMonaco(document.getElementById('container')!, basicCode[0].code);
 });
+watch(
+  () => tabVal.value,
+  (val) => {
+    const code = basicCode.find((item) => item.title === val)?.code || '';
+    monaco.setContent(code);
+  }
+);
 </script>
 
 <template>
