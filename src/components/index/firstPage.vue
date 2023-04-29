@@ -20,7 +20,7 @@ function scrollToCode() {
       <div class="detail-describe">Rust-like grammar with GC. First class syntax support for VSCode.</div>
     </div>
     <div v-show="isMobile" class="background-container">
-      <img src="https://lang.pivotstudio.cn/1b0fa098ad9a1b7d.png" />
+      <img src="@/assets/background.jpg" />
     </div>
     <div class="bottom">
       <div class="start-button" @click="scrollToCode" style="cursor: pointer">Try It</div>
@@ -31,7 +31,7 @@ function scrollToCode() {
 .first-page {
   height: 100vh;
   position: relative;
-  background: url(https://s3.bmp.ovh/imgs/2023/04/20/1b0fa098ad9a1b7d.png) 0 0 / cover;
+  background: url(@/assets/background.jpg) 0 0 / cover;
   @media screen and (max-width: 600px) {
     background: none;
   }

@@ -37,9 +37,34 @@ onMounted(async () => {
     <div id="advantage">
       <div class="gradient-font title">Reliability</div>
       <div class="detail-describe">
-        Pivot Lang is heavily tested to ensure that it is stable and reliable. We have a large number of unit tests and integration tests to ensure that the coverage of the code is as high as possible.
+        Pivot Lang is heavily tested to ensure that it is stable and reliable. We have a large number of unit tests and integration tests to ensure that the coverage of the code is as high as
+        possible.
       </div>
       <CodeCovEcharts></CodeCovEcharts>
+    </div>
+    <div id="advantage">
+      <div class="gradient-font title">Perfect VSC support</div>
+
+      <div class="advantage-item">
+        <div class="detail-describe text-describe">
+          <div class="title-text">Complete Language Server Protocol</div>
+          <div>We provide Code Hints,Code jump,Reference lookup,Code semantic and more to provide convenient coding environment for you.</div>
+        </div>
+        <div class="picture">
+          <img src="@/assets/LSP-hint.png" />
+          <img :style="{ top: '-200px', left: '50px' }" src="@/assets/LSP-reference.png" />
+        </div>
+      </div>
+      <div class="advantage-item">
+        <div class="picture">
+          <img src="@/assets/debug_code.png" />
+          <img :style="{ top: '-6px', left: '-160px' }" src="@/assets/debug_value.png" />
+        </div>
+        <div class="detail-describe text-describe">
+          <div class="title-text">Complete Language Server Protocol</div>
+          <div>You can easily debug pivot-lang anywhere with pivot-lang-support plugin,viewing what's going on in your code.</div>
+        </div>
+      </div>
     </div>
     <div id="team">
       <div class="gradient-font title">Meet The Team</div>
@@ -74,7 +99,31 @@ onMounted(async () => {
       color: #7d8590;
       margin-bottom: 30px;
     }
+    .advantage-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      .text-describe {
+        text-align: start;
+        width: 500px;
+        flex: 0 0 auto;
+        .title-text {
+          color: white;
+        }
+      }
+      .picture {
+        flex: 0 1 auto;
+        margin: 50px 100px;
+        height: 700px;
+        img {
+          position: relative;
+        }
+      }
+    }
   }
+
   #code-show {
     min-height: calc(100vh - 60px);
   }
