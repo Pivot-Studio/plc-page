@@ -28,4 +28,168 @@ fn getFibonacci(n: i64) i64 {
 }
 `,
   },
+  {
+    title: 'generic',
+    code: `use core::panic;
+pub struct GenericType<S|T> {
+    x: S;
+    y: *T;
+}
+
+pub struct GenericOutter<S> {
+    x: GenericInner<S>;
+}
+
+pub struct GenericInner<T> {
+    x: T;
+}
+
+pub struct One<T> {
+    a: T;
+}
+
+pub struct Two<T> {
+    b: One<T>;
+}
+
+pub struct Three<S> {
+    c: Two<S>;
+}
+
+pub struct GenericSelfRef<T|S> {
+    x: *GenericSelfRef<T|S>;
+}
+
+pub fn ret_generic1<T>() Three<T> {
+    return Three<T>{};
+}
+
+pub fn ret_generic2<T>(x: T) Three<T> {
+    let two = Two{
+        b: One{
+            a: x
+        }
+    };
+    return Three{
+        c: two
+    };
+}
+
+pub fn get_field<T>(x: Three<T>) T {
+    return x.c.b.a;
+}
+
+pub fn generic<T>(x: T) T {
+    let y = x;
+    return y;
+}
+
+pub fn simple<T>(x: i64) i64 {
+    if x == 0 {
+        return 0;
+    }
+    if x == 1 {
+        return 1;
+    }
+    if x == 2 {
+        return 1;
+    }
+    return simple<T>(x - 1) + simple<T>(x - 2);
+}
+
+pub fn complex<A|B|C>(a: i64, x: A, y: B, z: C) i64 {
+    if a == 0 {
+        return 0;
+    }
+    if a == 1 {
+        return 1;
+    }
+    if a == 2 {
+        return 1;
+    }
+    return complex<B|_|C>(a - 1, y, x, z) + complex<C|A|_>(a - 2, z, x, y);
+}
+
+pub fn test_generic_simple() void {
+    let x = generic(114514);
+    let y = generic(true);
+    panic::assert(y);
+    panic::assert(x == 114514);
+    let t = true;
+    let a = GenericType{
+        x: 999,
+        y: &t
+    };
+    let b = GenericType{
+        x: 888,
+        y: &a
+    };
+    panic::assert(*b.y.y);
+    panic::assert(b.y.x == 999);
+    let g = GenericOutter{
+        x: GenericInner{
+            x: 998
+        }
+    };
+    panic::assert(g.x.x == 998);
+    let half_infer = GenericType<i64|_>{
+        x: 999,
+        y: &a
+    };
+    panic::assert(half_infer.x == 999);
+    return;
+}
+
+pub fn test_generic_same_name() void {
+    let t = Three{
+        c: Two{
+            b: One{
+                a: 9999
+            }
+        }
+    };
+    let b = Three<bool>{};
+    b.c.b.a = true;
+    panic::assert(b.c.b.a);
+    panic::assert(t.c.b.a == 9999);
+    panic::assert(get_field(t) == 9999);
+    return;
+}
+
+pub fn test_ret_generic() void {
+    let x = ret_generic1<i64>();
+    let y = ret_generic2(true);
+    let z = ret_generic2([1, 2, 3]);
+    let i = ret_generic2(&z);
+    x.c.b.a = 999;
+    panic::assert(y.c.b.a);
+    panic::assert(x.c.b.a == 999);
+    panic::assert(get_field(z)[0] == 1);
+    return;
+}
+
+pub fn test_self_ref_generic() void {
+    let x = GenericSelfRef<i64|bool>{};
+    return;
+}
+
+pub fn test_generic_fn() void {
+    let res = simple<bool>(10);
+    panic::assert(res == 55);
+    res = complex(10, true, [1, 23], &res);
+    panic::assert(res == 55);
+    return;
+}
+
+pub fn test_generic() void {
+    test_generic_simple();
+    test_generic_same_name();
+    test_ret_generic();
+    test_self_ref_generic();
+    test_generic_fn();
+    return;
+}
+
+`,
+  },
 ];

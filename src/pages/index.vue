@@ -68,7 +68,7 @@ watch(
           <img :style="{ top: '-6px', left: '-160px' }" src="@/assets/debug_value.png" />
         </div>
         <div class="detail-describe text-describe">
-          <div class="title-text">Complete Language Server Protocol</div>
+          <div class="title-text">convenient code debug</div>
           <div>You can easily debug pivot-lang anywhere with pivot-lang-support plugin,viewing what's going on in your code.</div>
         </div>
       </div>
