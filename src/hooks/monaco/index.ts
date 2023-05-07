@@ -264,6 +264,7 @@ function initializeMonaco() {
             sug.kind = monaco.languages.CompletionItemKind.Keyword;
             break;
           case 3:
+            
             sug.kind = monaco.languages.CompletionItemKind.Function;
             sug.insertTextRules = monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
             break;
@@ -284,10 +285,15 @@ function initializeMonaco() {
             break;
           case 25:
             sug.kind = monaco.languages.CompletionItemKind.TypeParameter;
+            break;
           case 9:
             sug.kind = monaco.languages.CompletionItemKind.Module;
+            break;
           case 21:
             sug.kind = monaco.languages.CompletionItemKind.Constant;
+            break;
+          case 8:
+            sug.kind = monaco.languages.CompletionItemKind.Interface;
             break;
           default:
             break;
@@ -324,7 +330,7 @@ function initializeMonaco() {
         {
           label: 'trait',
           kind: monaco.languages.CompletionItemKind.Snippet,
-          insertText: ['trait ${1:name} {', '\tfn ${2:name}();', '}$0'].join('\n'),
+          insertText: ['trait ${1:name} {', '\tfn ${2:name}() void;', '}$0'].join('\n'),
           insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
           documentation: 'A trait',
           range: range,

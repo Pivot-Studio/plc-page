@@ -50,12 +50,12 @@ watch(
       <CodeCovEcharts></CodeCovEcharts>
     </div>
     <div id="advantage">
-      <div class="gradient-font title">Perfect VSC support</div>
+      <div class="gradient-font title">First Class VSC support</div>
 
       <div class="advantage-item">
         <div class="detail-describe text-describe">
-          <div class="title-text">Complete Language Server Protocol</div>
-          <div>We provide Code Hints,Code jump,Reference lookup,Code semantic and more to provide convenient coding environment for you.</div>
+          <div class="title-text">Code fast, code easy</div>
+          <div>We provide Code Hints, Code jump, Reference lookup, semantic highlights and more...</div>
         </div>
         <div class="picture">
           <img src="@/assets/LSP-hint.png" />
@@ -68,8 +68,8 @@ watch(
           <img :style="{ top: '-6px', left: '-160px' }" src="@/assets/debug_value.png" />
         </div>
         <div class="detail-describe text-describe">
-          <div class="title-text">convenient code debug</div>
-          <div>You can easily debug pivot-lang anywhere with pivot-lang-support plugin,viewing what's going on in your code.</div>
+          <div class="title-text">Debug with a single click</div>
+          <div>We have complete debug support on every major platform.</div>
         </div>
       </div>
     </div>

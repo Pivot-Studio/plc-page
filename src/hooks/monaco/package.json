@@ -31,7 +31,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@pivot-lang/pivot-lang": "^0.1.1",
+    "@pivot-lang/pivot-lang": "0.1.2-483d7b9.0",
     "monaco-editor": "^0.37.1",
     "vscode-languageserver-types": "^3.17.3"
   },
@@ -41,7 +41,7 @@
     "ts-loader": "^9.4.2",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4",
-    "webpack-cli": "^5.0.2",
-    "webpack-dev-server": "^4.13.3"
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^4.14.0"
   }
 }
