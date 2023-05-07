@@ -46,6 +46,7 @@ export class PlMonaco {
   editor: monaco.editor.IStandaloneCodeEditor;
   private model: monaco.editor.ITextModel;
   setContent(code: string) {
+    this.editor.revealLine(0);
     this.model.setValue(code);
   }
 }
@@ -443,7 +444,6 @@ export function createMonacoEditors() {
     // set its height to the parent's height
     parent.style.height = height + 'px';
     createPlMonaco(parent, code.textContent!);
-    console.log('create');
   }
 }
 (window as any).createMonacoEditors = createMonacoEditors;
