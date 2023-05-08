@@ -241,6 +241,7 @@ function initializeMonaco() {
             },
           };
         }),
+        dispose: () => {},
       } as any;
     },
   });
