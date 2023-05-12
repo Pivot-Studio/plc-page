@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo, CodeCovEcharts, VscSupportShow } from '@/components';
+import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo, CodeCovEcharts, VscSupportShow, Link } from '@/components';
 import { ref, onMounted, watch } from 'vue';
 import { basicCode } from '@/constant';
 import { memberList } from '@/constant';
@@ -7,6 +7,11 @@ import createMonaco, { PlMonaco } from '@pivot-lang/create-monaco';
 const tabVal = ref('hello world');
 const tabList = basicCode.map((item) => item.title);
 let monaco: PlMonaco;
+
+function gotoEmail() {
+  window.location.href = 'mailto:lang@pivotstudio.cn';
+}
+
 onMounted(async () => {
   monaco = await createMonaco(document.getElementById('container')!, basicCode[0].code);
 });
@@ -58,19 +63,32 @@ watch(
         </div>
       </div>
     </div>
-    <div id="join"></div>
+    <div id="join">
+      <div class="gradient-font title">Join Our Team</div>
+      <div class="two-grid-container">
+        <img class="left" src="@/assets/socialite.jpg" />
+        <div class="detail-describe right">
+          Pivot lang is still developing and we long for every geek joingus,completing the language together.If you are interested in pivot lang,click the button and write the email to <span
+            style="color: white"
+            >lang@pivotstudio.cn</span
+          >
+          introduce yourself now!
+        </div>
+      </div>
+    </div>
     <MoreInfo></MoreInfo>
     <Bottom></Bottom>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
   position: relative;
 
   #code-show,
   #advantage,
-  #team {
+  #team,
+  #join {
     position: relative;
     left: 0;
     right: 0;
@@ -87,7 +105,7 @@ watch(
   }
 
   #code-show {
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 100px);
   }
   .code-box {
     position: absolute;
@@ -112,6 +130,29 @@ watch(
       justify-content: center;
       flex-wrap: wrap;
       max-width: 1152px;
+    }
+  }
+
+  #join {
+    .two-grid-container {
+      display: flex;
+      align-items: center;
+      .left {
+        width: 30vw;
+        margin-left: 15vw;
+      }
+      .right {
+        width: 30vw;
+        margin-left: 10vw;
+        margin-right: 15vw;
+      }
+    }
+    img {
+      border-radius: 20px;
+    }
+    .button {
+      width: 10vw;
+      margin: 50px auto;
     }
   }
 }
@@ -146,5 +187,14 @@ watch(
   @media screen and (max-width: 600px) {
     font-size: 16px;
   }
+}
+.button {
+  padding: 10px 70px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 20px;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(133, 233, 242, 0), rgba(133, 233, 242, 0.5)), linear-gradient(76.14deg, #4caad9 19.78%, #498ff2 80.22%);
+  cursor: pointer;
 }
 </style>

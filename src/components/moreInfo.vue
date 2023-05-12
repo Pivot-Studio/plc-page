@@ -39,7 +39,7 @@ import { Link } from '@/components';
   display: flex;
   justify-content: center;
   background-color: #253443;
-  margin-top: 60px;
+  margin-top: 100px;
 }
 .container {
   max-width: 1200px;

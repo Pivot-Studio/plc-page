@@ -1,5 +1,5 @@
 export { default as FirstPage } from './index/firstPage.vue';
-export { default as VscSupportShow } from './index/VscSupportShow.vue';
+export { default as VscSupportShow } from './index/vscSupportShow.vue';
 
 export { default as Link } from './link.vue';
 export { default as Nav } from './nav.vue';
