@@ -1,4 +1,5 @@
 export { default as FirstPage } from './index/firstPage.vue';
+export { default as VscSupportShow } from './index/VscSupportShow.vue';
 
 export { default as Link } from './link.vue';
 export { default as Nav } from './nav.vue';
@@ -9,4 +10,3 @@ export { default as MemberCard } from './memberCard.vue';
 export { default as Bottom } from './bottom.vue';
 export { default as MoreInfo } from './moreInfo.vue';
 export { default as CodeCovEcharts } from './codecovEcharts.vue';
-
