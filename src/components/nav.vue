@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Link from '@/components/link.vue';
 import { inject } from 'vue';
-import func from '../../vue-temp/vue-editor-bridge';
 const isMobile = inject('isMobile') as boolean;
 function scrollToCode() {
   window.scrollTo({
