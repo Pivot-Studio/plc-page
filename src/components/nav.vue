@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import Link from '@/components/link.vue';
 import { inject } from 'vue';
+import func from '../../vue-temp/vue-editor-bridge';
 const isMobile = inject('isMobile') as boolean;
+function scrollToCode() {
+  window.scrollTo({
+    top: window.innerHeight - 10,
+    behavior: 'smooth',
+  });
+}
 </script>
 
 <template>
@@ -20,7 +27,7 @@ const isMobile = inject('isMobile') as boolean;
       <Link :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
         <div class="txt">Get Started</div>
       </Link>
-      <Link :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link :newWindow="true" href="https://github.com/Pivot-Studio/pivot-lang/blob/master/test/test/generic.pi">
         <div class="txt">Use Cases</div>
       </Link>
       <Link v-show="!isMobile" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
@@ -43,7 +50,7 @@ const isMobile = inject('isMobile') as boolean;
   font-size: 16px;
   background-color: rgba(0, 0, 0, 0.9);
 
-  @media screen and (max-width: 600px) {
+  @media (max-width: 800px) {
     padding: 10px 20px;
     font-size: 14px;
   }
@@ -68,7 +75,7 @@ const isMobile = inject('isMobile') as boolean;
     div {
       display: flex;
       align-items: center;
-      @media screen and (max-width: 600px) {
+      @media (max-width: 800px) {
         margin: 0 3px;
       }
     }

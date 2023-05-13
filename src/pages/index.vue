@@ -68,10 +68,8 @@ watch(
       <div class="two-grid-container">
         <img class="left" src="@/assets/socialite.jpg" />
         <div class="detail-describe right">
-          Pivot lang is still developing and we long for every geek joingus,completing the language together.If you are interested in pivot lang,click the button and write the email to <span
-            style="color: white"
-            >lang@pivotstudio.cn</span
-          >
+          Pivot lang is still developing and we long for every geek joingus,completing the language together.If you are interested in pivot lang,click the button and write the email to
+          <span style="color: white">lang@pivotstudio.cn</span>
           introduce yourself now!
         </div>
       </div>
@@ -81,7 +79,7 @@ watch(
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .container {
   position: relative;
 
@@ -111,12 +109,13 @@ watch(
     position: absolute;
     left: 50%;
     transform: translate(-50%);
+    max-width: 74.5vw;
     .code-container {
       border-bottom: 10px #1e1e1e solid;
       border-radius: 10px;
     }
     #container {
-      height: 600px;
+      height: 800px;
       width: 800px;
       max-height: calc(100vh - 400px);
       max-width: 80vw;
@@ -135,16 +134,30 @@ watch(
 
   #join {
     .two-grid-container {
-      display: flex;
-      align-items: center;
-      .left {
-        width: 30vw;
-        margin-left: 15vw;
+      @media (min-width: 800px) {
+        display: flex;
+        align-items: center;
+        .left {
+          width: 25vw;
+          margin-left: 20vw;
+        }
+        .right {
+          width: 30vw;
+          margin-left: 10vw;
+          margin-right: 15vw;
+          font-size: 1.4vw;
+        }
       }
-      .right {
-        width: 30vw;
-        margin-left: 10vw;
-        margin-right: 15vw;
+      @media (max-width: 800px) {
+        img {
+          display: none;
+        }
+        .right {
+          font-size: 16px;
+          width: 70vw;
+          margin-left: 15vw;
+          text-align: left;
+        }
       }
     }
     img {
@@ -155,46 +168,5 @@ watch(
       margin: 50px auto;
     }
   }
-}
-.gradient-font {
-  font-size: 58px;
-  font-weight: 860;
-  line-height: 150%;
-  background: linear-gradient(180deg, rgba(186, 255, 243, 0) 50.04%, rgba(189, 255, 244, 0.44) 100.09%), linear-gradient(64.57deg, #75fff3 7.22%, #599aff 90.07%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  @media screen and (max-width: 1200px) {
-    font-size: 48px;
-  }
-  @media screen and (max-width: 960px) {
-    font-size: 38px;
-  }
-  @media screen and (max-width: 600px) {
-    font-size: 28px;
-  }
-  @media screen and (max-width: 460px) {
-    font-size: 24px;
-  }
-}
-.detail-describe {
-  margin-top: 50px;
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 150%;
-  color: #fff;
-  width: 800px;
-  max-width: 90vw;
-  @media screen and (max-width: 600px) {
-    font-size: 16px;
-  }
-}
-.button {
-  padding: 10px 70px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 20px;
-  color: #fff;
-  background: linear-gradient(180deg, rgba(133, 233, 242, 0), rgba(133, 233, 242, 0.5)), linear-gradient(76.14deg, #4caad9 19.78%, #498ff2 80.22%);
-  cursor: pointer;
 }
 </style>

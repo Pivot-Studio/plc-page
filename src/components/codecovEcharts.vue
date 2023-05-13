@@ -10,7 +10,6 @@ const isMobile = inject("isMobile") as boolean;
 
 onMounted(async () => {
   const data = getSunBurstData(await getTotalCov());
-  console.log(data)
   totalCov.value = data.coverage;
   const option = {
     tooltip: {
@@ -34,7 +33,6 @@ onMounted(async () => {
     },
   };
   const myChart = echarts.init(covchartsDom.value as HTMLElement);
-  myChart.on("click", "series", handleCovChange);
   const loadEcharts = () => {
     const { top, bottom } = (
       covchartsDom.value as HTMLElement

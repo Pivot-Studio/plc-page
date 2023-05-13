@@ -3,7 +3,7 @@ import Link from '@/components/link.vue';
 import { inject, Ref, onMounted, vShow, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const isMobile = inject('isMobile') as Ref<boolean>;
+const sizeCnt = inject('sizeCnt') as Ref<number>;
 function scrollToCode() {
   window.scrollTo({
     top: window.innerHeight - 10,
@@ -19,7 +19,7 @@ function scrollToCode() {
       <div class="gradient-font">New General Purpose Language</div>
       <div class="detail-describe">Rust-like grammar with GC. First class syntax support for VSCode.</div>
     </div>
-    <div v-show="isMobile" class="background-container">
+    <div v-show="sizeCnt <= 1" class="background-container">
       <img src="@/assets/background.jpg" />
     </div>
     <div class="bottom">
@@ -27,12 +27,12 @@ function scrollToCode() {
     </div>
   </div>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
 .first-page {
   height: 100vh;
   position: relative;
   background: url(@/assets/background.jpg) 0 0 / cover;
-  @media screen and (max-width: 600px) {
+  @media (max-width: 960px) {
     background: none;
   }
 
@@ -40,7 +40,7 @@ function scrollToCode() {
     position: absolute;
     top: 200px;
     left: 100px;
-    @media screen and (max-width: 960px) {
+    @media (max-width: 960px) {
       position: absolute;
       top: 100px;
       left: 20px;

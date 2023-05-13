@@ -54,6 +54,7 @@ import { Link } from '@/components';
       margin: 20px;
     }
     .title {
+      text-align: center;
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 30px;

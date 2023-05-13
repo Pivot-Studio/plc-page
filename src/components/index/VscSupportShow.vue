@@ -37,7 +37,7 @@
       position: relative;
     }
   }
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     .advantage-item {
       display: flex;
       justify-content: center;
@@ -62,15 +62,15 @@
       }
     }
   }
-  @media (max-width: 600px) {
+  @media (max-width: 800px) {
     .advantage-item {
       display: block;
       .text-describe {
-        font-size: 3vw;
-        width: 60%;
+        font-size: 4vw;
+        width: 70%;
       }
       .picture {
-        width: 50vw;
+        width: 70vw;
         margin: 0 auto;
       }
     }
@@ -78,7 +78,7 @@
 }
 
 // 图片的响应式变化
-@media (min-width: 600px) {
+@media (min-width: 800px) {
   .lsp-img {
     img {
       width: 32vw;
@@ -100,7 +100,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   .lsp-img {
     img {
       width: 100%;

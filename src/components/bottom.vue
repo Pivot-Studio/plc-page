@@ -35,7 +35,7 @@
     font-size: 14px;
     line-height: 50px;
   }
-  @media screen and (max-width: 600px) {
+  @media (max-width: 800px) {
     font-size: 12px;
     justify-content: center;
     .right {

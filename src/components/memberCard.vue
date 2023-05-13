@@ -39,5 +39,17 @@ function gotoGithub() {
     border-radius: 50%;
     text-align: center;
   }
+  @media (max-width: 600px) {
+    width: 100px;
+    margin: 10px 8px;
+    font-size: 12px;
+    .avatar {
+      height: 48px;
+      width: 48px;
+    }
+    .name {
+      font-size: 14px;
+    }
+  }
 }
 </style>
