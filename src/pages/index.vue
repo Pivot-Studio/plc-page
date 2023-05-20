@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo, CodeCovEcharts, VscSupportShow, Link } from '@/components';
+import { Nav, FirstPage, TabList, GcEcharts, MemberCard, Bottom, MoreInfo, CodeCovEcharts, VscSupportShow, Link, CrossPlatforms } from '@/components';
 import { ref, onMounted, watch } from 'vue';
 import { basicCode } from '@/constant';
 import { memberList } from '@/constant';
@@ -54,6 +54,7 @@ watch(
       </div>
       <CodeCovEcharts></CodeCovEcharts>
     </div>
+    <CrossPlatforms></CrossPlatforms>
     <VscSupportShow></VscSupportShow>
     <div id="team">
       <div class="gradient-font title">Meet The Team</div>

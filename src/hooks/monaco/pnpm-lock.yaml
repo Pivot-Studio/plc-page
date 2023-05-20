@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@pivot-lang/pivot-lang':
-    specifier: 0.1.2-9b19718.0
-    version: 0.1.2-9b19718.0
+    specifier: 0.1.2-c22309a.0
+    version: 0.1.2-c22309a.0
   monaco-editor:
     specifier: ^0.37.1
     version: 0.37.1
@@ -48,8 +48,8 @@ packages:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
 
-  /@pivot-lang/pivot-lang@0.1.2-9b19718.0:
-    resolution: {integrity: sha512-w9Jvm11VnzfOFWQ+CeNVanao3EghHZOWlOvHHQCGa0GR25sBAnGijTQTY/MCJLb/E9HNJ+S3Y2L8cShGKHJ5/Q==}
+  /@pivot-lang/pivot-lang@0.1.2-c22309a.0:
+    resolution: {integrity: sha512-lWqiBDC0jIQ406/inCFgVrGYB9NCvEmHHyq9tJ/LFiUXUgmhMsviIuXGNnitr2EaOKJFiUFkRY6Hn+bhVcClSw==}
     dev: false
 
   /@types/body-parser@1.19.2:
