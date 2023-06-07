@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+import { ref, onMounted } from 'vue';
 import Prism from 'prismjs';
-import { ref, defineProps, onMounted } from 'vue';
 const codeRef = ref();
 const props = defineProps({
   code: {
