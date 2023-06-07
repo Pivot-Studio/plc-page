@@ -16,7 +16,7 @@ export default defineConfig({
     prismjsPlugin({
       languages: ['bash'],
       plugins: ['line-numbers', 'copy-to-clipboard'], //官网有其他功能,这里开启行数和复制按钮功能
-      theme: 'TWILIGHT',
+      theme: 'twilight',
       css: true,
     }),
   ],
