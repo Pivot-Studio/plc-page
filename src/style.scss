@@ -92,3 +92,18 @@ body {
     font-size: 16px;
   }
 }
+
+// 代码块复制文本样式
+.toolbar {
+  right: 15px !important;
+  color: #aaa;
+  :hover {
+    color: #fff;
+  }
+}
+.code-toolbar {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
