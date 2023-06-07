@@ -14,7 +14,7 @@ export default defineConfig({
     wasm(),
     (monacoEditorPlugin as any).default({}),
     prismjsPlugin({
-      languages: ['Bash'],
+      languages: ['bash'],
       plugins: ['line-numbers', 'copy-to-clipboard'], //官网有其他功能,这里开启行数和复制按钮功能
       theme: 'TWILIGHT',
       css: true,
