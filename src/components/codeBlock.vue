@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import Prism from 'prismjs';
-const codeRef = ref();
 const props = defineProps({
   code: {
     type: String,
@@ -14,7 +13,7 @@ onMounted(() => {
 </script>
 <template>
   <pre data-prismjs-copy="copy" data-prismjs-copy-error="按Ctrl+C复制" data-prismjs-copy-success="copied!" class="pre data-prismjs-copy">
-    <code className="language-jsx" style="font-size: 10px;" ref={codeRef}>{{ props.code }}</code>
+    <code className="language-jsx" style="font-size: 10px;">{{ props.code }}</code>
   </pre>
 </template>
 <style scoped lang="scss">

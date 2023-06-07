@@ -76,6 +76,7 @@ apt install pivot-lang`,
     justify-content: center;
     align-items: center;
     .advantage-item {
+      margin: 40px 0;
       position: relative;
     }
     .text-describe {
@@ -98,22 +99,22 @@ apt install pivot-lang`,
       max-height: 220px;
       transition: all 0.7s ease;
     }
-  }
-  @media (max-width: 800px) {
-    .advantage-item {
-      margin: 0 4vw;
-      .text-describe {
-        font-size: 4vw;
-        width: 70%;
-      }
-      .picture {
-        margin: 0 auto 12px;
-        transform: scale(0.8);
-      }
-      .code-block {
-        width: 60vw;
-        max-height: 220px;
-        transition: all 0.7s ease;
+    @media (max-width: 800px) {
+      .advantage-item {
+        margin: 10px 8vw;
+        .text-describe {
+          font-size: 4vw;
+          width: 70%;
+        }
+        .picture {
+          margin: 0 auto 12px;
+          transform: scale(.9);
+        }
+        .code-block {
+          width: 60vw;
+          max-height: 220px;
+          transition: all 0.7s ease;
+        }
       }
     }
   }
