@@ -1,17 +1,17 @@
 export const basicCode = [
   {
     title: 'hello world',
-    code: `use std::io;
-fn main() i64 {
-    io::print_s("hello world\\n");
+    code: `fn main() i64 {
+    println!("hello world!");
     return 0;
-}`,
+}
+`,
   },
   {
     title: 'fibonacci',
-    code: `use std::io;
-fn main() i64 {
-    io::printi64ln(getFibonacci(10));
+    code: `fn main() i64 {
+    let result = getFibonacci(10);
+    println!(result);
     return 0;
 }
 
