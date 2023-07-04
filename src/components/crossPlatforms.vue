@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, Ref } from 'vue';
+import { computed, Fragment, onMounted, reactive, ref, Ref } from 'vue';
 import codeBlock from './codeBlock.vue';
+import { useDetectDeviceType } from '@/hooks/detectDeviceType';
+
+const deviceType = useDetectDeviceType();
 const currenClickPlatform = ref('');
+
+if (deviceType.value !== 'other') {
+  currenClickPlatform.value = deviceType.value;
+} else {
+  deviceType.value = 'linux';
+}
+
 function showCode(type: string) {
-  if (currenClickPlatform.value === type) currenClickPlatform.value = '';
-  else currenClickPlatform.value = type;
+  currenClickPlatform.value = type;
 }
 const platforms = [
   {
@@ -24,7 +33,7 @@ scoop install plc`,
   {
     type: 'linux',
     icon: 'fa-brands fa-linux',
-    iconColor: 'rgb(220, 160, 50)',
+    iconColor: 'rgb(200, 150, 50)',
     code: `apt install wget gnupg
 wget -O -  https://lang.pivotstudio.cn/apt/public.key | apt-key add -
 echo "deb [arch=amd64] https://lang.pivotstudio.cn/apt/repo focal main
@@ -35,90 +44,67 @@ apt update
 apt install pivot-lang`,
   },
 ];
+
+const curShowCode = computed(() => {
+  return platforms.find((item) => item.type === currenClickPlatform.value)?.code;
+});
 </script>
 <template>
   <div id="advantage">
     <div class="gradient-font title">Cross Platforms</div>
+    <div class="detail-describe">Download Pivot Lang with the command now!</div>
     <div class="advantages">
-      <div v-for="item in platforms" class="advantage-item" :key="item.type">
-        <Transition>
-          <codeBlock v-if="currenClickPlatform === item.type" :class="['code-block', item.type]" :code="item.code"></codeBlock>
-        </Transition>
-        <Transition>
-          <font-awesome-icon
-            @click="showCode(item.type)"
-            inverse
-            :icon="item.icon"
-            :style="{
-              color: item.iconColor,
-              opacity: currenClickPlatform === item.type ? 0 : 1,
-              display: currenClickPlatform === item.type ? 'hidden' : 'block',
-              zIndex: currenClickPlatform === item.type ? -1 : 1,
-            }"
-            size="10x"
-            class="picture"
-          />
-        </Transition>
+      <div v-for="item in platforms" :class="{ 'advantage-item': true, 'selected-item': item.type === currenClickPlatform }" :key="item.type">
+        <font-awesome-icon
+          @click="showCode(item.type)"
+          inverse
+          :icon="item.icon"
+          :style="{
+            color: item.iconColor,
+          }"
+          size="10x"
+          class="picture"
+        />
       </div>
     </div>
+    <codeBlock class="code-block'" :code="curShowCode"></codeBlock>
   </div>
 </template>
 <style lang="scss" scoped>
 #advantage {
-  .text-describe {
-    .title-text {
-      color: white;
-    }
-  }
   .advantages {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     .advantage-item {
-      margin: 40px 0;
+      margin: 10px 5vw;
       position: relative;
-    }
-    .text-describe {
-      text-align: start;
-      font-size: 1.7vw;
-    }
-    .picture {
-      position: relative;
-      flex: 0 1 auto;
-      margin: 0 5vw;
-      background-color: #eee;
-      padding: 10px 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.7s ease;
-      // height: 30vw;
-    }
-    .code-block {
-      width: calc(220px + 5vw);
-      max-height: 220px;
-      transition: all 0.7s ease;
-    }
-    @media (max-width: 800px) {
-      .advantage-item {
-        margin: 10px 8vw;
-        .text-describe {
-          font-size: 4vw;
-          width: 70%;
+      .picture {
+        position: relative;
+        flex: 0 1 auto;
+        background-color: rgba(255, 255, 255, 0.72);
+        padding: 10px 26px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.7s ease;
+        margin: 0 auto 12px;
+        transform: scale(0.9);
+        &:hover {
+          background-color: #fff;
         }
-        .picture {
-          margin: 0 auto 12px;
-          transform: scale(.9);
-        }
-        .code-block {
-          width: 60vw;
-          max-height: 220px;
-          transition: all 0.7s ease;
-        }
+        // height: 30vw;
+      }
+    }
+
+    .selected-item {
+      .picture {
+        background-color: #fff;
       }
     }
   }
 }
+
 /* 下面我们会解释这些 class 是做什么的 */
 .v-enter-active,
 .v-leave-active {

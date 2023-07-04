@@ -101,9 +101,12 @@ body {
     color: #fff;
   }
 }
+
 .code-toolbar {
-  position: absolute !important;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 50px auto;
+  max-width: 720px;
+  @media (max-width: 800px) {
+    width: 60vw;
+    transition: all 0.7s ease;
+  }
 }
