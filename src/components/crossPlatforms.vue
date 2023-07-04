@@ -9,7 +9,7 @@ const currenClickPlatform = ref('');
 if (deviceType.value !== 'other') {
   currenClickPlatform.value = deviceType.value;
 } else {
-  deviceType.value = 'linux';
+  deviceType.value = 'mac';
 }
 
 function showCode(type: string) {
