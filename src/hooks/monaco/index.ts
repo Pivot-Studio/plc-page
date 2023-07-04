@@ -42,19 +42,24 @@ export class PlMonaco {
       model: this.model,
     });
     initializeEditor(this.editor, code, uri);
+    this.uri = uri;
   }
+  private uri: string;
   editor: monaco.editor.IStandaloneCodeEditor;
   private model: monaco.editor.ITextModel;
   setContent(code: string) {
     this.editor.revealLine(0);
-    this.model.setValue(code);
+    this.model.applyEdits([{
+      range: this.model.getFullModelRange(),
+      text: code,
+    }]);
   }
 }
 
 // 暂不支持同时创建多个Monaco的DOM
 let created = false;
 let plMonaco: PlMonaco;
-export default async function createPlMonaco(container: HTMLElement, code: string = '') {
+export default function createPlMonaco(container: HTMLElement, code: string = '') {
   if (!created) {
     plMonaco = new PlMonaco(container, code, `http://www.test.com/main.pi`);
     created = true;
@@ -229,7 +234,7 @@ function initializeMonaco() {
     provideInlayHints(model, range, token) {
       // console.log(JSON.parse(pl.get_inlay_hints()))
       let hints: tp.InlayHint[] = JSON.parse(pl.get_inlay_hints());
-      // console.warn(hints);
+      console.error(hints);
       return {
         hints: hints.map((h) => {
           return {

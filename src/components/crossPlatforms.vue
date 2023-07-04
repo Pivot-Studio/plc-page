@@ -52,7 +52,7 @@ const curShowCode = computed(() => {
 <template>
   <div id="advantage">
     <div class="gradient-font title">Cross Platforms</div>
-    <div class="detail-describe">Download Pivot Lang with the command now!</div>
+    <div class="detail-describe">Install Pivot Lang compiler with only a few commands!</div>
     <div class="advantages">
       <div v-for="item in platforms" :class="{ 'advantage-item': true, 'selected-item': item.type === currenClickPlatform }" :key="item.type">
         <font-awesome-icon

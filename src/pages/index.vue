@@ -13,7 +13,7 @@ function gotoEmail() {
 }
 
 onMounted(async () => {
-  monaco = await createMonaco(document.getElementById('container')!, basicCode[0].code);
+  monaco = createMonaco(document.getElementById('container')!, basicCode[0].code);
 });
 watch(
   () => tabVal.value,
