@@ -1,7 +1,8 @@
 export const basicCode = [
   {
     title: 'hello world',
-    code: `fn main() i64 {
+    code: `use std::io;
+fn main() i64 {
     println!("hello world!");
     return 0;
 }
@@ -9,7 +10,8 @@ export const basicCode = [
   },
   {
     title: 'fibonacci',
-    code: `fn main() i64 {
+    code: `use std::io;
+fn main() i64 {
     let result = getFibonacci(10);
     println!(result);
     return 0;
@@ -31,7 +33,7 @@ fn getFibonacci(n: i64) i64 {
   {
     title: 'fixed point',
     code: `use core::panic;
-pub fn test_fixed_point() void {
+pub fn main() i64 {
     let g = |f: |i64| => i64, x: i64| => i64 {
         if x == 0 {
             return 1;
@@ -42,7 +44,7 @@ pub fn test_fixed_point() void {
     for let x = 0; x < 10; x = x + 1 {
         panic::assert(fact(x) == fact_recursion(x));
     }
-    return;
+    return 0;
 }
 
 struct Func<A|F> {
@@ -85,7 +87,8 @@ fn fact_recursion(x: i64) i64 {
   {
     title: 'find islands',
     code: `use core::panic;
-pub fn test_map() void {
+use std::io;
+pub fn main() i64 {
     // count = 5
     // 1, 0, 1, 1, 1
     // 1, 1, 0, 1, 1
@@ -94,7 +97,8 @@ pub fn test_map() void {
     // 1, 0, 0, 1, 1
     let mp = [[1, 0, 1, 1, 1], [1, 1, 0, 1, 1], [1, 0, 0, 1, 1], [0, 1, 1, 0, 0], [1, 0, 0, 1, 1]];
     panic::assert(count(mp) == 5);
-    return;
+    println!(count(mp));
+    return 0;
 }
 
 pub fn count(mp: [[i64 * 5] * 5]) i64 {
