@@ -1,5 +1,5 @@
 (() => {
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/errors.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/errors.js
   var ErrorHandler = class {
     constructor() {
       this.listeners = [];
@@ -63,16 +63,16 @@
       this.name = this.message;
     }
   };
-  var ErrorNoTelemetry = class extends Error {
+  var ErrorNoTelemetry = class _ErrorNoTelemetry extends Error {
     constructor(msg) {
       super(msg);
       this.name = "CodeExpectedError";
     }
     static fromError(err) {
-      if (err instanceof ErrorNoTelemetry) {
+      if (err instanceof _ErrorNoTelemetry) {
         return err;
       }
-      const result = new ErrorNoTelemetry();
+      const result = new _ErrorNoTelemetry();
       result.message = err.message;
       result.stack = err.stack;
       return result;
@@ -81,14 +81,14 @@
       return err.name === "CodeExpectedError";
     }
   };
-  var BugIndicatingError = class extends Error {
+  var BugIndicatingError = class _BugIndicatingError extends Error {
     constructor(message) {
       super(message || "An unexpected bug occurred.");
-      Object.setPrototypeOf(this, BugIndicatingError.prototype);
+      Object.setPrototypeOf(this, _BugIndicatingError.prototype);
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/functional.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/functional.js
   function once(fn) {
     const _this = this;
     let didCall = false;
@@ -103,7 +103,7 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/iterator.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/iterator.js
   var Iterable;
   (function(Iterable2) {
     function is(thing) {
@@ -222,7 +222,7 @@
     Iterable2.consume = consume;
   })(Iterable || (Iterable = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/lifecycle.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/lifecycle.js
   var TRACK_DISPOSABLES = false;
   var disposableTracker = null;
   function setDisposableTracker(tracker) {
@@ -314,7 +314,7 @@
     });
     return self2;
   }
-  var DisposableStore = class {
+  var DisposableStore = class _DisposableStore {
     constructor() {
       this._toDispose = /* @__PURE__ */ new Set();
       this._isDisposed = false;
@@ -364,7 +364,7 @@
       }
       setParentOfDisposable(o, this);
       if (this._isDisposed) {
-        if (!DisposableStore.DISABLE_DISPOSED_WARNING) {
+        if (!_DisposableStore.DISABLE_DISPOSED_WARNING) {
           console.warn(new Error("Trying to add a disposable to a DisposableStore that has already been disposed of. The added object will be leaked!").stack);
         }
       } else {
@@ -396,29 +396,6 @@
   };
   Disposable.None = Object.freeze({ dispose() {
   } });
-  var SafeDisposable = class {
-    constructor() {
-      this.dispose = () => {
-      };
-      this.unset = () => {
-      };
-      this.isset = () => false;
-      trackDisposable(this);
-    }
-    set(fn) {
-      let callback = fn;
-      this.unset = () => callback = void 0;
-      this.isset = () => callback !== void 0;
-      this.dispose = () => {
-        if (callback) {
-          callback();
-          callback = void 0;
-          markAsDisposed(this);
-        }
-      };
-      return this;
-    }
-  };
   var DisposableMap = class {
     constructor() {
       this._store = /* @__PURE__ */ new Map();
@@ -474,12 +451,12 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/linkedList.js
-  var Node = class {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/linkedList.js
+  var Node = class _Node {
     constructor(element) {
       this.element = element;
-      this.next = Node.Undefined;
-      this.prev = Node.Undefined;
+      this.next = _Node.Undefined;
+      this.prev = _Node.Undefined;
     }
   };
   Node.Undefined = new Node(void 0);
@@ -582,161 +559,14 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/nls.js
-  var isPseudo = typeof document !== "undefined" && document.location && document.location.hash.indexOf("pseudo=true") >= 0;
-  function _format(message, args) {
-    let result;
-    if (args.length === 0) {
-      result = message;
-    } else {
-      result = message.replace(/\{(\d+)\}/g, (match, rest) => {
-        const index = rest[0];
-        const arg = args[index];
-        let result2 = match;
-        if (typeof arg === "string") {
-          result2 = arg;
-        } else if (typeof arg === "number" || typeof arg === "boolean" || arg === void 0 || arg === null) {
-          result2 = String(arg);
-        }
-        return result2;
-      });
-    }
-    if (isPseudo) {
-      result = "\uFF3B" + result.replace(/[aouei]/g, "$&$&") + "\uFF3D";
-    }
-    return result;
-  }
-  function localize(data, message, ...args) {
-    return _format(message, args);
-  }
-  function getConfiguredDefaultLocale(_) {
-    return void 0;
-  }
-
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/platform.js
-  var _a;
-  var LANGUAGE_DEFAULT = "en";
-  var _isWindows = false;
-  var _isMacintosh = false;
-  var _isLinux = false;
-  var _isLinuxSnap = false;
-  var _isNative = false;
-  var _isWeb = false;
-  var _isElectron = false;
-  var _isIOS = false;
-  var _isCI = false;
-  var _isMobile = false;
-  var _locale = void 0;
-  var _language = LANGUAGE_DEFAULT;
-  var _platformLocale = LANGUAGE_DEFAULT;
-  var _translationsConfigFile = void 0;
-  var _userAgent = void 0;
-  var globals = typeof self === "object" ? self : typeof global === "object" ? global : {};
-  var nodeProcess = void 0;
-  if (typeof globals.vscode !== "undefined" && typeof globals.vscode.process !== "undefined") {
-    nodeProcess = globals.vscode.process;
-  } else if (typeof process !== "undefined") {
-    nodeProcess = process;
-  }
-  var isElectronProcess = typeof ((_a = nodeProcess === null || nodeProcess === void 0 ? void 0 : nodeProcess.versions) === null || _a === void 0 ? void 0 : _a.electron) === "string";
-  var isElectronRenderer = isElectronProcess && (nodeProcess === null || nodeProcess === void 0 ? void 0 : nodeProcess.type) === "renderer";
-  if (typeof navigator === "object" && !isElectronRenderer) {
-    _userAgent = navigator.userAgent;
-    _isWindows = _userAgent.indexOf("Windows") >= 0;
-    _isMacintosh = _userAgent.indexOf("Macintosh") >= 0;
-    _isIOS = (_userAgent.indexOf("Macintosh") >= 0 || _userAgent.indexOf("iPad") >= 0 || _userAgent.indexOf("iPhone") >= 0) && !!navigator.maxTouchPoints && navigator.maxTouchPoints > 0;
-    _isLinux = _userAgent.indexOf("Linux") >= 0;
-    _isMobile = (_userAgent === null || _userAgent === void 0 ? void 0 : _userAgent.indexOf("Mobi")) >= 0;
-    _isWeb = true;
-    const configuredLocale = getConfiguredDefaultLocale(
-      // This call _must_ be done in the file that calls `nls.getConfiguredDefaultLocale`
-      // to ensure that the NLS AMD Loader plugin has been loaded and configured.
-      // This is because the loader plugin decides what the default locale is based on
-      // how it's able to resolve the strings.
-      localize({ key: "ensureLoaderPluginIsLoaded", comment: ["{Locked}"] }, "_")
-    );
-    _locale = configuredLocale || LANGUAGE_DEFAULT;
-    _language = _locale;
-    _platformLocale = navigator.language;
-  } else if (typeof nodeProcess === "object") {
-    _isWindows = nodeProcess.platform === "win32";
-    _isMacintosh = nodeProcess.platform === "darwin";
-    _isLinux = nodeProcess.platform === "linux";
-    _isLinuxSnap = _isLinux && !!nodeProcess.env["SNAP"] && !!nodeProcess.env["SNAP_REVISION"];
-    _isElectron = isElectronProcess;
-    _isCI = !!nodeProcess.env["CI"] || !!nodeProcess.env["BUILD_ARTIFACTSTAGINGDIRECTORY"];
-    _locale = LANGUAGE_DEFAULT;
-    _language = LANGUAGE_DEFAULT;
-    const rawNlsConfig = nodeProcess.env["VSCODE_NLS_CONFIG"];
-    if (rawNlsConfig) {
-      try {
-        const nlsConfig = JSON.parse(rawNlsConfig);
-        const resolved = nlsConfig.availableLanguages["*"];
-        _locale = nlsConfig.locale;
-        _platformLocale = nlsConfig.osLocale;
-        _language = resolved ? resolved : LANGUAGE_DEFAULT;
-        _translationsConfigFile = nlsConfig._translationsConfigFile;
-      } catch (e) {
-      }
-    }
-    _isNative = true;
-  } else {
-    console.error("Unable to resolve platform.");
-  }
-  var _platform = 0;
-  if (_isMacintosh) {
-    _platform = 1;
-  } else if (_isWindows) {
-    _platform = 3;
-  } else if (_isLinux) {
-    _platform = 2;
-  }
-  var isWindows = _isWindows;
-  var isMacintosh = _isMacintosh;
-  var isWebWorker = _isWeb && typeof globals.importScripts === "function";
-  var userAgent = _userAgent;
-  var setTimeout0IsFaster = typeof globals.postMessage === "function" && !globals.importScripts;
-  var setTimeout0 = (() => {
-    if (setTimeout0IsFaster) {
-      const pending = [];
-      globals.addEventListener("message", (e) => {
-        if (e.data && e.data.vscodeScheduleAsyncWork) {
-          for (let i = 0, len = pending.length; i < len; i++) {
-            const candidate = pending[i];
-            if (candidate.id === e.data.vscodeScheduleAsyncWork) {
-              pending.splice(i, 1);
-              candidate.callback();
-              return;
-            }
-          }
-        }
-      });
-      let lastId = 0;
-      return (callback) => {
-        const myId = ++lastId;
-        pending.push({
-          id: myId,
-          callback
-        });
-        globals.postMessage({ vscodeScheduleAsyncWork: myId }, "*");
-      };
-    }
-    return (callback) => setTimeout(callback);
-  })();
-  var isChrome = !!(userAgent && userAgent.indexOf("Chrome") >= 0);
-  var isFirefox = !!(userAgent && userAgent.indexOf("Firefox") >= 0);
-  var isSafari = !!(!isChrome && (userAgent && userAgent.indexOf("Safari") >= 0));
-  var isEdge = !!(userAgent && userAgent.indexOf("Edg/") >= 0);
-  var isAndroid = !!(userAgent && userAgent.indexOf("Android") >= 0);
-
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/stopwatch.js
-  var hasPerformanceNow = globals.performance && typeof globals.performance.now === "function";
-  var StopWatch = class {
-    static create(highResolution = true) {
-      return new StopWatch(highResolution);
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/stopwatch.js
+  var hasPerformanceNow = globalThis.performance && typeof globalThis.performance.now === "function";
+  var StopWatch = class _StopWatch {
+    static create(highResolution) {
+      return new _StopWatch(highResolution);
     }
     constructor(highResolution) {
-      this._highResolution = hasPerformanceNow && highResolution;
+      this._now = hasPerformanceNow && highResolution === false ? Date.now : globalThis.performance.now.bind(globalThis.performance);
       this._startTime = this._now();
       this._stopTime = -1;
     }
@@ -749,12 +579,9 @@
       }
       return this._now() - this._startTime;
     }
-    _now() {
-      return this._highResolution ? globals.performance.now() : Date.now();
-    }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/event.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/event.js
   var _enableDisposeWithListenerWarning = false;
   var _enableSnapshotPotentialLeakWarning = false;
   var Event;
@@ -1122,6 +949,7 @@
           }
         };
         observable.addObserver(observer);
+        observable.reportChanges();
         return {
           dispose() {
             observable.removeObserver(observer);
@@ -1131,17 +959,17 @@
     }
     Event2.fromObservableLight = fromObservableLight;
   })(Event || (Event = {}));
-  var EventProfiling = class {
+  var EventProfiling = class _EventProfiling {
     constructor(name) {
       this.listenerCount = 0;
       this.invocationCount = 0;
       this.elapsedOverall = 0;
       this.durations = [];
-      this.name = `${name}_${EventProfiling._idPool++}`;
-      EventProfiling.all.add(this);
+      this.name = `${name}_${_EventProfiling._idPool++}`;
+      _EventProfiling.all.add(this);
     }
     start(listenerCount) {
-      this._stopWatch = new StopWatch(true);
+      this._stopWatch = new StopWatch();
       this.listenerCount = listenerCount;
     }
     stop() {
@@ -1197,10 +1025,10 @@
       };
     }
   };
-  var Stacktrace = class {
+  var Stacktrace = class _Stacktrace {
     static create() {
       var _a3;
-      return new Stacktrace((_a3 = new Error().stack) !== null && _a3 !== void 0 ? _a3 : "");
+      return new _Stacktrace((_a3 = new Error().stack) !== null && _a3 !== void 0 ? _a3 : "");
     }
     constructor(value) {
       this.value = value;
@@ -1209,21 +1037,28 @@
       console.warn(this.value.split("\n").slice(2).join("\n"));
     }
   };
-  var Listener = class {
-    constructor(callback, callbackThis, stack) {
-      this.callback = callback;
-      this.callbackThis = callbackThis;
-      this.stack = stack;
-      this.subscription = new SafeDisposable();
+  var UniqueContainer = class {
+    constructor(value) {
+      this.value = value;
     }
-    invoke(e) {
-      this.callback.call(this.callbackThis, e);
+  };
+  var compactionThreshold = 2;
+  var forEachListener = (listeners, fn) => {
+    if (listeners instanceof UniqueContainer) {
+      fn(listeners);
+    } else {
+      for (let i = 0; i < listeners.length; i++) {
+        const l = listeners[i];
+        if (l) {
+          fn(l);
+        }
+      }
     }
   };
   var Emitter = class {
     constructor(options) {
       var _a3, _b, _c, _d, _e;
-      this._disposed = false;
+      this._size = 0;
       this._options = options;
       this._leakageMon = _globalLeakWarningThreshold > 0 || ((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.leakWarningThreshold) ? new LeakageMonitor((_c = (_b = this._options) === null || _b === void 0 ? void 0 : _b.leakWarningThreshold) !== null && _c !== void 0 ? _c : _globalLeakWarningThreshold) : void 0;
       this._perfMon = ((_d = this._options) === null || _d === void 0 ? void 0 : _d._profName) ? new EventProfiling(this._options._profName) : void 0;
@@ -1233,22 +1068,22 @@
       var _a3, _b, _c, _d;
       if (!this._disposed) {
         this._disposed = true;
+        if (((_a3 = this._deliveryQueue) === null || _a3 === void 0 ? void 0 : _a3.current) === this) {
+          this._deliveryQueue.reset();
+        }
         if (this._listeners) {
           if (_enableDisposeWithListenerWarning) {
-            const listeners = Array.from(this._listeners);
+            const listeners = this._listeners;
             queueMicrotask(() => {
-              var _a4;
-              for (const listener of listeners) {
-                if (listener.subscription.isset()) {
-                  listener.subscription.unset();
-                  (_a4 = listener.stack) === null || _a4 === void 0 ? void 0 : _a4.print();
-                }
-              }
+              forEachListener(listeners, (l) => {
+                var _a4;
+                return (_a4 = l.stack) === null || _a4 === void 0 ? void 0 : _a4.print();
+              });
             });
           }
-          this._listeners.clear();
+          this._listeners = void 0;
+          this._size = 0;
         }
-        (_a3 = this._deliveryQueue) === null || _a3 === void 0 ? void 0 : _a3.clear(this);
         (_c = (_b = this._options) === null || _b === void 0 ? void 0 : _b.onDidRemoveLastListener) === null || _c === void 0 ? void 0 : _c.call(_b);
         (_d = this._leakageMon) === null || _d === void 0 ? void 0 : _d.dispose();
       }
@@ -1258,142 +1093,169 @@
      * to events from this Emitter
      */
     get event() {
-      if (!this._event) {
-        this._event = (callback, thisArgs, disposables) => {
-          var _a3, _b, _c;
-          if (!this._listeners) {
-            this._listeners = new LinkedList();
-          }
-          if (this._leakageMon && this._listeners.size > this._leakageMon.threshold * 3) {
-            console.warn(`[${this._leakageMon.name}] REFUSES to accept new listeners because it exceeded its threshold by far`);
-            return Disposable.None;
-          }
-          const firstListener = this._listeners.isEmpty();
-          if (firstListener && ((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.onWillAddFirstListener)) {
-            this._options.onWillAddFirstListener(this);
-          }
-          let removeMonitor;
-          let stack;
-          if (this._leakageMon && this._listeners.size >= Math.ceil(this._leakageMon.threshold * 0.2)) {
-            stack = Stacktrace.create();
-            removeMonitor = this._leakageMon.check(stack, this._listeners.size + 1);
-          }
-          if (_enableDisposeWithListenerWarning) {
-            stack = stack !== null && stack !== void 0 ? stack : Stacktrace.create();
-          }
-          const listener = new Listener(callback, thisArgs, stack);
-          const removeListener = this._listeners.push(listener);
-          if (firstListener && ((_b = this._options) === null || _b === void 0 ? void 0 : _b.onDidAddFirstListener)) {
-            this._options.onDidAddFirstListener(this);
-          }
-          if ((_c = this._options) === null || _c === void 0 ? void 0 : _c.onDidAddListener) {
-            this._options.onDidAddListener(this, callback, thisArgs);
-          }
-          const result = listener.subscription.set(() => {
-            var _a4, _b2;
-            removeMonitor === null || removeMonitor === void 0 ? void 0 : removeMonitor();
-            if (!this._disposed) {
-              (_b2 = (_a4 = this._options) === null || _a4 === void 0 ? void 0 : _a4.onWillRemoveListener) === null || _b2 === void 0 ? void 0 : _b2.call(_a4, this);
-              removeListener();
-              if (this._options && this._options.onDidRemoveLastListener) {
-                const hasListeners = this._listeners && !this._listeners.isEmpty();
-                if (!hasListeners) {
-                  this._options.onDidRemoveLastListener(this);
-                }
-              }
-            }
-          });
-          if (disposables instanceof DisposableStore) {
-            disposables.add(result);
-          } else if (Array.isArray(disposables)) {
-            disposables.push(result);
-          }
-          return result;
-        };
-      }
+      var _a3;
+      (_a3 = this._event) !== null && _a3 !== void 0 ? _a3 : this._event = (callback, thisArgs, disposables) => {
+        var _a4, _b, _c, _d, _e;
+        if (this._leakageMon && this._size > this._leakageMon.threshold * 3) {
+          console.warn(`[${this._leakageMon.name}] REFUSES to accept new listeners because it exceeded its threshold by far`);
+          return Disposable.None;
+        }
+        if (this._disposed) {
+          return Disposable.None;
+        }
+        if (thisArgs) {
+          callback = callback.bind(thisArgs);
+        }
+        const contained = new UniqueContainer(callback);
+        let removeMonitor;
+        let stack;
+        if (this._leakageMon && this._size >= Math.ceil(this._leakageMon.threshold * 0.2)) {
+          contained.stack = Stacktrace.create();
+          removeMonitor = this._leakageMon.check(contained.stack, this._size + 1);
+        }
+        if (_enableDisposeWithListenerWarning) {
+          contained.stack = stack !== null && stack !== void 0 ? stack : Stacktrace.create();
+        }
+        if (!this._listeners) {
+          (_b = (_a4 = this._options) === null || _a4 === void 0 ? void 0 : _a4.onWillAddFirstListener) === null || _b === void 0 ? void 0 : _b.call(_a4, this);
+          this._listeners = contained;
+          (_d = (_c = this._options) === null || _c === void 0 ? void 0 : _c.onDidAddFirstListener) === null || _d === void 0 ? void 0 : _d.call(_c, this);
+        } else if (this._listeners instanceof UniqueContainer) {
+          (_e = this._deliveryQueue) !== null && _e !== void 0 ? _e : this._deliveryQueue = new EventDeliveryQueuePrivate();
+          this._listeners = [this._listeners, contained];
+        } else {
+          this._listeners.push(contained);
+        }
+        this._size++;
+        const result = toDisposable(() => {
+          removeMonitor === null || removeMonitor === void 0 ? void 0 : removeMonitor();
+          this._removeListener(contained);
+        });
+        if (disposables instanceof DisposableStore) {
+          disposables.add(result);
+        } else if (Array.isArray(disposables)) {
+          disposables.push(result);
+        }
+        return result;
+      };
       return this._event;
+    }
+    _removeListener(listener) {
+      var _a3, _b, _c, _d;
+      (_b = (_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.onWillRemoveListener) === null || _b === void 0 ? void 0 : _b.call(_a3, this);
+      if (!this._listeners) {
+        return;
+      }
+      if (this._size === 1) {
+        this._listeners = void 0;
+        (_d = (_c = this._options) === null || _c === void 0 ? void 0 : _c.onDidRemoveLastListener) === null || _d === void 0 ? void 0 : _d.call(_c, this);
+        this._size = 0;
+        return;
+      }
+      const listeners = this._listeners;
+      const index = listeners.indexOf(listener);
+      if (index === -1) {
+        console.log("disposed?", this._disposed);
+        console.log("size?", this._size);
+        console.log("arr?", JSON.stringify(this._listeners));
+        throw new Error("Attempted to dispose unknown listener");
+      }
+      this._size--;
+      listeners[index] = void 0;
+      const adjustDeliveryQueue = this._deliveryQueue.current === this;
+      if (this._size * compactionThreshold <= listeners.length) {
+        let n = 0;
+        for (let i = 0; i < listeners.length; i++) {
+          if (listeners[i]) {
+            listeners[n++] = listeners[i];
+          } else if (adjustDeliveryQueue) {
+            this._deliveryQueue.end--;
+            if (n < this._deliveryQueue.i) {
+              this._deliveryQueue.i--;
+            }
+          }
+        }
+        listeners.length = n;
+      }
+    }
+    _deliver(listener, value) {
+      var _a3;
+      if (!listener) {
+        return;
+      }
+      const errorHandler2 = ((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.onListenerError) || onUnexpectedError;
+      if (!errorHandler2) {
+        listener.value(value);
+        return;
+      }
+      try {
+        listener.value(value);
+      } catch (e) {
+        errorHandler2(e);
+      }
+    }
+    /** Delivers items in the queue. Assumes the queue is ready to go. */
+    _deliverQueue(dq) {
+      const listeners = dq.current._listeners;
+      while (dq.i < dq.end) {
+        this._deliver(listeners[dq.i++], dq.value);
+      }
+      dq.reset();
     }
     /**
      * To be kept private to fire an event to
      * subscribers
      */
     fire(event) {
-      var _a3, _b, _c;
-      if (this._listeners) {
-        if (!this._deliveryQueue) {
-          this._deliveryQueue = new PrivateEventDeliveryQueue((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.onListenerError);
-        }
-        for (const listener of this._listeners) {
-          this._deliveryQueue.push(this, listener, event);
-        }
-        (_b = this._perfMon) === null || _b === void 0 ? void 0 : _b.start(this._deliveryQueue.size);
-        this._deliveryQueue.deliver();
-        (_c = this._perfMon) === null || _c === void 0 ? void 0 : _c.stop();
+      var _a3, _b, _c, _d;
+      if ((_a3 = this._deliveryQueue) === null || _a3 === void 0 ? void 0 : _a3.current) {
+        this._deliverQueue(this._deliveryQueue);
+        (_b = this._perfMon) === null || _b === void 0 ? void 0 : _b.stop();
       }
+      (_c = this._perfMon) === null || _c === void 0 ? void 0 : _c.start(this._size);
+      if (!this._listeners) {
+      } else if (this._listeners instanceof UniqueContainer) {
+        this._deliver(this._listeners, event);
+      } else {
+        const dq = this._deliveryQueue;
+        dq.enqueue(this, event, this._listeners.length);
+        this._deliverQueue(dq);
+      }
+      (_d = this._perfMon) === null || _d === void 0 ? void 0 : _d.stop();
     }
     hasListeners() {
-      if (!this._listeners) {
-        return false;
-      }
-      return !this._listeners.isEmpty();
+      return this._size > 0;
     }
   };
-  var EventDeliveryQueue = class {
-    constructor(_onListenerError = onUnexpectedError) {
-      this._onListenerError = _onListenerError;
-      this._queue = new LinkedList();
+  var EventDeliveryQueuePrivate = class {
+    constructor() {
+      this.i = -1;
+      this.end = 0;
     }
-    get size() {
-      return this._queue.size;
+    enqueue(emitter, value, end) {
+      this.i = 0;
+      this.end = end;
+      this.current = emitter;
+      this.value = value;
     }
-    push(emitter, listener, event) {
-      this._queue.push(new EventDeliveryQueueElement(emitter, listener, event));
-    }
-    clear(emitter) {
-      const newQueue = new LinkedList();
-      for (const element of this._queue) {
-        if (element.emitter !== emitter) {
-          newQueue.push(element);
-        }
-      }
-      this._queue = newQueue;
-    }
-    deliver() {
-      while (this._queue.size > 0) {
-        const element = this._queue.shift();
-        try {
-          element.listener.invoke(element.event);
-        } catch (e) {
-          this._onListenerError(e);
-        }
-      }
-    }
-  };
-  var PrivateEventDeliveryQueue = class extends EventDeliveryQueue {
-    clear(emitter) {
-      this._queue.clear();
-    }
-  };
-  var EventDeliveryQueueElement = class {
-    constructor(emitter, listener, event) {
-      this.emitter = emitter;
-      this.listener = listener;
-      this.event = event;
+    reset() {
+      this.i = this.end;
+      this.current = void 0;
+      this.value = void 0;
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/types.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/types.js
   function isString(str) {
     return typeof str === "string";
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/objects.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/objects.js
   function getAllPropertyNames(obj) {
     let res = [];
-    let proto = Object.getPrototypeOf(obj);
-    while (Object.prototype !== proto) {
-      res = res.concat(Object.getOwnPropertyNames(proto));
-      proto = Object.getPrototypeOf(proto);
+    while (Object.prototype !== obj) {
+      res = res.concat(Object.getOwnPropertyNames(obj));
+      obj = Object.getPrototypeOf(obj);
     }
     return res;
   }
@@ -1420,7 +1282,154 @@
     return result;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/cache.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/nls.js
+  var isPseudo = typeof document !== "undefined" && document.location && document.location.hash.indexOf("pseudo=true") >= 0;
+  function _format(message, args) {
+    let result;
+    if (args.length === 0) {
+      result = message;
+    } else {
+      result = message.replace(/\{(\d+)\}/g, (match, rest) => {
+        const index = rest[0];
+        const arg = args[index];
+        let result2 = match;
+        if (typeof arg === "string") {
+          result2 = arg;
+        } else if (typeof arg === "number" || typeof arg === "boolean" || arg === void 0 || arg === null) {
+          result2 = String(arg);
+        }
+        return result2;
+      });
+    }
+    if (isPseudo) {
+      result = "\uFF3B" + result.replace(/[aouei]/g, "$&$&") + "\uFF3D";
+    }
+    return result;
+  }
+  function localize(data, message, ...args) {
+    return _format(message, args);
+  }
+  function getConfiguredDefaultLocale(_) {
+    return void 0;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/platform.js
+  var _a;
+  var LANGUAGE_DEFAULT = "en";
+  var _isWindows = false;
+  var _isMacintosh = false;
+  var _isLinux = false;
+  var _isLinuxSnap = false;
+  var _isNative = false;
+  var _isWeb = false;
+  var _isElectron = false;
+  var _isIOS = false;
+  var _isCI = false;
+  var _isMobile = false;
+  var _locale = void 0;
+  var _language = LANGUAGE_DEFAULT;
+  var _platformLocale = LANGUAGE_DEFAULT;
+  var _translationsConfigFile = void 0;
+  var _userAgent = void 0;
+  var globals = typeof self === "object" ? self : typeof global === "object" ? global : {};
+  var nodeProcess = void 0;
+  if (typeof globals.vscode !== "undefined" && typeof globals.vscode.process !== "undefined") {
+    nodeProcess = globals.vscode.process;
+  } else if (typeof process !== "undefined") {
+    nodeProcess = process;
+  }
+  var isElectronProcess = typeof ((_a = nodeProcess === null || nodeProcess === void 0 ? void 0 : nodeProcess.versions) === null || _a === void 0 ? void 0 : _a.electron) === "string";
+  var isElectronRenderer = isElectronProcess && (nodeProcess === null || nodeProcess === void 0 ? void 0 : nodeProcess.type) === "renderer";
+  if (typeof navigator === "object" && !isElectronRenderer) {
+    _userAgent = navigator.userAgent;
+    _isWindows = _userAgent.indexOf("Windows") >= 0;
+    _isMacintosh = _userAgent.indexOf("Macintosh") >= 0;
+    _isIOS = (_userAgent.indexOf("Macintosh") >= 0 || _userAgent.indexOf("iPad") >= 0 || _userAgent.indexOf("iPhone") >= 0) && !!navigator.maxTouchPoints && navigator.maxTouchPoints > 0;
+    _isLinux = _userAgent.indexOf("Linux") >= 0;
+    _isMobile = (_userAgent === null || _userAgent === void 0 ? void 0 : _userAgent.indexOf("Mobi")) >= 0;
+    _isWeb = true;
+    const configuredLocale = getConfiguredDefaultLocale(
+      // This call _must_ be done in the file that calls `nls.getConfiguredDefaultLocale`
+      // to ensure that the NLS AMD Loader plugin has been loaded and configured.
+      // This is because the loader plugin decides what the default locale is based on
+      // how it's able to resolve the strings.
+      localize({ key: "ensureLoaderPluginIsLoaded", comment: ["{Locked}"] }, "_")
+    );
+    _locale = configuredLocale || LANGUAGE_DEFAULT;
+    _language = _locale;
+    _platformLocale = navigator.language;
+  } else if (typeof nodeProcess === "object") {
+    _isWindows = nodeProcess.platform === "win32";
+    _isMacintosh = nodeProcess.platform === "darwin";
+    _isLinux = nodeProcess.platform === "linux";
+    _isLinuxSnap = _isLinux && !!nodeProcess.env["SNAP"] && !!nodeProcess.env["SNAP_REVISION"];
+    _isElectron = isElectronProcess;
+    _isCI = !!nodeProcess.env["CI"] || !!nodeProcess.env["BUILD_ARTIFACTSTAGINGDIRECTORY"];
+    _locale = LANGUAGE_DEFAULT;
+    _language = LANGUAGE_DEFAULT;
+    const rawNlsConfig = nodeProcess.env["VSCODE_NLS_CONFIG"];
+    if (rawNlsConfig) {
+      try {
+        const nlsConfig = JSON.parse(rawNlsConfig);
+        const resolved = nlsConfig.availableLanguages["*"];
+        _locale = nlsConfig.locale;
+        _platformLocale = nlsConfig.osLocale;
+        _language = resolved ? resolved : LANGUAGE_DEFAULT;
+        _translationsConfigFile = nlsConfig._translationsConfigFile;
+      } catch (e) {
+      }
+    }
+    _isNative = true;
+  } else {
+    console.error("Unable to resolve platform.");
+  }
+  var _platform = 0;
+  if (_isMacintosh) {
+    _platform = 1;
+  } else if (_isWindows) {
+    _platform = 3;
+  } else if (_isLinux) {
+    _platform = 2;
+  }
+  var isWindows = _isWindows;
+  var isMacintosh = _isMacintosh;
+  var isWebWorker = _isWeb && typeof globals.importScripts === "function";
+  var userAgent = _userAgent;
+  var setTimeout0IsFaster = typeof globals.postMessage === "function" && !globals.importScripts;
+  var setTimeout0 = (() => {
+    if (setTimeout0IsFaster) {
+      const pending = [];
+      globals.addEventListener("message", (e) => {
+        if (e.data && e.data.vscodeScheduleAsyncWork) {
+          for (let i = 0, len = pending.length; i < len; i++) {
+            const candidate = pending[i];
+            if (candidate.id === e.data.vscodeScheduleAsyncWork) {
+              pending.splice(i, 1);
+              candidate.callback();
+              return;
+            }
+          }
+        }
+      });
+      let lastId = 0;
+      return (callback) => {
+        const myId = ++lastId;
+        pending.push({
+          id: myId,
+          callback
+        });
+        globals.postMessage({ vscodeScheduleAsyncWork: myId }, "*");
+      };
+    }
+    return (callback) => setTimeout(callback);
+  })();
+  var isChrome = !!(userAgent && userAgent.indexOf("Chrome") >= 0);
+  var isFirefox = !!(userAgent && userAgent.indexOf("Firefox") >= 0);
+  var isSafari = !!(!isChrome && (userAgent && userAgent.indexOf("Safari") >= 0));
+  var isEdge = !!(userAgent && userAgent.indexOf("Edg/") >= 0);
+  var isAndroid = !!(userAgent && userAgent.indexOf("Android") >= 0);
+
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/cache.js
   var LRUCachedFunction = class {
     constructor(fn) {
       this.fn = fn;
@@ -1437,7 +1446,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/lazy.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/lazy.js
   var Lazy = class {
     constructor(executor) {
       this.executor = executor;
@@ -1472,7 +1481,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/strings.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/strings.js
   var _a2;
   function escapeRegExpCharacters(value) {
     return value.replace(/[\\\{\}\*\+\?\|\^\$\.\[\]\(\)]/g, "\\$&");
@@ -1528,12 +1537,12 @@
     65279
     /* CharCode.UTF8_BOM */
   );
-  var GraphemeBreakTree = class {
+  var GraphemeBreakTree = class _GraphemeBreakTree {
     static getInstance() {
-      if (!GraphemeBreakTree._INSTANCE) {
-        GraphemeBreakTree._INSTANCE = new GraphemeBreakTree();
+      if (!_GraphemeBreakTree._INSTANCE) {
+        _GraphemeBreakTree._INSTANCE = new _GraphemeBreakTree();
       }
-      return GraphemeBreakTree._INSTANCE;
+      return _GraphemeBreakTree._INSTANCE;
     }
     constructor() {
       this._data = getGraphemeBreakRawData();
@@ -1570,12 +1579,12 @@
   function getGraphemeBreakRawData() {
     return JSON.parse("[0,0,0,51229,51255,12,44061,44087,12,127462,127487,6,7083,7085,5,47645,47671,12,54813,54839,12,128678,128678,14,3270,3270,5,9919,9923,14,45853,45879,12,49437,49463,12,53021,53047,12,71216,71218,7,128398,128399,14,129360,129374,14,2519,2519,5,4448,4519,9,9742,9742,14,12336,12336,14,44957,44983,12,46749,46775,12,48541,48567,12,50333,50359,12,52125,52151,12,53917,53943,12,69888,69890,5,73018,73018,5,127990,127990,14,128558,128559,14,128759,128760,14,129653,129655,14,2027,2035,5,2891,2892,7,3761,3761,5,6683,6683,5,8293,8293,4,9825,9826,14,9999,9999,14,43452,43453,5,44509,44535,12,45405,45431,12,46301,46327,12,47197,47223,12,48093,48119,12,48989,49015,12,49885,49911,12,50781,50807,12,51677,51703,12,52573,52599,12,53469,53495,12,54365,54391,12,65279,65279,4,70471,70472,7,72145,72147,7,119173,119179,5,127799,127818,14,128240,128244,14,128512,128512,14,128652,128652,14,128721,128722,14,129292,129292,14,129445,129450,14,129734,129743,14,1476,1477,5,2366,2368,7,2750,2752,7,3076,3076,5,3415,3415,5,4141,4144,5,6109,6109,5,6964,6964,5,7394,7400,5,9197,9198,14,9770,9770,14,9877,9877,14,9968,9969,14,10084,10084,14,43052,43052,5,43713,43713,5,44285,44311,12,44733,44759,12,45181,45207,12,45629,45655,12,46077,46103,12,46525,46551,12,46973,46999,12,47421,47447,12,47869,47895,12,48317,48343,12,48765,48791,12,49213,49239,12,49661,49687,12,50109,50135,12,50557,50583,12,51005,51031,12,51453,51479,12,51901,51927,12,52349,52375,12,52797,52823,12,53245,53271,12,53693,53719,12,54141,54167,12,54589,54615,12,55037,55063,12,69506,69509,5,70191,70193,5,70841,70841,7,71463,71467,5,72330,72342,5,94031,94031,5,123628,123631,5,127763,127765,14,127941,127941,14,128043,128062,14,128302,128317,14,128465,128467,14,128539,128539,14,128640,128640,14,128662,128662,14,128703,128703,14,128745,128745,14,129004,129007,14,129329,129330,14,129402,129402,14,129483,129483,14,129686,129704,14,130048,131069,14,173,173,4,1757,1757,1,2200,2207,5,2434,2435,7,2631,2632,5,2817,2817,5,3008,3008,5,3201,3201,5,3387,3388,5,3542,3542,5,3902,3903,7,4190,4192,5,6002,6003,5,6439,6440,5,6765,6770,7,7019,7027,5,7154,7155,7,8205,8205,13,8505,8505,14,9654,9654,14,9757,9757,14,9792,9792,14,9852,9853,14,9890,9894,14,9937,9937,14,9981,9981,14,10035,10036,14,11035,11036,14,42654,42655,5,43346,43347,7,43587,43587,5,44006,44007,7,44173,44199,12,44397,44423,12,44621,44647,12,44845,44871,12,45069,45095,12,45293,45319,12,45517,45543,12,45741,45767,12,45965,45991,12,46189,46215,12,46413,46439,12,46637,46663,12,46861,46887,12,47085,47111,12,47309,47335,12,47533,47559,12,47757,47783,12,47981,48007,12,48205,48231,12,48429,48455,12,48653,48679,12,48877,48903,12,49101,49127,12,49325,49351,12,49549,49575,12,49773,49799,12,49997,50023,12,50221,50247,12,50445,50471,12,50669,50695,12,50893,50919,12,51117,51143,12,51341,51367,12,51565,51591,12,51789,51815,12,52013,52039,12,52237,52263,12,52461,52487,12,52685,52711,12,52909,52935,12,53133,53159,12,53357,53383,12,53581,53607,12,53805,53831,12,54029,54055,12,54253,54279,12,54477,54503,12,54701,54727,12,54925,54951,12,55149,55175,12,68101,68102,5,69762,69762,7,70067,70069,7,70371,70378,5,70720,70721,7,71087,71087,5,71341,71341,5,71995,71996,5,72249,72249,7,72850,72871,5,73109,73109,5,118576,118598,5,121505,121519,5,127245,127247,14,127568,127569,14,127777,127777,14,127872,127891,14,127956,127967,14,128015,128016,14,128110,128172,14,128259,128259,14,128367,128368,14,128424,128424,14,128488,128488,14,128530,128532,14,128550,128551,14,128566,128566,14,128647,128647,14,128656,128656,14,128667,128673,14,128691,128693,14,128715,128715,14,128728,128732,14,128752,128752,14,128765,128767,14,129096,129103,14,129311,129311,14,129344,129349,14,129394,129394,14,129413,129425,14,129466,129471,14,129511,129535,14,129664,129666,14,129719,129722,14,129760,129767,14,917536,917631,5,13,13,2,1160,1161,5,1564,1564,4,1807,1807,1,2085,2087,5,2307,2307,7,2382,2383,7,2497,2500,5,2563,2563,7,2677,2677,5,2763,2764,7,2879,2879,5,2914,2915,5,3021,3021,5,3142,3144,5,3263,3263,5,3285,3286,5,3398,3400,7,3530,3530,5,3633,3633,5,3864,3865,5,3974,3975,5,4155,4156,7,4229,4230,5,5909,5909,7,6078,6085,7,6277,6278,5,6451,6456,7,6744,6750,5,6846,6846,5,6972,6972,5,7074,7077,5,7146,7148,7,7222,7223,5,7416,7417,5,8234,8238,4,8417,8417,5,9000,9000,14,9203,9203,14,9730,9731,14,9748,9749,14,9762,9763,14,9776,9783,14,9800,9811,14,9831,9831,14,9872,9873,14,9882,9882,14,9900,9903,14,9929,9933,14,9941,9960,14,9974,9974,14,9989,9989,14,10006,10006,14,10062,10062,14,10160,10160,14,11647,11647,5,12953,12953,14,43019,43019,5,43232,43249,5,43443,43443,5,43567,43568,7,43696,43696,5,43765,43765,7,44013,44013,5,44117,44143,12,44229,44255,12,44341,44367,12,44453,44479,12,44565,44591,12,44677,44703,12,44789,44815,12,44901,44927,12,45013,45039,12,45125,45151,12,45237,45263,12,45349,45375,12,45461,45487,12,45573,45599,12,45685,45711,12,45797,45823,12,45909,45935,12,46021,46047,12,46133,46159,12,46245,46271,12,46357,46383,12,46469,46495,12,46581,46607,12,46693,46719,12,46805,46831,12,46917,46943,12,47029,47055,12,47141,47167,12,47253,47279,12,47365,47391,12,47477,47503,12,47589,47615,12,47701,47727,12,47813,47839,12,47925,47951,12,48037,48063,12,48149,48175,12,48261,48287,12,48373,48399,12,48485,48511,12,48597,48623,12,48709,48735,12,48821,48847,12,48933,48959,12,49045,49071,12,49157,49183,12,49269,49295,12,49381,49407,12,49493,49519,12,49605,49631,12,49717,49743,12,49829,49855,12,49941,49967,12,50053,50079,12,50165,50191,12,50277,50303,12,50389,50415,12,50501,50527,12,50613,50639,12,50725,50751,12,50837,50863,12,50949,50975,12,51061,51087,12,51173,51199,12,51285,51311,12,51397,51423,12,51509,51535,12,51621,51647,12,51733,51759,12,51845,51871,12,51957,51983,12,52069,52095,12,52181,52207,12,52293,52319,12,52405,52431,12,52517,52543,12,52629,52655,12,52741,52767,12,52853,52879,12,52965,52991,12,53077,53103,12,53189,53215,12,53301,53327,12,53413,53439,12,53525,53551,12,53637,53663,12,53749,53775,12,53861,53887,12,53973,53999,12,54085,54111,12,54197,54223,12,54309,54335,12,54421,54447,12,54533,54559,12,54645,54671,12,54757,54783,12,54869,54895,12,54981,55007,12,55093,55119,12,55243,55291,10,66045,66045,5,68325,68326,5,69688,69702,5,69817,69818,5,69957,69958,7,70089,70092,5,70198,70199,5,70462,70462,5,70502,70508,5,70750,70750,5,70846,70846,7,71100,71101,5,71230,71230,7,71351,71351,5,71737,71738,5,72000,72000,7,72160,72160,5,72273,72278,5,72752,72758,5,72882,72883,5,73031,73031,5,73461,73462,7,94192,94193,7,119149,119149,7,121403,121452,5,122915,122916,5,126980,126980,14,127358,127359,14,127535,127535,14,127759,127759,14,127771,127771,14,127792,127793,14,127825,127867,14,127897,127899,14,127945,127945,14,127985,127986,14,128000,128007,14,128021,128021,14,128066,128100,14,128184,128235,14,128249,128252,14,128266,128276,14,128335,128335,14,128379,128390,14,128407,128419,14,128444,128444,14,128481,128481,14,128499,128499,14,128526,128526,14,128536,128536,14,128543,128543,14,128556,128556,14,128564,128564,14,128577,128580,14,128643,128645,14,128649,128649,14,128654,128654,14,128660,128660,14,128664,128664,14,128675,128675,14,128686,128689,14,128695,128696,14,128705,128709,14,128717,128719,14,128725,128725,14,128736,128741,14,128747,128748,14,128755,128755,14,128762,128762,14,128981,128991,14,129009,129023,14,129160,129167,14,129296,129304,14,129320,129327,14,129340,129342,14,129356,129356,14,129388,129392,14,129399,129400,14,129404,129407,14,129432,129442,14,129454,129455,14,129473,129474,14,129485,129487,14,129648,129651,14,129659,129660,14,129671,129679,14,129709,129711,14,129728,129730,14,129751,129753,14,129776,129782,14,917505,917505,4,917760,917999,5,10,10,3,127,159,4,768,879,5,1471,1471,5,1536,1541,1,1648,1648,5,1767,1768,5,1840,1866,5,2070,2073,5,2137,2139,5,2274,2274,1,2363,2363,7,2377,2380,7,2402,2403,5,2494,2494,5,2507,2508,7,2558,2558,5,2622,2624,7,2641,2641,5,2691,2691,7,2759,2760,5,2786,2787,5,2876,2876,5,2881,2884,5,2901,2902,5,3006,3006,5,3014,3016,7,3072,3072,5,3134,3136,5,3157,3158,5,3260,3260,5,3266,3266,5,3274,3275,7,3328,3329,5,3391,3392,7,3405,3405,5,3457,3457,5,3536,3537,7,3551,3551,5,3636,3642,5,3764,3772,5,3895,3895,5,3967,3967,7,3993,4028,5,4146,4151,5,4182,4183,7,4226,4226,5,4253,4253,5,4957,4959,5,5940,5940,7,6070,6070,7,6087,6088,7,6158,6158,4,6432,6434,5,6448,6449,7,6679,6680,5,6742,6742,5,6754,6754,5,6783,6783,5,6912,6915,5,6966,6970,5,6978,6978,5,7042,7042,7,7080,7081,5,7143,7143,7,7150,7150,7,7212,7219,5,7380,7392,5,7412,7412,5,8203,8203,4,8232,8232,4,8265,8265,14,8400,8412,5,8421,8432,5,8617,8618,14,9167,9167,14,9200,9200,14,9410,9410,14,9723,9726,14,9733,9733,14,9745,9745,14,9752,9752,14,9760,9760,14,9766,9766,14,9774,9774,14,9786,9786,14,9794,9794,14,9823,9823,14,9828,9828,14,9833,9850,14,9855,9855,14,9875,9875,14,9880,9880,14,9885,9887,14,9896,9897,14,9906,9916,14,9926,9927,14,9935,9935,14,9939,9939,14,9962,9962,14,9972,9972,14,9978,9978,14,9986,9986,14,9997,9997,14,10002,10002,14,10017,10017,14,10055,10055,14,10071,10071,14,10133,10135,14,10548,10549,14,11093,11093,14,12330,12333,5,12441,12442,5,42608,42610,5,43010,43010,5,43045,43046,5,43188,43203,7,43302,43309,5,43392,43394,5,43446,43449,5,43493,43493,5,43571,43572,7,43597,43597,7,43703,43704,5,43756,43757,5,44003,44004,7,44009,44010,7,44033,44059,12,44089,44115,12,44145,44171,12,44201,44227,12,44257,44283,12,44313,44339,12,44369,44395,12,44425,44451,12,44481,44507,12,44537,44563,12,44593,44619,12,44649,44675,12,44705,44731,12,44761,44787,12,44817,44843,12,44873,44899,12,44929,44955,12,44985,45011,12,45041,45067,12,45097,45123,12,45153,45179,12,45209,45235,12,45265,45291,12,45321,45347,12,45377,45403,12,45433,45459,12,45489,45515,12,45545,45571,12,45601,45627,12,45657,45683,12,45713,45739,12,45769,45795,12,45825,45851,12,45881,45907,12,45937,45963,12,45993,46019,12,46049,46075,12,46105,46131,12,46161,46187,12,46217,46243,12,46273,46299,12,46329,46355,12,46385,46411,12,46441,46467,12,46497,46523,12,46553,46579,12,46609,46635,12,46665,46691,12,46721,46747,12,46777,46803,12,46833,46859,12,46889,46915,12,46945,46971,12,47001,47027,12,47057,47083,12,47113,47139,12,47169,47195,12,47225,47251,12,47281,47307,12,47337,47363,12,47393,47419,12,47449,47475,12,47505,47531,12,47561,47587,12,47617,47643,12,47673,47699,12,47729,47755,12,47785,47811,12,47841,47867,12,47897,47923,12,47953,47979,12,48009,48035,12,48065,48091,12,48121,48147,12,48177,48203,12,48233,48259,12,48289,48315,12,48345,48371,12,48401,48427,12,48457,48483,12,48513,48539,12,48569,48595,12,48625,48651,12,48681,48707,12,48737,48763,12,48793,48819,12,48849,48875,12,48905,48931,12,48961,48987,12,49017,49043,12,49073,49099,12,49129,49155,12,49185,49211,12,49241,49267,12,49297,49323,12,49353,49379,12,49409,49435,12,49465,49491,12,49521,49547,12,49577,49603,12,49633,49659,12,49689,49715,12,49745,49771,12,49801,49827,12,49857,49883,12,49913,49939,12,49969,49995,12,50025,50051,12,50081,50107,12,50137,50163,12,50193,50219,12,50249,50275,12,50305,50331,12,50361,50387,12,50417,50443,12,50473,50499,12,50529,50555,12,50585,50611,12,50641,50667,12,50697,50723,12,50753,50779,12,50809,50835,12,50865,50891,12,50921,50947,12,50977,51003,12,51033,51059,12,51089,51115,12,51145,51171,12,51201,51227,12,51257,51283,12,51313,51339,12,51369,51395,12,51425,51451,12,51481,51507,12,51537,51563,12,51593,51619,12,51649,51675,12,51705,51731,12,51761,51787,12,51817,51843,12,51873,51899,12,51929,51955,12,51985,52011,12,52041,52067,12,52097,52123,12,52153,52179,12,52209,52235,12,52265,52291,12,52321,52347,12,52377,52403,12,52433,52459,12,52489,52515,12,52545,52571,12,52601,52627,12,52657,52683,12,52713,52739,12,52769,52795,12,52825,52851,12,52881,52907,12,52937,52963,12,52993,53019,12,53049,53075,12,53105,53131,12,53161,53187,12,53217,53243,12,53273,53299,12,53329,53355,12,53385,53411,12,53441,53467,12,53497,53523,12,53553,53579,12,53609,53635,12,53665,53691,12,53721,53747,12,53777,53803,12,53833,53859,12,53889,53915,12,53945,53971,12,54001,54027,12,54057,54083,12,54113,54139,12,54169,54195,12,54225,54251,12,54281,54307,12,54337,54363,12,54393,54419,12,54449,54475,12,54505,54531,12,54561,54587,12,54617,54643,12,54673,54699,12,54729,54755,12,54785,54811,12,54841,54867,12,54897,54923,12,54953,54979,12,55009,55035,12,55065,55091,12,55121,55147,12,55177,55203,12,65024,65039,5,65520,65528,4,66422,66426,5,68152,68154,5,69291,69292,5,69633,69633,5,69747,69748,5,69811,69814,5,69826,69826,5,69932,69932,7,70016,70017,5,70079,70080,7,70095,70095,5,70196,70196,5,70367,70367,5,70402,70403,7,70464,70464,5,70487,70487,5,70709,70711,7,70725,70725,7,70833,70834,7,70843,70844,7,70849,70849,7,71090,71093,5,71103,71104,5,71227,71228,7,71339,71339,5,71344,71349,5,71458,71461,5,71727,71735,5,71985,71989,7,71998,71998,5,72002,72002,7,72154,72155,5,72193,72202,5,72251,72254,5,72281,72283,5,72344,72345,5,72766,72766,7,72874,72880,5,72885,72886,5,73023,73029,5,73104,73105,5,73111,73111,5,92912,92916,5,94095,94098,5,113824,113827,4,119142,119142,7,119155,119162,4,119362,119364,5,121476,121476,5,122888,122904,5,123184,123190,5,125252,125258,5,127183,127183,14,127340,127343,14,127377,127386,14,127491,127503,14,127548,127551,14,127744,127756,14,127761,127761,14,127769,127769,14,127773,127774,14,127780,127788,14,127796,127797,14,127820,127823,14,127869,127869,14,127894,127895,14,127902,127903,14,127943,127943,14,127947,127950,14,127972,127972,14,127988,127988,14,127992,127994,14,128009,128011,14,128019,128019,14,128023,128041,14,128064,128064,14,128102,128107,14,128174,128181,14,128238,128238,14,128246,128247,14,128254,128254,14,128264,128264,14,128278,128299,14,128329,128330,14,128348,128359,14,128371,128377,14,128392,128393,14,128401,128404,14,128421,128421,14,128433,128434,14,128450,128452,14,128476,128478,14,128483,128483,14,128495,128495,14,128506,128506,14,128519,128520,14,128528,128528,14,128534,128534,14,128538,128538,14,128540,128542,14,128544,128549,14,128552,128555,14,128557,128557,14,128560,128563,14,128565,128565,14,128567,128576,14,128581,128591,14,128641,128642,14,128646,128646,14,128648,128648,14,128650,128651,14,128653,128653,14,128655,128655,14,128657,128659,14,128661,128661,14,128663,128663,14,128665,128666,14,128674,128674,14,128676,128677,14,128679,128685,14,128690,128690,14,128694,128694,14,128697,128702,14,128704,128704,14,128710,128714,14,128716,128716,14,128720,128720,14,128723,128724,14,128726,128727,14,128733,128735,14,128742,128744,14,128746,128746,14,128749,128751,14,128753,128754,14,128756,128758,14,128761,128761,14,128763,128764,14,128884,128895,14,128992,129003,14,129008,129008,14,129036,129039,14,129114,129119,14,129198,129279,14,129293,129295,14,129305,129310,14,129312,129319,14,129328,129328,14,129331,129338,14,129343,129343,14,129351,129355,14,129357,129359,14,129375,129387,14,129393,129393,14,129395,129398,14,129401,129401,14,129403,129403,14,129408,129412,14,129426,129431,14,129443,129444,14,129451,129453,14,129456,129465,14,129472,129472,14,129475,129482,14,129484,129484,14,129488,129510,14,129536,129647,14,129652,129652,14,129656,129658,14,129661,129663,14,129667,129670,14,129680,129685,14,129705,129708,14,129712,129718,14,129723,129727,14,129731,129733,14,129744,129750,14,129754,129759,14,129768,129775,14,129783,129791,14,917504,917504,4,917506,917535,4,917632,917759,4,918000,921599,4,0,9,4,11,12,4,14,31,4,169,169,14,174,174,14,1155,1159,5,1425,1469,5,1473,1474,5,1479,1479,5,1552,1562,5,1611,1631,5,1750,1756,5,1759,1764,5,1770,1773,5,1809,1809,5,1958,1968,5,2045,2045,5,2075,2083,5,2089,2093,5,2192,2193,1,2250,2273,5,2275,2306,5,2362,2362,5,2364,2364,5,2369,2376,5,2381,2381,5,2385,2391,5,2433,2433,5,2492,2492,5,2495,2496,7,2503,2504,7,2509,2509,5,2530,2531,5,2561,2562,5,2620,2620,5,2625,2626,5,2635,2637,5,2672,2673,5,2689,2690,5,2748,2748,5,2753,2757,5,2761,2761,7,2765,2765,5,2810,2815,5,2818,2819,7,2878,2878,5,2880,2880,7,2887,2888,7,2893,2893,5,2903,2903,5,2946,2946,5,3007,3007,7,3009,3010,7,3018,3020,7,3031,3031,5,3073,3075,7,3132,3132,5,3137,3140,7,3146,3149,5,3170,3171,5,3202,3203,7,3262,3262,7,3264,3265,7,3267,3268,7,3271,3272,7,3276,3277,5,3298,3299,5,3330,3331,7,3390,3390,5,3393,3396,5,3402,3404,7,3406,3406,1,3426,3427,5,3458,3459,7,3535,3535,5,3538,3540,5,3544,3550,7,3570,3571,7,3635,3635,7,3655,3662,5,3763,3763,7,3784,3789,5,3893,3893,5,3897,3897,5,3953,3966,5,3968,3972,5,3981,3991,5,4038,4038,5,4145,4145,7,4153,4154,5,4157,4158,5,4184,4185,5,4209,4212,5,4228,4228,7,4237,4237,5,4352,4447,8,4520,4607,10,5906,5908,5,5938,5939,5,5970,5971,5,6068,6069,5,6071,6077,5,6086,6086,5,6089,6099,5,6155,6157,5,6159,6159,5,6313,6313,5,6435,6438,7,6441,6443,7,6450,6450,5,6457,6459,5,6681,6682,7,6741,6741,7,6743,6743,7,6752,6752,5,6757,6764,5,6771,6780,5,6832,6845,5,6847,6862,5,6916,6916,7,6965,6965,5,6971,6971,7,6973,6977,7,6979,6980,7,7040,7041,5,7073,7073,7,7078,7079,7,7082,7082,7,7142,7142,5,7144,7145,5,7149,7149,5,7151,7153,5,7204,7211,7,7220,7221,7,7376,7378,5,7393,7393,7,7405,7405,5,7415,7415,7,7616,7679,5,8204,8204,5,8206,8207,4,8233,8233,4,8252,8252,14,8288,8292,4,8294,8303,4,8413,8416,5,8418,8420,5,8482,8482,14,8596,8601,14,8986,8987,14,9096,9096,14,9193,9196,14,9199,9199,14,9201,9202,14,9208,9210,14,9642,9643,14,9664,9664,14,9728,9729,14,9732,9732,14,9735,9741,14,9743,9744,14,9746,9746,14,9750,9751,14,9753,9756,14,9758,9759,14,9761,9761,14,9764,9765,14,9767,9769,14,9771,9773,14,9775,9775,14,9784,9785,14,9787,9791,14,9793,9793,14,9795,9799,14,9812,9822,14,9824,9824,14,9827,9827,14,9829,9830,14,9832,9832,14,9851,9851,14,9854,9854,14,9856,9861,14,9874,9874,14,9876,9876,14,9878,9879,14,9881,9881,14,9883,9884,14,9888,9889,14,9895,9895,14,9898,9899,14,9904,9905,14,9917,9918,14,9924,9925,14,9928,9928,14,9934,9934,14,9936,9936,14,9938,9938,14,9940,9940,14,9961,9961,14,9963,9967,14,9970,9971,14,9973,9973,14,9975,9977,14,9979,9980,14,9982,9985,14,9987,9988,14,9992,9996,14,9998,9998,14,10000,10001,14,10004,10004,14,10013,10013,14,10024,10024,14,10052,10052,14,10060,10060,14,10067,10069,14,10083,10083,14,10085,10087,14,10145,10145,14,10175,10175,14,11013,11015,14,11088,11088,14,11503,11505,5,11744,11775,5,12334,12335,5,12349,12349,14,12951,12951,14,42607,42607,5,42612,42621,5,42736,42737,5,43014,43014,5,43043,43044,7,43047,43047,7,43136,43137,7,43204,43205,5,43263,43263,5,43335,43345,5,43360,43388,8,43395,43395,7,43444,43445,7,43450,43451,7,43454,43456,7,43561,43566,5,43569,43570,5,43573,43574,5,43596,43596,5,43644,43644,5,43698,43700,5,43710,43711,5,43755,43755,7,43758,43759,7,43766,43766,5,44005,44005,5,44008,44008,5,44012,44012,7,44032,44032,11,44060,44060,11,44088,44088,11,44116,44116,11,44144,44144,11,44172,44172,11,44200,44200,11,44228,44228,11,44256,44256,11,44284,44284,11,44312,44312,11,44340,44340,11,44368,44368,11,44396,44396,11,44424,44424,11,44452,44452,11,44480,44480,11,44508,44508,11,44536,44536,11,44564,44564,11,44592,44592,11,44620,44620,11,44648,44648,11,44676,44676,11,44704,44704,11,44732,44732,11,44760,44760,11,44788,44788,11,44816,44816,11,44844,44844,11,44872,44872,11,44900,44900,11,44928,44928,11,44956,44956,11,44984,44984,11,45012,45012,11,45040,45040,11,45068,45068,11,45096,45096,11,45124,45124,11,45152,45152,11,45180,45180,11,45208,45208,11,45236,45236,11,45264,45264,11,45292,45292,11,45320,45320,11,45348,45348,11,45376,45376,11,45404,45404,11,45432,45432,11,45460,45460,11,45488,45488,11,45516,45516,11,45544,45544,11,45572,45572,11,45600,45600,11,45628,45628,11,45656,45656,11,45684,45684,11,45712,45712,11,45740,45740,11,45768,45768,11,45796,45796,11,45824,45824,11,45852,45852,11,45880,45880,11,45908,45908,11,45936,45936,11,45964,45964,11,45992,45992,11,46020,46020,11,46048,46048,11,46076,46076,11,46104,46104,11,46132,46132,11,46160,46160,11,46188,46188,11,46216,46216,11,46244,46244,11,46272,46272,11,46300,46300,11,46328,46328,11,46356,46356,11,46384,46384,11,46412,46412,11,46440,46440,11,46468,46468,11,46496,46496,11,46524,46524,11,46552,46552,11,46580,46580,11,46608,46608,11,46636,46636,11,46664,46664,11,46692,46692,11,46720,46720,11,46748,46748,11,46776,46776,11,46804,46804,11,46832,46832,11,46860,46860,11,46888,46888,11,46916,46916,11,46944,46944,11,46972,46972,11,47000,47000,11,47028,47028,11,47056,47056,11,47084,47084,11,47112,47112,11,47140,47140,11,47168,47168,11,47196,47196,11,47224,47224,11,47252,47252,11,47280,47280,11,47308,47308,11,47336,47336,11,47364,47364,11,47392,47392,11,47420,47420,11,47448,47448,11,47476,47476,11,47504,47504,11,47532,47532,11,47560,47560,11,47588,47588,11,47616,47616,11,47644,47644,11,47672,47672,11,47700,47700,11,47728,47728,11,47756,47756,11,47784,47784,11,47812,47812,11,47840,47840,11,47868,47868,11,47896,47896,11,47924,47924,11,47952,47952,11,47980,47980,11,48008,48008,11,48036,48036,11,48064,48064,11,48092,48092,11,48120,48120,11,48148,48148,11,48176,48176,11,48204,48204,11,48232,48232,11,48260,48260,11,48288,48288,11,48316,48316,11,48344,48344,11,48372,48372,11,48400,48400,11,48428,48428,11,48456,48456,11,48484,48484,11,48512,48512,11,48540,48540,11,48568,48568,11,48596,48596,11,48624,48624,11,48652,48652,11,48680,48680,11,48708,48708,11,48736,48736,11,48764,48764,11,48792,48792,11,48820,48820,11,48848,48848,11,48876,48876,11,48904,48904,11,48932,48932,11,48960,48960,11,48988,48988,11,49016,49016,11,49044,49044,11,49072,49072,11,49100,49100,11,49128,49128,11,49156,49156,11,49184,49184,11,49212,49212,11,49240,49240,11,49268,49268,11,49296,49296,11,49324,49324,11,49352,49352,11,49380,49380,11,49408,49408,11,49436,49436,11,49464,49464,11,49492,49492,11,49520,49520,11,49548,49548,11,49576,49576,11,49604,49604,11,49632,49632,11,49660,49660,11,49688,49688,11,49716,49716,11,49744,49744,11,49772,49772,11,49800,49800,11,49828,49828,11,49856,49856,11,49884,49884,11,49912,49912,11,49940,49940,11,49968,49968,11,49996,49996,11,50024,50024,11,50052,50052,11,50080,50080,11,50108,50108,11,50136,50136,11,50164,50164,11,50192,50192,11,50220,50220,11,50248,50248,11,50276,50276,11,50304,50304,11,50332,50332,11,50360,50360,11,50388,50388,11,50416,50416,11,50444,50444,11,50472,50472,11,50500,50500,11,50528,50528,11,50556,50556,11,50584,50584,11,50612,50612,11,50640,50640,11,50668,50668,11,50696,50696,11,50724,50724,11,50752,50752,11,50780,50780,11,50808,50808,11,50836,50836,11,50864,50864,11,50892,50892,11,50920,50920,11,50948,50948,11,50976,50976,11,51004,51004,11,51032,51032,11,51060,51060,11,51088,51088,11,51116,51116,11,51144,51144,11,51172,51172,11,51200,51200,11,51228,51228,11,51256,51256,11,51284,51284,11,51312,51312,11,51340,51340,11,51368,51368,11,51396,51396,11,51424,51424,11,51452,51452,11,51480,51480,11,51508,51508,11,51536,51536,11,51564,51564,11,51592,51592,11,51620,51620,11,51648,51648,11,51676,51676,11,51704,51704,11,51732,51732,11,51760,51760,11,51788,51788,11,51816,51816,11,51844,51844,11,51872,51872,11,51900,51900,11,51928,51928,11,51956,51956,11,51984,51984,11,52012,52012,11,52040,52040,11,52068,52068,11,52096,52096,11,52124,52124,11,52152,52152,11,52180,52180,11,52208,52208,11,52236,52236,11,52264,52264,11,52292,52292,11,52320,52320,11,52348,52348,11,52376,52376,11,52404,52404,11,52432,52432,11,52460,52460,11,52488,52488,11,52516,52516,11,52544,52544,11,52572,52572,11,52600,52600,11,52628,52628,11,52656,52656,11,52684,52684,11,52712,52712,11,52740,52740,11,52768,52768,11,52796,52796,11,52824,52824,11,52852,52852,11,52880,52880,11,52908,52908,11,52936,52936,11,52964,52964,11,52992,52992,11,53020,53020,11,53048,53048,11,53076,53076,11,53104,53104,11,53132,53132,11,53160,53160,11,53188,53188,11,53216,53216,11,53244,53244,11,53272,53272,11,53300,53300,11,53328,53328,11,53356,53356,11,53384,53384,11,53412,53412,11,53440,53440,11,53468,53468,11,53496,53496,11,53524,53524,11,53552,53552,11,53580,53580,11,53608,53608,11,53636,53636,11,53664,53664,11,53692,53692,11,53720,53720,11,53748,53748,11,53776,53776,11,53804,53804,11,53832,53832,11,53860,53860,11,53888,53888,11,53916,53916,11,53944,53944,11,53972,53972,11,54000,54000,11,54028,54028,11,54056,54056,11,54084,54084,11,54112,54112,11,54140,54140,11,54168,54168,11,54196,54196,11,54224,54224,11,54252,54252,11,54280,54280,11,54308,54308,11,54336,54336,11,54364,54364,11,54392,54392,11,54420,54420,11,54448,54448,11,54476,54476,11,54504,54504,11,54532,54532,11,54560,54560,11,54588,54588,11,54616,54616,11,54644,54644,11,54672,54672,11,54700,54700,11,54728,54728,11,54756,54756,11,54784,54784,11,54812,54812,11,54840,54840,11,54868,54868,11,54896,54896,11,54924,54924,11,54952,54952,11,54980,54980,11,55008,55008,11,55036,55036,11,55064,55064,11,55092,55092,11,55120,55120,11,55148,55148,11,55176,55176,11,55216,55238,9,64286,64286,5,65056,65071,5,65438,65439,5,65529,65531,4,66272,66272,5,68097,68099,5,68108,68111,5,68159,68159,5,68900,68903,5,69446,69456,5,69632,69632,7,69634,69634,7,69744,69744,5,69759,69761,5,69808,69810,7,69815,69816,7,69821,69821,1,69837,69837,1,69927,69931,5,69933,69940,5,70003,70003,5,70018,70018,7,70070,70078,5,70082,70083,1,70094,70094,7,70188,70190,7,70194,70195,7,70197,70197,7,70206,70206,5,70368,70370,7,70400,70401,5,70459,70460,5,70463,70463,7,70465,70468,7,70475,70477,7,70498,70499,7,70512,70516,5,70712,70719,5,70722,70724,5,70726,70726,5,70832,70832,5,70835,70840,5,70842,70842,5,70845,70845,5,70847,70848,5,70850,70851,5,71088,71089,7,71096,71099,7,71102,71102,7,71132,71133,5,71219,71226,5,71229,71229,5,71231,71232,5,71340,71340,7,71342,71343,7,71350,71350,7,71453,71455,5,71462,71462,7,71724,71726,7,71736,71736,7,71984,71984,5,71991,71992,7,71997,71997,7,71999,71999,1,72001,72001,1,72003,72003,5,72148,72151,5,72156,72159,7,72164,72164,7,72243,72248,5,72250,72250,1,72263,72263,5,72279,72280,7,72324,72329,1,72343,72343,7,72751,72751,7,72760,72765,5,72767,72767,5,72873,72873,7,72881,72881,7,72884,72884,7,73009,73014,5,73020,73021,5,73030,73030,1,73098,73102,7,73107,73108,7,73110,73110,7,73459,73460,5,78896,78904,4,92976,92982,5,94033,94087,7,94180,94180,5,113821,113822,5,118528,118573,5,119141,119141,5,119143,119145,5,119150,119154,5,119163,119170,5,119210,119213,5,121344,121398,5,121461,121461,5,121499,121503,5,122880,122886,5,122907,122913,5,122918,122922,5,123566,123566,5,125136,125142,5,126976,126979,14,126981,127182,14,127184,127231,14,127279,127279,14,127344,127345,14,127374,127374,14,127405,127461,14,127489,127490,14,127514,127514,14,127538,127546,14,127561,127567,14,127570,127743,14,127757,127758,14,127760,127760,14,127762,127762,14,127766,127768,14,127770,127770,14,127772,127772,14,127775,127776,14,127778,127779,14,127789,127791,14,127794,127795,14,127798,127798,14,127819,127819,14,127824,127824,14,127868,127868,14,127870,127871,14,127892,127893,14,127896,127896,14,127900,127901,14,127904,127940,14,127942,127942,14,127944,127944,14,127946,127946,14,127951,127955,14,127968,127971,14,127973,127984,14,127987,127987,14,127989,127989,14,127991,127991,14,127995,127999,5,128008,128008,14,128012,128014,14,128017,128018,14,128020,128020,14,128022,128022,14,128042,128042,14,128063,128063,14,128065,128065,14,128101,128101,14,128108,128109,14,128173,128173,14,128182,128183,14,128236,128237,14,128239,128239,14,128245,128245,14,128248,128248,14,128253,128253,14,128255,128258,14,128260,128263,14,128265,128265,14,128277,128277,14,128300,128301,14,128326,128328,14,128331,128334,14,128336,128347,14,128360,128366,14,128369,128370,14,128378,128378,14,128391,128391,14,128394,128397,14,128400,128400,14,128405,128406,14,128420,128420,14,128422,128423,14,128425,128432,14,128435,128443,14,128445,128449,14,128453,128464,14,128468,128475,14,128479,128480,14,128482,128482,14,128484,128487,14,128489,128494,14,128496,128498,14,128500,128505,14,128507,128511,14,128513,128518,14,128521,128525,14,128527,128527,14,128529,128529,14,128533,128533,14,128535,128535,14,128537,128537,14]");
   }
-  var AmbiguousCharacters = class {
+  var AmbiguousCharacters = class _AmbiguousCharacters {
     static getInstance(locales) {
-      return AmbiguousCharacters.cache.get(Array.from(locales));
+      return _AmbiguousCharacters.cache.get(Array.from(locales));
     }
     static getLocales() {
-      return AmbiguousCharacters._locales.value;
+      return _AmbiguousCharacters._locales.value;
     }
     constructor(confusableDictionary) {
       this.confusableDictionary = confusableDictionary;
@@ -1640,26 +1649,26 @@
     return new AmbiguousCharacters(map);
   });
   AmbiguousCharacters._locales = new Lazy(() => Object.keys(AmbiguousCharacters.ambiguousCharacterData.value).filter((k) => !k.startsWith("_")));
-  var InvisibleCharacters = class {
+  var InvisibleCharacters = class _InvisibleCharacters {
     static getRawData() {
       return JSON.parse("[9,10,11,12,13,32,127,160,173,847,1564,4447,4448,6068,6069,6155,6156,6157,6158,7355,7356,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8203,8204,8205,8206,8207,8234,8235,8236,8237,8238,8239,8287,8288,8289,8290,8291,8292,8293,8294,8295,8296,8297,8298,8299,8300,8301,8302,8303,10240,12288,12644,65024,65025,65026,65027,65028,65029,65030,65031,65032,65033,65034,65035,65036,65037,65038,65039,65279,65440,65520,65521,65522,65523,65524,65525,65526,65527,65528,65532,78844,119155,119156,119157,119158,119159,119160,119161,119162,917504,917505,917506,917507,917508,917509,917510,917511,917512,917513,917514,917515,917516,917517,917518,917519,917520,917521,917522,917523,917524,917525,917526,917527,917528,917529,917530,917531,917532,917533,917534,917535,917536,917537,917538,917539,917540,917541,917542,917543,917544,917545,917546,917547,917548,917549,917550,917551,917552,917553,917554,917555,917556,917557,917558,917559,917560,917561,917562,917563,917564,917565,917566,917567,917568,917569,917570,917571,917572,917573,917574,917575,917576,917577,917578,917579,917580,917581,917582,917583,917584,917585,917586,917587,917588,917589,917590,917591,917592,917593,917594,917595,917596,917597,917598,917599,917600,917601,917602,917603,917604,917605,917606,917607,917608,917609,917610,917611,917612,917613,917614,917615,917616,917617,917618,917619,917620,917621,917622,917623,917624,917625,917626,917627,917628,917629,917630,917631,917760,917761,917762,917763,917764,917765,917766,917767,917768,917769,917770,917771,917772,917773,917774,917775,917776,917777,917778,917779,917780,917781,917782,917783,917784,917785,917786,917787,917788,917789,917790,917791,917792,917793,917794,917795,917796,917797,917798,917799,917800,917801,917802,917803,917804,917805,917806,917807,917808,917809,917810,917811,917812,917813,917814,917815,917816,917817,917818,917819,917820,917821,917822,917823,917824,917825,917826,917827,917828,917829,917830,917831,917832,917833,917834,917835,917836,917837,917838,917839,917840,917841,917842,917843,917844,917845,917846,917847,917848,917849,917850,917851,917852,917853,917854,917855,917856,917857,917858,917859,917860,917861,917862,917863,917864,917865,917866,917867,917868,917869,917870,917871,917872,917873,917874,917875,917876,917877,917878,917879,917880,917881,917882,917883,917884,917885,917886,917887,917888,917889,917890,917891,917892,917893,917894,917895,917896,917897,917898,917899,917900,917901,917902,917903,917904,917905,917906,917907,917908,917909,917910,917911,917912,917913,917914,917915,917916,917917,917918,917919,917920,917921,917922,917923,917924,917925,917926,917927,917928,917929,917930,917931,917932,917933,917934,917935,917936,917937,917938,917939,917940,917941,917942,917943,917944,917945,917946,917947,917948,917949,917950,917951,917952,917953,917954,917955,917956,917957,917958,917959,917960,917961,917962,917963,917964,917965,917966,917967,917968,917969,917970,917971,917972,917973,917974,917975,917976,917977,917978,917979,917980,917981,917982,917983,917984,917985,917986,917987,917988,917989,917990,917991,917992,917993,917994,917995,917996,917997,917998,917999]");
     }
     static getData() {
       if (!this._data) {
-        this._data = new Set(InvisibleCharacters.getRawData());
+        this._data = new Set(_InvisibleCharacters.getRawData());
       }
       return this._data;
     }
     static isInvisibleCharacter(codePoint) {
-      return InvisibleCharacters.getData().has(codePoint);
+      return _InvisibleCharacters.getData().has(codePoint);
     }
     static get codePoints() {
-      return InvisibleCharacters.getData();
+      return _InvisibleCharacters.getData();
     }
   };
   InvisibleCharacters._data = void 0;
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/worker/simpleWorker.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/worker/simpleWorker.js
   var INITIALIZE = "$initialize";
   var RequestMessage = class {
     constructor(vsWorker, req, method, args) {
@@ -1956,7 +1965,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/diff/diffChange.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/diff/diffChange.js
   var DiffChange = class {
     /**
      * Constructs a new DiffChange with the given sequence information
@@ -1982,7 +1991,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/hash.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/hash.js
   function numberHash(val, initialHashVal) {
     return (initialHashVal << 5) - initialHashVal + val | 0;
   }
@@ -2015,7 +2024,7 @@
     }
     return leftPad((bufferOrValue >>> 0).toString(16), bitsize / 4);
   }
-  var StringSHA1 = class {
+  var StringSHA1 = class _StringSHA1 {
     constructor() {
       this._h0 = 1732584193;
       this._h1 = 4023233417;
@@ -2135,7 +2144,7 @@
       this._step();
     }
     _step() {
-      const bigBlock32 = StringSHA1._bigBlock32;
+      const bigBlock32 = _StringSHA1._bigBlock32;
       const data = this._buffDV;
       for (let j = 0; j < 64; j += 4) {
         bigBlock32.setUint32(j, data.getUint32(j, false), false);
@@ -2180,7 +2189,7 @@
   };
   StringSHA1._bigBlock32 = new DataView(new ArrayBuffer(320));
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/diff/diff.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/diff/diff.js
   var StringDiffSequence = class {
     constructor(source) {
       this.source = source;
@@ -2298,7 +2307,7 @@
       return this.m_changes;
     }
   };
-  var LcsDiff = class {
+  var LcsDiff = class _LcsDiff {
     /**
      * Constructs the DiffFinder
      */
@@ -2306,8 +2315,8 @@
       this.ContinueProcessingPredicate = continueProcessingPredicate;
       this._originalSequence = originalSequence;
       this._modifiedSequence = modifiedSequence;
-      const [originalStringElements, originalElementsOrHash, originalHasStrings] = LcsDiff._getElements(originalSequence);
-      const [modifiedStringElements, modifiedElementsOrHash, modifiedHasStrings] = LcsDiff._getElements(modifiedSequence);
+      const [originalStringElements, originalElementsOrHash, originalHasStrings] = _LcsDiff._getElements(originalSequence);
+      const [modifiedStringElements, modifiedElementsOrHash, modifiedHasStrings] = _LcsDiff._getElements(modifiedSequence);
       this._hasStrings = originalHasStrings && modifiedHasStrings;
       this._originalStringElements = originalStringElements;
       this._originalElementsOrHash = originalElementsOrHash;
@@ -2321,7 +2330,7 @@
     }
     static _getElements(sequence) {
       const elements = sequence.getElements();
-      if (LcsDiff._isStringArray(elements)) {
+      if (_LcsDiff._isStringArray(elements)) {
         const hashes = new Int32Array(elements.length);
         for (let i = 0, len = elements.length; i < len; i++) {
           hashes[i] = stringHash(elements[i], 0);
@@ -2343,8 +2352,8 @@
       if (!this.ElementsAreEqual(originalIndex, newIndex)) {
         return false;
       }
-      const originalElement = LcsDiff._getStrictElement(this._originalSequence, originalIndex);
-      const modifiedElement = LcsDiff._getStrictElement(this._modifiedSequence, newIndex);
+      const originalElement = _LcsDiff._getStrictElement(this._originalSequence, originalIndex);
+      const modifiedElement = _LcsDiff._getStrictElement(this._modifiedSequence, newIndex);
       return originalElement === modifiedElement;
     }
     static _getStrictElement(sequence, index) {
@@ -2917,7 +2926,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/process.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/process.js
   var safeProcess;
   if (typeof globals.vscode !== "undefined" && typeof globals.vscode.process !== "undefined") {
     const sandboxProcess = globals.vscode.process;
@@ -2972,7 +2981,7 @@
   var env = safeProcess.env;
   var platform = safeProcess.platform;
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/path.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/path.js
   var CHAR_UPPERCASE_A = 65;
   var CHAR_LOWERCASE_A = 97;
   var CHAR_UPPERCASE_Z = 90;
@@ -4020,7 +4029,7 @@
   var extname = platformIsWin32 ? win32.extname : posix.extname;
   var sep = platformIsWin32 ? win32.sep : posix.sep;
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/uri.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/uri.js
   var _schemePattern = /^\w[\w\d+.-]*$/;
   var _singleSlashStart = /^\//;
   var _doubleSlashStart = /^\/\//;
@@ -4066,9 +4075,9 @@
   var _empty = "";
   var _slash = "/";
   var _regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
-  var URI = class {
+  var URI = class _URI {
     static isUri(thing) {
-      if (thing instanceof URI) {
+      if (thing instanceof _URI) {
         return true;
       }
       if (!thing) {
@@ -4235,7 +4244,7 @@
       }
       let newPath;
       if (isWindows && uri.scheme === "file") {
-        newPath = URI.file(win32.join(uriToFsPath(uri, true), ...pathFragment)).path;
+        newPath = _URI.file(win32.join(uriToFsPath(uri, true), ...pathFragment)).path;
       } else {
         newPath = posix.join(uri.path, ...pathFragment);
       }
@@ -4263,7 +4272,7 @@
       var _a3, _b;
       if (!data) {
         return data;
-      } else if (data instanceof URI) {
+      } else if (data instanceof _URI) {
         return data;
       } else {
         const result = new Uri(data);
@@ -4552,8 +4561,8 @@
     return str.replace(_rEncodedAsHex, (match) => decodeURIComponentGraceful(match));
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/position.js
-  var Position = class {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/position.js
+  var Position = class _Position {
     constructor(lineNumber, column) {
       this.lineNumber = lineNumber;
       this.column = column;
@@ -4568,7 +4577,7 @@
       if (newLineNumber === this.lineNumber && newColumn === this.column) {
         return this;
       } else {
-        return new Position(newLineNumber, newColumn);
+        return new _Position(newLineNumber, newColumn);
       }
     }
     /**
@@ -4584,7 +4593,7 @@
      * Test if this position equals other position
      */
     equals(other) {
-      return Position.equals(this, other);
+      return _Position.equals(this, other);
     }
     /**
      * Test if position `a` equals position `b`
@@ -4600,7 +4609,7 @@
      * If the two positions are equal, the result will be false.
      */
     isBefore(other) {
-      return Position.isBefore(this, other);
+      return _Position.isBefore(this, other);
     }
     /**
      * Test if position `a` is before position `b`.
@@ -4620,7 +4629,7 @@
      * If the two positions are equal, the result will be true.
      */
     isBeforeOrEqual(other) {
-      return Position.isBeforeOrEqual(this, other);
+      return _Position.isBeforeOrEqual(this, other);
     }
     /**
      * Test if position `a` is before position `b`.
@@ -4652,7 +4661,7 @@
      * Clone this position.
      */
     clone() {
-      return new Position(this.lineNumber, this.column);
+      return new _Position(this.lineNumber, this.column);
     }
     /**
      * Convert to a human-readable representation.
@@ -4665,7 +4674,7 @@
      * Create a `Position` from an `IPosition`.
      */
     static lift(pos) {
-      return new Position(pos.lineNumber, pos.column);
+      return new _Position(pos.lineNumber, pos.column);
     }
     /**
      * Test if `obj` is an `IPosition`.
@@ -4675,8 +4684,8 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/range.js
-  var Range = class {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/range.js
+  var Range = class _Range {
     constructor(startLineNumber, startColumn, endLineNumber, endColumn) {
       if (startLineNumber > endLineNumber || startLineNumber === endLineNumber && startColumn > endColumn) {
         this.startLineNumber = endLineNumber;
@@ -4694,7 +4703,7 @@
      * Test if this range is empty.
      */
     isEmpty() {
-      return Range.isEmpty(this);
+      return _Range.isEmpty(this);
     }
     /**
      * Test if `range` is empty.
@@ -4706,7 +4715,7 @@
      * Test if position is in this range. If the position is at the edges, will return true.
      */
     containsPosition(position) {
-      return Range.containsPosition(this, position);
+      return _Range.containsPosition(this, position);
     }
     /**
      * Test if `position` is in `range`. If the position is at the edges, will return true.
@@ -4743,7 +4752,7 @@
      * Test if range is in this range. If the range is equal to this range, will return true.
      */
     containsRange(range) {
-      return Range.containsRange(this, range);
+      return _Range.containsRange(this, range);
     }
     /**
      * Test if `otherRange` is in `range`. If the ranges are equal, will return true.
@@ -4767,7 +4776,7 @@
      * Test if `range` is strictly in this range. `range` must start after and end before this range for the result to be true.
      */
     strictContainsRange(range) {
-      return Range.strictContainsRange(this, range);
+      return _Range.strictContainsRange(this, range);
     }
     /**
      * Test if `otherRange` is strictly in `range` (must start after, and end before). If the ranges are equal, will return false.
@@ -4792,7 +4801,7 @@
      * The smallest position will be used as the start point, and the largest one as the end point.
      */
     plusRange(range) {
-      return Range.plusRange(this, range);
+      return _Range.plusRange(this, range);
     }
     /**
      * A reunion of the two ranges.
@@ -4823,13 +4832,13 @@
         endLineNumber = a.endLineNumber;
         endColumn = a.endColumn;
       }
-      return new Range(startLineNumber, startColumn, endLineNumber, endColumn);
+      return new _Range(startLineNumber, startColumn, endLineNumber, endColumn);
     }
     /**
      * A intersection of the two ranges.
      */
     intersectRanges(range) {
-      return Range.intersectRanges(this, range);
+      return _Range.intersectRanges(this, range);
     }
     /**
      * A intersection of the two ranges.
@@ -4861,13 +4870,13 @@
       if (resultStartLineNumber === resultEndLineNumber && resultStartColumn > resultEndColumn) {
         return null;
       }
-      return new Range(resultStartLineNumber, resultStartColumn, resultEndLineNumber, resultEndColumn);
+      return new _Range(resultStartLineNumber, resultStartColumn, resultEndLineNumber, resultEndColumn);
     }
     /**
      * Test if this range equals other.
      */
     equalsRange(other) {
-      return Range.equalsRange(this, other);
+      return _Range.equalsRange(this, other);
     }
     /**
      * Test if range `a` equals `b`.
@@ -4882,7 +4891,7 @@
      * Return the end position (which will be after or equal to the start position)
      */
     getEndPosition() {
-      return Range.getEndPosition(this);
+      return _Range.getEndPosition(this);
     }
     /**
      * Return the end position (which will be after or equal to the start position)
@@ -4894,7 +4903,7 @@
      * Return the start position (which will be before or equal to the end position)
      */
     getStartPosition() {
-      return Range.getStartPosition(this);
+      return _Range.getStartPosition(this);
     }
     /**
      * Return the start position (which will be before or equal to the end position)
@@ -4912,53 +4921,53 @@
      * Create a new range using this range's start position, and using endLineNumber and endColumn as the end position.
      */
     setEndPosition(endLineNumber, endColumn) {
-      return new Range(this.startLineNumber, this.startColumn, endLineNumber, endColumn);
+      return new _Range(this.startLineNumber, this.startColumn, endLineNumber, endColumn);
     }
     /**
      * Create a new range using this range's end position, and using startLineNumber and startColumn as the start position.
      */
     setStartPosition(startLineNumber, startColumn) {
-      return new Range(startLineNumber, startColumn, this.endLineNumber, this.endColumn);
+      return new _Range(startLineNumber, startColumn, this.endLineNumber, this.endColumn);
     }
     /**
      * Create a new empty range using this range's start position.
      */
     collapseToStart() {
-      return Range.collapseToStart(this);
+      return _Range.collapseToStart(this);
     }
     /**
      * Create a new empty range using this range's start position.
      */
     static collapseToStart(range) {
-      return new Range(range.startLineNumber, range.startColumn, range.startLineNumber, range.startColumn);
+      return new _Range(range.startLineNumber, range.startColumn, range.startLineNumber, range.startColumn);
     }
     /**
      * Create a new empty range using this range's end position.
      */
     collapseToEnd() {
-      return Range.collapseToEnd(this);
+      return _Range.collapseToEnd(this);
     }
     /**
      * Create a new empty range using this range's end position.
      */
     static collapseToEnd(range) {
-      return new Range(range.endLineNumber, range.endColumn, range.endLineNumber, range.endColumn);
+      return new _Range(range.endLineNumber, range.endColumn, range.endLineNumber, range.endColumn);
     }
     /**
      * Moves the range by the given amount of lines.
      */
     delta(lineCount) {
-      return new Range(this.startLineNumber + lineCount, this.startColumn, this.endLineNumber + lineCount, this.endColumn);
+      return new _Range(this.startLineNumber + lineCount, this.startColumn, this.endLineNumber + lineCount, this.endColumn);
     }
     // ---
     static fromPositions(start, end = start) {
-      return new Range(start.lineNumber, start.column, end.lineNumber, end.column);
+      return new _Range(start.lineNumber, start.column, end.lineNumber, end.column);
     }
     static lift(range) {
       if (!range) {
         return null;
       }
-      return new Range(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
+      return new _Range(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
     }
     /**
      * Test if `obj` is an `IRange`.
@@ -5046,7 +5055,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/arrays.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/arrays.js
   var CompareResult;
   (function(CompareResult2) {
     function isLessThan(result) {
@@ -5065,7 +5074,7 @@
     CompareResult2.lessThan = -1;
     CompareResult2.neitherLessOrGreaterThan = 0;
   })(CompareResult || (CompareResult = {}));
-  var CallbackIterable = class {
+  var CallbackIterable = class _CallbackIterable {
     constructor(iterate) {
       this.iterate = iterate;
     }
@@ -5078,10 +5087,10 @@
       return result;
     }
     filter(predicate) {
-      return new CallbackIterable((cb) => this.iterate((item) => predicate(item) ? cb(item) : true));
+      return new _CallbackIterable((cb) => this.iterate((item) => predicate(item) ? cb(item) : true));
     }
     map(mapFn) {
-      return new CallbackIterable((cb) => this.iterate((item) => cb(mapFn(item))));
+      return new _CallbackIterable((cb) => this.iterate((item) => cb(mapFn(item))));
     }
     findLast(predicate) {
       let result;
@@ -5109,7 +5118,7 @@
   CallbackIterable.empty = new CallbackIterable((_callback) => {
   });
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/uint.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/uint.js
   function toUint8(v) {
     if (v < 0) {
       return 0;
@@ -5129,7 +5138,7 @@
     return v | 0;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/model/prefixSumComputer.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/model/prefixSumComputer.js
   var PrefixSumComputer = class {
     constructor(values) {
       this.values = values;
@@ -5265,7 +5274,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/model/mirrorTextModel.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/model/mirrorTextModel.js
   var MirrorTextModel = class {
     constructor(uri, lines, eol, versionId) {
       this._uri = uri;
@@ -5356,7 +5365,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordHelper.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordHelper.js
   var USUAL_WORD_SEPARATORS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
   function createWordRegExp(allowInWords = "") {
     let source = "(-?\\d*\\.\\d\\w*)|([^";
@@ -5456,12 +5465,12 @@
     return null;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/characterClassifier.js
-  var CharacterClassifier = class {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/characterClassifier.js
+  var CharacterClassifier = class _CharacterClassifier {
     constructor(_defaultValue) {
       const defaultValue = toUint8(_defaultValue);
       this._defaultValue = defaultValue;
-      this._asciiMap = CharacterClassifier._createAsciiMap(defaultValue);
+      this._asciiMap = _CharacterClassifier._createAsciiMap(defaultValue);
       this._map = /* @__PURE__ */ new Map();
     }
     static _createAsciiMap(defaultValue) {
@@ -5490,7 +5499,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/languages/linkComputer.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/languages/linkComputer.js
   var Uint8Matrix = class {
     constructor(rows, cols, defaultValue) {
       const data = new Uint8Array(rows * cols);
@@ -5712,7 +5721,7 @@
     }
     return _classifier;
   }
-  var LinkComputer = class {
+  var LinkComputer = class _LinkComputer {
     static _createLink(classifier, line, lineNumber, linkBeginIndex, linkEndIndex) {
       let lastIncludedCharIndex = linkEndIndex - 1;
       do {
@@ -5807,7 +5816,7 @@
                 chClass = classifier.get(chCode);
             }
             if (chClass === 1) {
-              result.push(LinkComputer._createLink(classifier, line, i, linkBeginIndex, j));
+              result.push(_LinkComputer._createLink(classifier, line, i, linkBeginIndex, j));
               resetStateMachine = true;
             }
           } else if (state === 12) {
@@ -5840,7 +5849,7 @@
           j++;
         }
         if (state === 13) {
-          result.push(LinkComputer._createLink(classifier, line, i, linkBeginIndex, len));
+          result.push(_LinkComputer._createLink(classifier, line, i, linkBeginIndex, len));
         }
       }
       return result;
@@ -5853,7 +5862,7 @@
     return LinkComputer.computeLinks(model);
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/languages/supports/inplaceReplaceSupport.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/languages/supports/inplaceReplaceSupport.js
   var BasicInplaceReplace = class {
     constructor() {
       this._defaultValueSet = [
@@ -5932,7 +5941,7 @@
   };
   BasicInplaceReplace.INSTANCE = new BasicInplaceReplace();
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/cancellation.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/cancellation.js
   var shortcutEvent = Object.freeze(function(callback, context) {
     const handle = setTimeout(callback.bind(context), 0);
     return { dispose() {
@@ -6029,7 +6038,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/keyCodes.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/keyCodes.js
   var KeyCodeStrMap = class {
     constructor() {
       this._keyCodeToStr = [];
@@ -6380,8 +6389,8 @@
     return (firstPart | chordPart) >>> 0;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/selection.js
-  var Selection = class extends Range {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/selection.js
+  var Selection = class _Selection extends Range {
     constructor(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn) {
       super(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn);
       this.selectionStartLineNumber = selectionStartLineNumber;
@@ -6399,7 +6408,7 @@
      * Test if equals other selection.
      */
     equalsSelection(other) {
-      return Selection.selectionsEqual(this, other);
+      return _Selection.selectionsEqual(this, other);
     }
     /**
      * Test if the two selections are equal.
@@ -6421,9 +6430,9 @@
      */
     setEndPosition(endLineNumber, endColumn) {
       if (this.getDirection() === 0) {
-        return new Selection(this.startLineNumber, this.startColumn, endLineNumber, endColumn);
+        return new _Selection(this.startLineNumber, this.startColumn, endLineNumber, endColumn);
       }
-      return new Selection(endLineNumber, endColumn, this.startLineNumber, this.startColumn);
+      return new _Selection(endLineNumber, endColumn, this.startLineNumber, this.startColumn);
     }
     /**
      * Get the position at `positionLineNumber` and `positionColumn`.
@@ -6442,32 +6451,32 @@
      */
     setStartPosition(startLineNumber, startColumn) {
       if (this.getDirection() === 0) {
-        return new Selection(startLineNumber, startColumn, this.endLineNumber, this.endColumn);
+        return new _Selection(startLineNumber, startColumn, this.endLineNumber, this.endColumn);
       }
-      return new Selection(this.endLineNumber, this.endColumn, startLineNumber, startColumn);
+      return new _Selection(this.endLineNumber, this.endColumn, startLineNumber, startColumn);
     }
     // ----
     /**
      * Create a `Selection` from one or two positions
      */
     static fromPositions(start, end = start) {
-      return new Selection(start.lineNumber, start.column, end.lineNumber, end.column);
+      return new _Selection(start.lineNumber, start.column, end.lineNumber, end.column);
     }
     /**
      * Creates a `Selection` from a range, given a direction.
      */
     static fromRange(range, direction) {
       if (direction === 0) {
-        return new Selection(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
+        return new _Selection(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
       } else {
-        return new Selection(range.endLineNumber, range.endColumn, range.startLineNumber, range.startColumn);
+        return new _Selection(range.endLineNumber, range.endColumn, range.startLineNumber, range.startColumn);
       }
     }
     /**
      * Create a `Selection` from an `ISelection`.
      */
     static liftSelection(sel) {
-      return new Selection(sel.selectionStartLineNumber, sel.selectionStartColumn, sel.positionLineNumber, sel.positionColumn);
+      return new _Selection(sel.selectionStartLineNumber, sel.selectionStartColumn, sel.positionLineNumber, sel.positionColumn);
     }
     /**
      * `a` equals `b`.
@@ -6500,13 +6509,13 @@
      */
     static createWithDirection(startLineNumber, startColumn, endLineNumber, endColumn, direction) {
       if (direction === 0) {
-        return new Selection(startLineNumber, startColumn, endLineNumber, endColumn);
+        return new _Selection(startLineNumber, startColumn, endLineNumber, endColumn);
       }
-      return new Selection(endLineNumber, endColumn, startLineNumber, startColumn);
+      return new _Selection(endLineNumber, endColumn, startLineNumber, startColumn);
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/codicons.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/codicons.js
   var _codiconFontCharacters = /* @__PURE__ */ Object.create(null);
   function register(id, fontCharacter) {
     if (isString(fontCharacter)) {
@@ -7062,7 +7071,7 @@
     quickInputBack: register("quick-input-back", "arrow-left")
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/tokenizationRegistry.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/tokenizationRegistry.js
   var __awaiter = function(thisArg, _arguments, P, generator) {
     function adopt(value) {
       return value instanceof P ? value : new P(function(resolve2) {
@@ -7213,7 +7222,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/languages.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/languages.js
   var Token = class {
     constructor(offset, type, language) {
       this.offset = offset;
@@ -7443,6 +7452,112 @@
     DocumentHighlightKind3[DocumentHighlightKind3["Read"] = 1] = "Read";
     DocumentHighlightKind3[DocumentHighlightKind3["Write"] = 2] = "Write";
   })(DocumentHighlightKind || (DocumentHighlightKind = {}));
+  var symbolKindNames = {
+    [
+      17
+      /* SymbolKind.Array */
+    ]: localize("Array", "array"),
+    [
+      16
+      /* SymbolKind.Boolean */
+    ]: localize("Boolean", "boolean"),
+    [
+      4
+      /* SymbolKind.Class */
+    ]: localize("Class", "class"),
+    [
+      13
+      /* SymbolKind.Constant */
+    ]: localize("Constant", "constant"),
+    [
+      8
+      /* SymbolKind.Constructor */
+    ]: localize("Constructor", "constructor"),
+    [
+      9
+      /* SymbolKind.Enum */
+    ]: localize("Enum", "enumeration"),
+    [
+      21
+      /* SymbolKind.EnumMember */
+    ]: localize("EnumMember", "enumeration member"),
+    [
+      23
+      /* SymbolKind.Event */
+    ]: localize("Event", "event"),
+    [
+      7
+      /* SymbolKind.Field */
+    ]: localize("Field", "field"),
+    [
+      0
+      /* SymbolKind.File */
+    ]: localize("File", "file"),
+    [
+      11
+      /* SymbolKind.Function */
+    ]: localize("Function", "function"),
+    [
+      10
+      /* SymbolKind.Interface */
+    ]: localize("Interface", "interface"),
+    [
+      19
+      /* SymbolKind.Key */
+    ]: localize("Key", "key"),
+    [
+      5
+      /* SymbolKind.Method */
+    ]: localize("Method", "method"),
+    [
+      1
+      /* SymbolKind.Module */
+    ]: localize("Module", "module"),
+    [
+      2
+      /* SymbolKind.Namespace */
+    ]: localize("Namespace", "namespace"),
+    [
+      20
+      /* SymbolKind.Null */
+    ]: localize("Null", "null"),
+    [
+      15
+      /* SymbolKind.Number */
+    ]: localize("Number", "number"),
+    [
+      18
+      /* SymbolKind.Object */
+    ]: localize("Object", "object"),
+    [
+      24
+      /* SymbolKind.Operator */
+    ]: localize("Operator", "operator"),
+    [
+      3
+      /* SymbolKind.Package */
+    ]: localize("Package", "package"),
+    [
+      6
+      /* SymbolKind.Property */
+    ]: localize("Property", "property"),
+    [
+      14
+      /* SymbolKind.String */
+    ]: localize("String", "string"),
+    [
+      22
+      /* SymbolKind.Struct */
+    ]: localize("Struct", "struct"),
+    [
+      25
+      /* SymbolKind.TypeParameter */
+    ]: localize("TypeParameter", "type parameter"),
+    [
+      12
+      /* SymbolKind.Variable */
+    ]: localize("Variable", "variable")
+  };
   var SymbolKinds;
   (function(SymbolKinds2) {
     const byKind = /* @__PURE__ */ new Map();
@@ -7482,7 +7597,7 @@
     }
     SymbolKinds2.toIcon = toIcon;
   })(SymbolKinds || (SymbolKinds = {}));
-  var FoldingRangeKind = class {
+  var FoldingRangeKind = class _FoldingRangeKind {
     /**
      * Returns a {@link FoldingRangeKind} for the given value.
      *
@@ -7491,13 +7606,13 @@
     static fromValue(value) {
       switch (value) {
         case "comment":
-          return FoldingRangeKind.Comment;
+          return _FoldingRangeKind.Comment;
         case "imports":
-          return FoldingRangeKind.Imports;
+          return _FoldingRangeKind.Imports;
         case "region":
-          return FoldingRangeKind.Region;
+          return _FoldingRangeKind.Region;
       }
-      return new FoldingRangeKind(value);
+      return new _FoldingRangeKind(value);
     }
     /**
      * Creates a new {@link FoldingRangeKind}.
@@ -7528,7 +7643,7 @@
   })(InlayHintKind || (InlayHintKind = {}));
   var TokenizationRegistry2 = new TokenizationRegistry();
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/standalone/standaloneEnums.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/standalone/standaloneEnums.js
   var AccessibilitySupport;
   (function(AccessibilitySupport2) {
     AccessibilitySupport2[AccessibilitySupport2["Unknown"] = 0] = "Unknown";
@@ -7629,144 +7744,147 @@
     EditorOption2[EditorOption2["accessibilitySupport"] = 2] = "accessibilitySupport";
     EditorOption2[EditorOption2["accessibilityPageSize"] = 3] = "accessibilityPageSize";
     EditorOption2[EditorOption2["ariaLabel"] = 4] = "ariaLabel";
-    EditorOption2[EditorOption2["autoClosingBrackets"] = 5] = "autoClosingBrackets";
-    EditorOption2[EditorOption2["screenReaderAnnounceInlineSuggestion"] = 6] = "screenReaderAnnounceInlineSuggestion";
-    EditorOption2[EditorOption2["autoClosingDelete"] = 7] = "autoClosingDelete";
-    EditorOption2[EditorOption2["autoClosingOvertype"] = 8] = "autoClosingOvertype";
-    EditorOption2[EditorOption2["autoClosingQuotes"] = 9] = "autoClosingQuotes";
-    EditorOption2[EditorOption2["autoIndent"] = 10] = "autoIndent";
-    EditorOption2[EditorOption2["automaticLayout"] = 11] = "automaticLayout";
-    EditorOption2[EditorOption2["autoSurround"] = 12] = "autoSurround";
-    EditorOption2[EditorOption2["bracketPairColorization"] = 13] = "bracketPairColorization";
-    EditorOption2[EditorOption2["guides"] = 14] = "guides";
-    EditorOption2[EditorOption2["codeLens"] = 15] = "codeLens";
-    EditorOption2[EditorOption2["codeLensFontFamily"] = 16] = "codeLensFontFamily";
-    EditorOption2[EditorOption2["codeLensFontSize"] = 17] = "codeLensFontSize";
-    EditorOption2[EditorOption2["colorDecorators"] = 18] = "colorDecorators";
-    EditorOption2[EditorOption2["colorDecoratorsLimit"] = 19] = "colorDecoratorsLimit";
-    EditorOption2[EditorOption2["columnSelection"] = 20] = "columnSelection";
-    EditorOption2[EditorOption2["comments"] = 21] = "comments";
-    EditorOption2[EditorOption2["contextmenu"] = 22] = "contextmenu";
-    EditorOption2[EditorOption2["copyWithSyntaxHighlighting"] = 23] = "copyWithSyntaxHighlighting";
-    EditorOption2[EditorOption2["cursorBlinking"] = 24] = "cursorBlinking";
-    EditorOption2[EditorOption2["cursorSmoothCaretAnimation"] = 25] = "cursorSmoothCaretAnimation";
-    EditorOption2[EditorOption2["cursorStyle"] = 26] = "cursorStyle";
-    EditorOption2[EditorOption2["cursorSurroundingLines"] = 27] = "cursorSurroundingLines";
-    EditorOption2[EditorOption2["cursorSurroundingLinesStyle"] = 28] = "cursorSurroundingLinesStyle";
-    EditorOption2[EditorOption2["cursorWidth"] = 29] = "cursorWidth";
-    EditorOption2[EditorOption2["disableLayerHinting"] = 30] = "disableLayerHinting";
-    EditorOption2[EditorOption2["disableMonospaceOptimizations"] = 31] = "disableMonospaceOptimizations";
-    EditorOption2[EditorOption2["domReadOnly"] = 32] = "domReadOnly";
-    EditorOption2[EditorOption2["dragAndDrop"] = 33] = "dragAndDrop";
-    EditorOption2[EditorOption2["dropIntoEditor"] = 34] = "dropIntoEditor";
-    EditorOption2[EditorOption2["emptySelectionClipboard"] = 35] = "emptySelectionClipboard";
-    EditorOption2[EditorOption2["experimentalWhitespaceRendering"] = 36] = "experimentalWhitespaceRendering";
-    EditorOption2[EditorOption2["extraEditorClassName"] = 37] = "extraEditorClassName";
-    EditorOption2[EditorOption2["fastScrollSensitivity"] = 38] = "fastScrollSensitivity";
-    EditorOption2[EditorOption2["find"] = 39] = "find";
-    EditorOption2[EditorOption2["fixedOverflowWidgets"] = 40] = "fixedOverflowWidgets";
-    EditorOption2[EditorOption2["folding"] = 41] = "folding";
-    EditorOption2[EditorOption2["foldingStrategy"] = 42] = "foldingStrategy";
-    EditorOption2[EditorOption2["foldingHighlight"] = 43] = "foldingHighlight";
-    EditorOption2[EditorOption2["foldingImportsByDefault"] = 44] = "foldingImportsByDefault";
-    EditorOption2[EditorOption2["foldingMaximumRegions"] = 45] = "foldingMaximumRegions";
-    EditorOption2[EditorOption2["unfoldOnClickAfterEndOfLine"] = 46] = "unfoldOnClickAfterEndOfLine";
-    EditorOption2[EditorOption2["fontFamily"] = 47] = "fontFamily";
-    EditorOption2[EditorOption2["fontInfo"] = 48] = "fontInfo";
-    EditorOption2[EditorOption2["fontLigatures"] = 49] = "fontLigatures";
-    EditorOption2[EditorOption2["fontSize"] = 50] = "fontSize";
-    EditorOption2[EditorOption2["fontWeight"] = 51] = "fontWeight";
-    EditorOption2[EditorOption2["fontVariations"] = 52] = "fontVariations";
-    EditorOption2[EditorOption2["formatOnPaste"] = 53] = "formatOnPaste";
-    EditorOption2[EditorOption2["formatOnType"] = 54] = "formatOnType";
-    EditorOption2[EditorOption2["glyphMargin"] = 55] = "glyphMargin";
-    EditorOption2[EditorOption2["gotoLocation"] = 56] = "gotoLocation";
-    EditorOption2[EditorOption2["hideCursorInOverviewRuler"] = 57] = "hideCursorInOverviewRuler";
-    EditorOption2[EditorOption2["hover"] = 58] = "hover";
-    EditorOption2[EditorOption2["inDiffEditor"] = 59] = "inDiffEditor";
-    EditorOption2[EditorOption2["inlineSuggest"] = 60] = "inlineSuggest";
-    EditorOption2[EditorOption2["letterSpacing"] = 61] = "letterSpacing";
-    EditorOption2[EditorOption2["lightbulb"] = 62] = "lightbulb";
-    EditorOption2[EditorOption2["lineDecorationsWidth"] = 63] = "lineDecorationsWidth";
-    EditorOption2[EditorOption2["lineHeight"] = 64] = "lineHeight";
-    EditorOption2[EditorOption2["lineNumbers"] = 65] = "lineNumbers";
-    EditorOption2[EditorOption2["lineNumbersMinChars"] = 66] = "lineNumbersMinChars";
-    EditorOption2[EditorOption2["linkedEditing"] = 67] = "linkedEditing";
-    EditorOption2[EditorOption2["links"] = 68] = "links";
-    EditorOption2[EditorOption2["matchBrackets"] = 69] = "matchBrackets";
-    EditorOption2[EditorOption2["minimap"] = 70] = "minimap";
-    EditorOption2[EditorOption2["mouseStyle"] = 71] = "mouseStyle";
-    EditorOption2[EditorOption2["mouseWheelScrollSensitivity"] = 72] = "mouseWheelScrollSensitivity";
-    EditorOption2[EditorOption2["mouseWheelZoom"] = 73] = "mouseWheelZoom";
-    EditorOption2[EditorOption2["multiCursorMergeOverlapping"] = 74] = "multiCursorMergeOverlapping";
-    EditorOption2[EditorOption2["multiCursorModifier"] = 75] = "multiCursorModifier";
-    EditorOption2[EditorOption2["multiCursorPaste"] = 76] = "multiCursorPaste";
-    EditorOption2[EditorOption2["multiCursorLimit"] = 77] = "multiCursorLimit";
-    EditorOption2[EditorOption2["occurrencesHighlight"] = 78] = "occurrencesHighlight";
-    EditorOption2[EditorOption2["overviewRulerBorder"] = 79] = "overviewRulerBorder";
-    EditorOption2[EditorOption2["overviewRulerLanes"] = 80] = "overviewRulerLanes";
-    EditorOption2[EditorOption2["padding"] = 81] = "padding";
-    EditorOption2[EditorOption2["pasteAs"] = 82] = "pasteAs";
-    EditorOption2[EditorOption2["parameterHints"] = 83] = "parameterHints";
-    EditorOption2[EditorOption2["peekWidgetDefaultFocus"] = 84] = "peekWidgetDefaultFocus";
-    EditorOption2[EditorOption2["definitionLinkOpensInPeek"] = 85] = "definitionLinkOpensInPeek";
-    EditorOption2[EditorOption2["quickSuggestions"] = 86] = "quickSuggestions";
-    EditorOption2[EditorOption2["quickSuggestionsDelay"] = 87] = "quickSuggestionsDelay";
-    EditorOption2[EditorOption2["readOnly"] = 88] = "readOnly";
-    EditorOption2[EditorOption2["renameOnType"] = 89] = "renameOnType";
-    EditorOption2[EditorOption2["renderControlCharacters"] = 90] = "renderControlCharacters";
-    EditorOption2[EditorOption2["renderFinalNewline"] = 91] = "renderFinalNewline";
-    EditorOption2[EditorOption2["renderLineHighlight"] = 92] = "renderLineHighlight";
-    EditorOption2[EditorOption2["renderLineHighlightOnlyWhenFocus"] = 93] = "renderLineHighlightOnlyWhenFocus";
-    EditorOption2[EditorOption2["renderValidationDecorations"] = 94] = "renderValidationDecorations";
-    EditorOption2[EditorOption2["renderWhitespace"] = 95] = "renderWhitespace";
-    EditorOption2[EditorOption2["revealHorizontalRightPadding"] = 96] = "revealHorizontalRightPadding";
-    EditorOption2[EditorOption2["roundedSelection"] = 97] = "roundedSelection";
-    EditorOption2[EditorOption2["rulers"] = 98] = "rulers";
-    EditorOption2[EditorOption2["scrollbar"] = 99] = "scrollbar";
-    EditorOption2[EditorOption2["scrollBeyondLastColumn"] = 100] = "scrollBeyondLastColumn";
-    EditorOption2[EditorOption2["scrollBeyondLastLine"] = 101] = "scrollBeyondLastLine";
-    EditorOption2[EditorOption2["scrollPredominantAxis"] = 102] = "scrollPredominantAxis";
-    EditorOption2[EditorOption2["selectionClipboard"] = 103] = "selectionClipboard";
-    EditorOption2[EditorOption2["selectionHighlight"] = 104] = "selectionHighlight";
-    EditorOption2[EditorOption2["selectOnLineNumbers"] = 105] = "selectOnLineNumbers";
-    EditorOption2[EditorOption2["showFoldingControls"] = 106] = "showFoldingControls";
-    EditorOption2[EditorOption2["showUnused"] = 107] = "showUnused";
-    EditorOption2[EditorOption2["snippetSuggestions"] = 108] = "snippetSuggestions";
-    EditorOption2[EditorOption2["smartSelect"] = 109] = "smartSelect";
-    EditorOption2[EditorOption2["smoothScrolling"] = 110] = "smoothScrolling";
-    EditorOption2[EditorOption2["stickyScroll"] = 111] = "stickyScroll";
-    EditorOption2[EditorOption2["stickyTabStops"] = 112] = "stickyTabStops";
-    EditorOption2[EditorOption2["stopRenderingLineAfter"] = 113] = "stopRenderingLineAfter";
-    EditorOption2[EditorOption2["suggest"] = 114] = "suggest";
-    EditorOption2[EditorOption2["suggestFontSize"] = 115] = "suggestFontSize";
-    EditorOption2[EditorOption2["suggestLineHeight"] = 116] = "suggestLineHeight";
-    EditorOption2[EditorOption2["suggestOnTriggerCharacters"] = 117] = "suggestOnTriggerCharacters";
-    EditorOption2[EditorOption2["suggestSelection"] = 118] = "suggestSelection";
-    EditorOption2[EditorOption2["tabCompletion"] = 119] = "tabCompletion";
-    EditorOption2[EditorOption2["tabIndex"] = 120] = "tabIndex";
-    EditorOption2[EditorOption2["unicodeHighlighting"] = 121] = "unicodeHighlighting";
-    EditorOption2[EditorOption2["unusualLineTerminators"] = 122] = "unusualLineTerminators";
-    EditorOption2[EditorOption2["useShadowDOM"] = 123] = "useShadowDOM";
-    EditorOption2[EditorOption2["useTabStops"] = 124] = "useTabStops";
-    EditorOption2[EditorOption2["wordBreak"] = 125] = "wordBreak";
-    EditorOption2[EditorOption2["wordSeparators"] = 126] = "wordSeparators";
-    EditorOption2[EditorOption2["wordWrap"] = 127] = "wordWrap";
-    EditorOption2[EditorOption2["wordWrapBreakAfterCharacters"] = 128] = "wordWrapBreakAfterCharacters";
-    EditorOption2[EditorOption2["wordWrapBreakBeforeCharacters"] = 129] = "wordWrapBreakBeforeCharacters";
-    EditorOption2[EditorOption2["wordWrapColumn"] = 130] = "wordWrapColumn";
-    EditorOption2[EditorOption2["wordWrapOverride1"] = 131] = "wordWrapOverride1";
-    EditorOption2[EditorOption2["wordWrapOverride2"] = 132] = "wordWrapOverride2";
-    EditorOption2[EditorOption2["wrappingIndent"] = 133] = "wrappingIndent";
-    EditorOption2[EditorOption2["wrappingStrategy"] = 134] = "wrappingStrategy";
-    EditorOption2[EditorOption2["showDeprecated"] = 135] = "showDeprecated";
-    EditorOption2[EditorOption2["inlayHints"] = 136] = "inlayHints";
-    EditorOption2[EditorOption2["editorClassName"] = 137] = "editorClassName";
-    EditorOption2[EditorOption2["pixelRatio"] = 138] = "pixelRatio";
-    EditorOption2[EditorOption2["tabFocusMode"] = 139] = "tabFocusMode";
-    EditorOption2[EditorOption2["layoutInfo"] = 140] = "layoutInfo";
-    EditorOption2[EditorOption2["wrappingInfo"] = 141] = "wrappingInfo";
-    EditorOption2[EditorOption2["defaultColorDecorators"] = 142] = "defaultColorDecorators";
+    EditorOption2[EditorOption2["ariaRequired"] = 5] = "ariaRequired";
+    EditorOption2[EditorOption2["autoClosingBrackets"] = 6] = "autoClosingBrackets";
+    EditorOption2[EditorOption2["screenReaderAnnounceInlineSuggestion"] = 7] = "screenReaderAnnounceInlineSuggestion";
+    EditorOption2[EditorOption2["autoClosingDelete"] = 8] = "autoClosingDelete";
+    EditorOption2[EditorOption2["autoClosingOvertype"] = 9] = "autoClosingOvertype";
+    EditorOption2[EditorOption2["autoClosingQuotes"] = 10] = "autoClosingQuotes";
+    EditorOption2[EditorOption2["autoIndent"] = 11] = "autoIndent";
+    EditorOption2[EditorOption2["automaticLayout"] = 12] = "automaticLayout";
+    EditorOption2[EditorOption2["autoSurround"] = 13] = "autoSurround";
+    EditorOption2[EditorOption2["bracketPairColorization"] = 14] = "bracketPairColorization";
+    EditorOption2[EditorOption2["guides"] = 15] = "guides";
+    EditorOption2[EditorOption2["codeLens"] = 16] = "codeLens";
+    EditorOption2[EditorOption2["codeLensFontFamily"] = 17] = "codeLensFontFamily";
+    EditorOption2[EditorOption2["codeLensFontSize"] = 18] = "codeLensFontSize";
+    EditorOption2[EditorOption2["colorDecorators"] = 19] = "colorDecorators";
+    EditorOption2[EditorOption2["colorDecoratorsLimit"] = 20] = "colorDecoratorsLimit";
+    EditorOption2[EditorOption2["columnSelection"] = 21] = "columnSelection";
+    EditorOption2[EditorOption2["comments"] = 22] = "comments";
+    EditorOption2[EditorOption2["contextmenu"] = 23] = "contextmenu";
+    EditorOption2[EditorOption2["copyWithSyntaxHighlighting"] = 24] = "copyWithSyntaxHighlighting";
+    EditorOption2[EditorOption2["cursorBlinking"] = 25] = "cursorBlinking";
+    EditorOption2[EditorOption2["cursorSmoothCaretAnimation"] = 26] = "cursorSmoothCaretAnimation";
+    EditorOption2[EditorOption2["cursorStyle"] = 27] = "cursorStyle";
+    EditorOption2[EditorOption2["cursorSurroundingLines"] = 28] = "cursorSurroundingLines";
+    EditorOption2[EditorOption2["cursorSurroundingLinesStyle"] = 29] = "cursorSurroundingLinesStyle";
+    EditorOption2[EditorOption2["cursorWidth"] = 30] = "cursorWidth";
+    EditorOption2[EditorOption2["disableLayerHinting"] = 31] = "disableLayerHinting";
+    EditorOption2[EditorOption2["disableMonospaceOptimizations"] = 32] = "disableMonospaceOptimizations";
+    EditorOption2[EditorOption2["domReadOnly"] = 33] = "domReadOnly";
+    EditorOption2[EditorOption2["dragAndDrop"] = 34] = "dragAndDrop";
+    EditorOption2[EditorOption2["dropIntoEditor"] = 35] = "dropIntoEditor";
+    EditorOption2[EditorOption2["emptySelectionClipboard"] = 36] = "emptySelectionClipboard";
+    EditorOption2[EditorOption2["experimentalWhitespaceRendering"] = 37] = "experimentalWhitespaceRendering";
+    EditorOption2[EditorOption2["extraEditorClassName"] = 38] = "extraEditorClassName";
+    EditorOption2[EditorOption2["fastScrollSensitivity"] = 39] = "fastScrollSensitivity";
+    EditorOption2[EditorOption2["find"] = 40] = "find";
+    EditorOption2[EditorOption2["fixedOverflowWidgets"] = 41] = "fixedOverflowWidgets";
+    EditorOption2[EditorOption2["folding"] = 42] = "folding";
+    EditorOption2[EditorOption2["foldingStrategy"] = 43] = "foldingStrategy";
+    EditorOption2[EditorOption2["foldingHighlight"] = 44] = "foldingHighlight";
+    EditorOption2[EditorOption2["foldingImportsByDefault"] = 45] = "foldingImportsByDefault";
+    EditorOption2[EditorOption2["foldingMaximumRegions"] = 46] = "foldingMaximumRegions";
+    EditorOption2[EditorOption2["unfoldOnClickAfterEndOfLine"] = 47] = "unfoldOnClickAfterEndOfLine";
+    EditorOption2[EditorOption2["fontFamily"] = 48] = "fontFamily";
+    EditorOption2[EditorOption2["fontInfo"] = 49] = "fontInfo";
+    EditorOption2[EditorOption2["fontLigatures"] = 50] = "fontLigatures";
+    EditorOption2[EditorOption2["fontSize"] = 51] = "fontSize";
+    EditorOption2[EditorOption2["fontWeight"] = 52] = "fontWeight";
+    EditorOption2[EditorOption2["fontVariations"] = 53] = "fontVariations";
+    EditorOption2[EditorOption2["formatOnPaste"] = 54] = "formatOnPaste";
+    EditorOption2[EditorOption2["formatOnType"] = 55] = "formatOnType";
+    EditorOption2[EditorOption2["glyphMargin"] = 56] = "glyphMargin";
+    EditorOption2[EditorOption2["gotoLocation"] = 57] = "gotoLocation";
+    EditorOption2[EditorOption2["hideCursorInOverviewRuler"] = 58] = "hideCursorInOverviewRuler";
+    EditorOption2[EditorOption2["hover"] = 59] = "hover";
+    EditorOption2[EditorOption2["inDiffEditor"] = 60] = "inDiffEditor";
+    EditorOption2[EditorOption2["inlineSuggest"] = 61] = "inlineSuggest";
+    EditorOption2[EditorOption2["letterSpacing"] = 62] = "letterSpacing";
+    EditorOption2[EditorOption2["lightbulb"] = 63] = "lightbulb";
+    EditorOption2[EditorOption2["lineDecorationsWidth"] = 64] = "lineDecorationsWidth";
+    EditorOption2[EditorOption2["lineHeight"] = 65] = "lineHeight";
+    EditorOption2[EditorOption2["lineNumbers"] = 66] = "lineNumbers";
+    EditorOption2[EditorOption2["lineNumbersMinChars"] = 67] = "lineNumbersMinChars";
+    EditorOption2[EditorOption2["linkedEditing"] = 68] = "linkedEditing";
+    EditorOption2[EditorOption2["links"] = 69] = "links";
+    EditorOption2[EditorOption2["matchBrackets"] = 70] = "matchBrackets";
+    EditorOption2[EditorOption2["minimap"] = 71] = "minimap";
+    EditorOption2[EditorOption2["mouseStyle"] = 72] = "mouseStyle";
+    EditorOption2[EditorOption2["mouseWheelScrollSensitivity"] = 73] = "mouseWheelScrollSensitivity";
+    EditorOption2[EditorOption2["mouseWheelZoom"] = 74] = "mouseWheelZoom";
+    EditorOption2[EditorOption2["multiCursorMergeOverlapping"] = 75] = "multiCursorMergeOverlapping";
+    EditorOption2[EditorOption2["multiCursorModifier"] = 76] = "multiCursorModifier";
+    EditorOption2[EditorOption2["multiCursorPaste"] = 77] = "multiCursorPaste";
+    EditorOption2[EditorOption2["multiCursorLimit"] = 78] = "multiCursorLimit";
+    EditorOption2[EditorOption2["occurrencesHighlight"] = 79] = "occurrencesHighlight";
+    EditorOption2[EditorOption2["overviewRulerBorder"] = 80] = "overviewRulerBorder";
+    EditorOption2[EditorOption2["overviewRulerLanes"] = 81] = "overviewRulerLanes";
+    EditorOption2[EditorOption2["padding"] = 82] = "padding";
+    EditorOption2[EditorOption2["pasteAs"] = 83] = "pasteAs";
+    EditorOption2[EditorOption2["parameterHints"] = 84] = "parameterHints";
+    EditorOption2[EditorOption2["peekWidgetDefaultFocus"] = 85] = "peekWidgetDefaultFocus";
+    EditorOption2[EditorOption2["definitionLinkOpensInPeek"] = 86] = "definitionLinkOpensInPeek";
+    EditorOption2[EditorOption2["quickSuggestions"] = 87] = "quickSuggestions";
+    EditorOption2[EditorOption2["quickSuggestionsDelay"] = 88] = "quickSuggestionsDelay";
+    EditorOption2[EditorOption2["readOnly"] = 89] = "readOnly";
+    EditorOption2[EditorOption2["readOnlyMessage"] = 90] = "readOnlyMessage";
+    EditorOption2[EditorOption2["renameOnType"] = 91] = "renameOnType";
+    EditorOption2[EditorOption2["renderControlCharacters"] = 92] = "renderControlCharacters";
+    EditorOption2[EditorOption2["renderFinalNewline"] = 93] = "renderFinalNewline";
+    EditorOption2[EditorOption2["renderLineHighlight"] = 94] = "renderLineHighlight";
+    EditorOption2[EditorOption2["renderLineHighlightOnlyWhenFocus"] = 95] = "renderLineHighlightOnlyWhenFocus";
+    EditorOption2[EditorOption2["renderValidationDecorations"] = 96] = "renderValidationDecorations";
+    EditorOption2[EditorOption2["renderWhitespace"] = 97] = "renderWhitespace";
+    EditorOption2[EditorOption2["revealHorizontalRightPadding"] = 98] = "revealHorizontalRightPadding";
+    EditorOption2[EditorOption2["roundedSelection"] = 99] = "roundedSelection";
+    EditorOption2[EditorOption2["rulers"] = 100] = "rulers";
+    EditorOption2[EditorOption2["scrollbar"] = 101] = "scrollbar";
+    EditorOption2[EditorOption2["scrollBeyondLastColumn"] = 102] = "scrollBeyondLastColumn";
+    EditorOption2[EditorOption2["scrollBeyondLastLine"] = 103] = "scrollBeyondLastLine";
+    EditorOption2[EditorOption2["scrollPredominantAxis"] = 104] = "scrollPredominantAxis";
+    EditorOption2[EditorOption2["selectionClipboard"] = 105] = "selectionClipboard";
+    EditorOption2[EditorOption2["selectionHighlight"] = 106] = "selectionHighlight";
+    EditorOption2[EditorOption2["selectOnLineNumbers"] = 107] = "selectOnLineNumbers";
+    EditorOption2[EditorOption2["showFoldingControls"] = 108] = "showFoldingControls";
+    EditorOption2[EditorOption2["showUnused"] = 109] = "showUnused";
+    EditorOption2[EditorOption2["snippetSuggestions"] = 110] = "snippetSuggestions";
+    EditorOption2[EditorOption2["smartSelect"] = 111] = "smartSelect";
+    EditorOption2[EditorOption2["smoothScrolling"] = 112] = "smoothScrolling";
+    EditorOption2[EditorOption2["stickyScroll"] = 113] = "stickyScroll";
+    EditorOption2[EditorOption2["stickyTabStops"] = 114] = "stickyTabStops";
+    EditorOption2[EditorOption2["stopRenderingLineAfter"] = 115] = "stopRenderingLineAfter";
+    EditorOption2[EditorOption2["suggest"] = 116] = "suggest";
+    EditorOption2[EditorOption2["suggestFontSize"] = 117] = "suggestFontSize";
+    EditorOption2[EditorOption2["suggestLineHeight"] = 118] = "suggestLineHeight";
+    EditorOption2[EditorOption2["suggestOnTriggerCharacters"] = 119] = "suggestOnTriggerCharacters";
+    EditorOption2[EditorOption2["suggestSelection"] = 120] = "suggestSelection";
+    EditorOption2[EditorOption2["tabCompletion"] = 121] = "tabCompletion";
+    EditorOption2[EditorOption2["tabIndex"] = 122] = "tabIndex";
+    EditorOption2[EditorOption2["unicodeHighlighting"] = 123] = "unicodeHighlighting";
+    EditorOption2[EditorOption2["unusualLineTerminators"] = 124] = "unusualLineTerminators";
+    EditorOption2[EditorOption2["useShadowDOM"] = 125] = "useShadowDOM";
+    EditorOption2[EditorOption2["useTabStops"] = 126] = "useTabStops";
+    EditorOption2[EditorOption2["wordBreak"] = 127] = "wordBreak";
+    EditorOption2[EditorOption2["wordSeparators"] = 128] = "wordSeparators";
+    EditorOption2[EditorOption2["wordWrap"] = 129] = "wordWrap";
+    EditorOption2[EditorOption2["wordWrapBreakAfterCharacters"] = 130] = "wordWrapBreakAfterCharacters";
+    EditorOption2[EditorOption2["wordWrapBreakBeforeCharacters"] = 131] = "wordWrapBreakBeforeCharacters";
+    EditorOption2[EditorOption2["wordWrapColumn"] = 132] = "wordWrapColumn";
+    EditorOption2[EditorOption2["wordWrapOverride1"] = 133] = "wordWrapOverride1";
+    EditorOption2[EditorOption2["wordWrapOverride2"] = 134] = "wordWrapOverride2";
+    EditorOption2[EditorOption2["wrappingIndent"] = 135] = "wrappingIndent";
+    EditorOption2[EditorOption2["wrappingStrategy"] = 136] = "wrappingStrategy";
+    EditorOption2[EditorOption2["showDeprecated"] = 137] = "showDeprecated";
+    EditorOption2[EditorOption2["inlayHints"] = 138] = "inlayHints";
+    EditorOption2[EditorOption2["editorClassName"] = 139] = "editorClassName";
+    EditorOption2[EditorOption2["pixelRatio"] = 140] = "pixelRatio";
+    EditorOption2[EditorOption2["tabFocusMode"] = 141] = "tabFocusMode";
+    EditorOption2[EditorOption2["layoutInfo"] = 142] = "layoutInfo";
+    EditorOption2[EditorOption2["wrappingInfo"] = 143] = "wrappingInfo";
+    EditorOption2[EditorOption2["defaultColorDecorators"] = 144] = "defaultColorDecorators";
+    EditorOption2[EditorOption2["colorDecoratorsActivatedOn"] = 145] = "colorDecoratorsActivatedOn";
   })(EditorOption || (EditorOption = {}));
   var EndOfLinePreference;
   (function(EndOfLinePreference2) {
@@ -8102,7 +8220,7 @@
     WrappingIndent2[WrappingIndent2["DeepIndent"] = 3] = "DeepIndent";
   })(WrappingIndent || (WrappingIndent = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorBaseApi.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorBaseApi.js
   var KeyMod = class {
     static chord(firstPart, secondPart) {
       return KeyChord(firstPart, secondPart);
@@ -8131,7 +8249,7 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordCharacterClassifier.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordCharacterClassifier.js
   var WordCharacterClassifier = class extends CharacterClassifier {
     constructor(wordSeparators) {
       super(
@@ -8168,7 +8286,7 @@
   }
   var getMapForWordSeparators = once2((input) => new WordCharacterClassifier(input));
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/model.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/model.js
   var OverviewRulerLane2;
   (function(OverviewRulerLane3) {
     OverviewRulerLane3[OverviewRulerLane3["Left"] = 1] = "Left";
@@ -8194,7 +8312,7 @@
     InjectedTextCursorStops3[InjectedTextCursorStops3["None"] = 3] = "None";
   })(InjectedTextCursorStops2 || (InjectedTextCursorStops2 = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/model/textModelSearch.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/model/textModelSearch.js
   function leftIsWordBounday(wordSeparators, text, textLength, matchStartIndex, matchLength) {
     if (matchStartIndex === 0) {
       return true;
@@ -8282,7 +8400,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/assert.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/assert.js
   function assertNever(value, message = "Unreachable") {
     throw new Error(message);
   }
@@ -8306,7 +8424,7 @@
     return true;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/services/unicodeTextModelHighlighter.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/services/unicodeTextModelHighlighter.js
   var UnicodeTextModelHighlighter = class {
     static computeUnicodeHighlights(model, options, range) {
       const startLine = range ? range.startLineNumber : 1;
@@ -8483,10 +8601,27 @@
     return character === " " || character === "\n" || character === "	";
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/lineRange.js
-  var LineRange = class {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/lineRange.js
+  var LineRange = class _LineRange {
     static fromRange(range) {
-      return new LineRange(range.startLineNumber, range.endLineNumber);
+      return new _LineRange(range.startLineNumber, range.endLineNumber);
+    }
+    static subtract(a, b) {
+      if (!b) {
+        return [a];
+      }
+      if (a.startLineNumber < b.startLineNumber && b.endLineNumberExclusive < a.endLineNumberExclusive) {
+        return [
+          new _LineRange(a.startLineNumber, b.startLineNumber),
+          new _LineRange(b.endLineNumberExclusive, a.endLineNumberExclusive)
+        ];
+      } else if (b.startLineNumber <= a.startLineNumber && a.endLineNumberExclusive <= b.endLineNumberExclusive) {
+        return [];
+      } else if (b.endLineNumberExclusive < a.endLineNumberExclusive) {
+        return [new _LineRange(Math.max(b.endLineNumberExclusive, a.startLineNumber), a.endLineNumberExclusive)];
+      } else {
+        return [new _LineRange(a.startLineNumber, Math.min(b.startLineNumber, a.endLineNumberExclusive))];
+      }
     }
     /**
      * @param lineRanges An array of sorted line ranges.
@@ -8539,7 +8674,7 @@
           current = next;
         } else {
           if (current.endLineNumberExclusive >= next.startLineNumber) {
-            current = new LineRange(current.startLineNumber, Math.max(current.endLineNumberExclusive, next.endLineNumberExclusive));
+            current = new _LineRange(current.startLineNumber, Math.max(current.endLineNumberExclusive, next.endLineNumberExclusive));
           } else {
             result.push(current);
             current = next;
@@ -8552,7 +8687,13 @@
       return result;
     }
     static ofLength(startLineNumber, length) {
-      return new LineRange(startLineNumber, startLineNumber + length);
+      return new _LineRange(startLineNumber, startLineNumber + length);
+    }
+    /**
+     * @internal
+     */
+    static deserialize(lineRange) {
+      return new _LineRange(lineRange[0], lineRange[1]);
     }
     constructor(startLineNumber, endLineNumberExclusive) {
       if (startLineNumber > endLineNumberExclusive) {
@@ -8577,7 +8718,7 @@
      * Moves this line range by the given offset of line numbers.
      */
     delta(offset) {
-      return new LineRange(this.startLineNumber + offset, this.endLineNumberExclusive + offset);
+      return new _LineRange(this.startLineNumber + offset, this.endLineNumberExclusive + offset);
     }
     /**
      * The number of lines this line range spans.
@@ -8589,7 +8730,7 @@
      * Creates a line range that combines this and the given line range.
      */
     join(other) {
-      return new LineRange(Math.min(this.startLineNumber, other.startLineNumber), Math.max(this.endLineNumberExclusive, other.endLineNumberExclusive));
+      return new _LineRange(Math.min(this.startLineNumber, other.startLineNumber), Math.max(this.endLineNumberExclusive, other.endLineNumberExclusive));
     }
     toString() {
       return `[${this.startLineNumber},${this.endLineNumberExclusive})`;
@@ -8602,7 +8743,7 @@
       const startLineNumber = Math.max(this.startLineNumber, other.startLineNumber);
       const endLineNumberExclusive = Math.min(this.endLineNumberExclusive, other.endLineNumberExclusive);
       if (startLineNumber <= endLineNumberExclusive) {
-        return new LineRange(startLineNumber, endLineNumberExclusive);
+        return new _LineRange(startLineNumber, endLineNumberExclusive);
       }
       return void 0;
     }
@@ -8624,29 +8765,51 @@
     toExclusiveRange() {
       return new Range(this.startLineNumber, 1, this.endLineNumberExclusive, 1);
     }
+    mapToLineArray(f) {
+      const result = [];
+      for (let lineNumber = this.startLineNumber; lineNumber < this.endLineNumberExclusive; lineNumber++) {
+        result.push(f(lineNumber));
+      }
+      return result;
+    }
+    forEach(f) {
+      for (let lineNumber = this.startLineNumber; lineNumber < this.endLineNumberExclusive; lineNumber++) {
+        f(lineNumber);
+      }
+    }
+    /**
+     * @internal
+     */
+    serialize() {
+      return [this.startLineNumber, this.endLineNumberExclusive];
+    }
+    includes(lineNumber) {
+      return this.startLineNumber <= lineNumber && lineNumber < this.endLineNumberExclusive;
+    }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputer.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputer.js
   var LinesDiff = class {
-    constructor(changes, hitTimeout) {
+    constructor(changes, moves, hitTimeout) {
       this.changes = changes;
+      this.moves = moves;
       this.hitTimeout = hitTimeout;
     }
   };
-  var LineRangeMapping = class {
+  var LineRangeMapping = class _LineRangeMapping {
     static inverse(mapping, originalLineCount, modifiedLineCount) {
       const result = [];
       let lastOriginalEndLineNumber = 1;
       let lastModifiedEndLineNumber = 1;
       for (const m of mapping) {
-        const r2 = new LineRangeMapping(new LineRange(lastOriginalEndLineNumber, m.originalRange.startLineNumber), new LineRange(lastModifiedEndLineNumber, m.modifiedRange.startLineNumber), void 0);
+        const r2 = new _LineRangeMapping(new LineRange(lastOriginalEndLineNumber, m.originalRange.startLineNumber), new LineRange(lastModifiedEndLineNumber, m.modifiedRange.startLineNumber), void 0);
         if (!r2.modifiedRange.isEmpty) {
           result.push(r2);
         }
         lastOriginalEndLineNumber = m.originalRange.endLineNumberExclusive;
         lastModifiedEndLineNumber = m.modifiedRange.endLineNumberExclusive;
       }
-      const r = new LineRangeMapping(new LineRange(lastOriginalEndLineNumber, originalLineCount + 1), new LineRange(lastModifiedEndLineNumber, modifiedLineCount + 1), void 0);
+      const r = new _LineRangeMapping(new LineRange(lastOriginalEndLineNumber, originalLineCount + 1), new LineRange(lastModifiedEndLineNumber, modifiedLineCount + 1), void 0);
       if (!r.modifiedRange.isEmpty) {
         result.push(r);
       }
@@ -8663,8 +8826,12 @@
     get changedLineCount() {
       return Math.max(this.originalRange.length, this.modifiedRange.length);
     }
+    flip() {
+      var _a3;
+      return new _LineRangeMapping(this.modifiedRange, this.originalRange, (_a3 = this.innerChanges) === null || _a3 === void 0 ? void 0 : _a3.map((c) => c.flip()));
+    }
   };
-  var RangeMapping = class {
+  var RangeMapping = class _RangeMapping {
     constructor(originalRange, modifiedRange) {
       this.originalRange = originalRange;
       this.modifiedRange = modifiedRange;
@@ -8672,9 +8839,33 @@
     toString() {
       return `{${this.originalRange.toString()}->${this.modifiedRange.toString()}}`;
     }
+    flip() {
+      return new _RangeMapping(this.modifiedRange, this.originalRange);
+    }
+  };
+  var SimpleLineRangeMapping = class _SimpleLineRangeMapping {
+    constructor(original, modified) {
+      this.original = original;
+      this.modified = modified;
+    }
+    toString() {
+      return `{${this.original.toString()}->${this.modified.toString()}}`;
+    }
+    flip() {
+      return new _SimpleLineRangeMapping(this.modified, this.original);
+    }
+  };
+  var MovedText = class _MovedText {
+    constructor(lineRangeMapping, changes) {
+      this.lineRangeMapping = lineRangeMapping;
+      this.changes = changes;
+    }
+    flip() {
+      return new _MovedText(this.lineRangeMapping.flip(), this.changes.map((c) => c.flip()));
+    }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/smartLinesDiffComputer.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/smartLinesDiffComputer.js
   var MINIMUM_MATCHING_CHARACTER_LENGTH = 3;
   var SmartLinesDiffComputer = class {
     computeDiff(originalLines, modifiedLines, options) {
@@ -8716,7 +8907,7 @@
         return checkAdjacentItems(changes, (m1, m2) => m2.originalRange.startLineNumber - m1.originalRange.endLineNumberExclusive === m2.modifiedRange.startLineNumber - m1.modifiedRange.endLineNumberExclusive && // There has to be an unchanged line in between (otherwise both diffs should have been joined)
         m1.originalRange.endLineNumberExclusive < m2.originalRange.startLineNumber && m1.modifiedRange.endLineNumberExclusive < m2.modifiedRange.startLineNumber);
       });
-      return new LinesDiff(changes, result.quitEarly);
+      return new LinesDiff(changes, [], result.quitEarly);
     }
   };
   function computeDiff(originalSequence, modifiedSequence, continueProcessingPredicate, pretty) {
@@ -8828,7 +9019,7 @@
       return this._columns[i] + 1;
     }
   };
-  var CharChange = class {
+  var CharChange = class _CharChange {
     constructor(originalStartLineNumber, originalStartColumn, originalEndLineNumber, originalEndColumn, modifiedStartLineNumber, modifiedStartColumn, modifiedEndLineNumber, modifiedEndColumn) {
       this.originalStartLineNumber = originalStartLineNumber;
       this.originalStartColumn = originalStartColumn;
@@ -8848,7 +9039,7 @@
       const modifiedStartColumn = modifiedCharSequence.getStartColumn(diffChange.modifiedStart);
       const modifiedEndLineNumber = modifiedCharSequence.getEndLineNumber(diffChange.modifiedStart + diffChange.modifiedLength - 1);
       const modifiedEndColumn = modifiedCharSequence.getEndColumn(diffChange.modifiedStart + diffChange.modifiedLength - 1);
-      return new CharChange(originalStartLineNumber, originalStartColumn, originalEndLineNumber, originalEndColumn, modifiedStartLineNumber, modifiedStartColumn, modifiedEndLineNumber, modifiedEndColumn);
+      return new _CharChange(originalStartLineNumber, originalStartColumn, originalEndLineNumber, originalEndColumn, modifiedStartLineNumber, modifiedStartColumn, modifiedEndLineNumber, modifiedEndColumn);
     }
   };
   function postProcessCharChanges(rawChanges) {
@@ -8872,7 +9063,7 @@
     }
     return result;
   }
-  var LineChange = class {
+  var LineChange = class _LineChange {
     constructor(originalStartLineNumber, originalEndLineNumber, modifiedStartLineNumber, modifiedEndLineNumber, charChanges) {
       this.originalStartLineNumber = originalStartLineNumber;
       this.originalEndLineNumber = originalEndLineNumber;
@@ -8914,7 +9105,7 @@
           }
         }
       }
-      return new LineChange(originalStartLineNumber, originalEndLineNumber, modifiedStartLineNumber, modifiedEndLineNumber, charChanges);
+      return new _LineChange(originalStartLineNumber, originalEndLineNumber, modifiedStartLineNumber, modifiedEndLineNumber, charChanges);
     }
   };
   var DiffComputer = class {
@@ -9094,8 +9285,8 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/core/offsetRange.js
-  var OffsetRange = class {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/core/offsetRange.js
+  var OffsetRange = class _OffsetRange {
     static addRange(range, sortedRanges) {
       let i = 0;
       while (i < sortedRanges.length && sortedRanges[i].endExclusive < range.start) {
@@ -9110,14 +9301,14 @@
       } else {
         const start = Math.min(range.start, sortedRanges[i].start);
         const end = Math.max(range.endExclusive, sortedRanges[j - 1].endExclusive);
-        sortedRanges.splice(i, j - i, new OffsetRange(start, end));
+        sortedRanges.splice(i, j - i, new _OffsetRange(start, end));
       }
     }
     static tryCreate(start, endExclusive) {
       if (start > endExclusive) {
         return void 0;
       }
-      return new OffsetRange(start, endExclusive);
+      return new _OffsetRange(start, endExclusive);
     }
     constructor(start, endExclusive) {
       this.start = start;
@@ -9130,7 +9321,7 @@
       return this.start === this.endExclusive;
     }
     delta(offset) {
-      return new OffsetRange(this.start + offset, this.endExclusive + offset);
+      return new _OffsetRange(this.start + offset, this.endExclusive + offset);
     }
     get length() {
       return this.endExclusive - this.start;
@@ -9144,12 +9335,15 @@
     containsRange(other) {
       return this.start <= other.start && other.endExclusive <= this.endExclusive;
     }
+    contains(offset) {
+      return this.start <= offset && offset < this.endExclusive;
+    }
     /**
      * for all numbers n: range1.contains(n) or range2.contains(n) => range1.join(range2).contains(n)
      * The joined range is the smallest range that contains both ranges.
      */
     join(other) {
-      return new OffsetRange(Math.min(this.start, other.start), Math.max(this.endExclusive, other.endExclusive));
+      return new _OffsetRange(Math.min(this.start, other.start), Math.max(this.endExclusive, other.endExclusive));
     }
     /**
      * for all numbers n: range1.contains(n) and range2.contains(n) <=> range1.intersect(range2).contains(n)
@@ -9161,38 +9355,44 @@
       const start = Math.max(this.start, other.start);
       const end = Math.min(this.endExclusive, other.endExclusive);
       if (start <= end) {
-        return new OffsetRange(start, end);
+        return new _OffsetRange(start, end);
       }
       return void 0;
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/diffAlgorithm.js
-  var DiffAlgorithmResult = class {
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/diffAlgorithm.js
+  var DiffAlgorithmResult = class _DiffAlgorithmResult {
     static trivial(seq1, seq2) {
-      return new DiffAlgorithmResult([new SequenceDiff(new OffsetRange(0, seq1.length), new OffsetRange(0, seq2.length))], false);
+      return new _DiffAlgorithmResult([new SequenceDiff(new OffsetRange(0, seq1.length), new OffsetRange(0, seq2.length))], false);
     }
     static trivialTimedOut(seq1, seq2) {
-      return new DiffAlgorithmResult([new SequenceDiff(new OffsetRange(0, seq1.length), new OffsetRange(0, seq2.length))], true);
+      return new _DiffAlgorithmResult([new SequenceDiff(new OffsetRange(0, seq1.length), new OffsetRange(0, seq2.length))], true);
     }
     constructor(diffs, hitTimeout) {
       this.diffs = diffs;
       this.hitTimeout = hitTimeout;
     }
   };
-  var SequenceDiff = class {
+  var SequenceDiff = class _SequenceDiff {
     constructor(seq1Range, seq2Range) {
       this.seq1Range = seq1Range;
       this.seq2Range = seq2Range;
     }
     reverse() {
-      return new SequenceDiff(this.seq2Range, this.seq1Range);
+      return new _SequenceDiff(this.seq2Range, this.seq1Range);
     }
     toString() {
       return `${this.seq1Range} <-> ${this.seq2Range}`;
     }
     join(other) {
-      return new SequenceDiff(this.seq1Range.join(other.seq1Range), this.seq2Range.join(other.seq2Range));
+      return new _SequenceDiff(this.seq1Range.join(other.seq1Range), this.seq2Range.join(other.seq2Range));
+    }
+    delta(offset) {
+      if (offset === 0) {
+        return this;
+      }
+      return new _SequenceDiff(this.seq1Range.delta(offset), this.seq2Range.delta(offset));
     }
   };
   var InfiniteTimeout = class {
@@ -9221,7 +9421,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/utils.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/utils.js
   var Array2D = class {
     constructor(width, height) {
       this.width = width;
@@ -9237,7 +9437,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/dynamicProgrammingDiffing.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/dynamicProgrammingDiffing.js
   var DynamicProgrammingDiffing = class {
     compute(sequence1, sequence2, timeout = InfiniteTimeout.instance, equalityScore) {
       if (sequence1.length === 0 || sequence2.length === 0) {
@@ -9313,7 +9513,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/joinSequenceDiffs.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/joinSequenceDiffs.js
   function optimizeSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
     let result = sequenceDiffs;
     result = joinSequenceDiffs(sequence1, sequence2, result);
@@ -9336,59 +9536,140 @@
     }
     return result;
   }
-  function joinSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
-    const result = [];
-    if (sequenceDiffs.length > 0) {
-      result.push(sequenceDiffs[0]);
+  function removeRandomMatches(sequence1, sequence2, sequenceDiffs) {
+    let diffs = sequenceDiffs;
+    if (diffs.length === 0) {
+      return diffs;
     }
+    let counter = 0;
+    let shouldRepeat;
+    do {
+      shouldRepeat = false;
+      const result = [
+        diffs[0]
+      ];
+      for (let i = 1; i < diffs.length; i++) {
+        let shouldJoinDiffs = function(before, after) {
+          const unchangedRange = new OffsetRange(lastResult.seq1Range.endExclusive, cur.seq1Range.start);
+          const unchangedLineCount = sequence1.countLinesIn(unchangedRange);
+          if (unchangedLineCount > 5 || unchangedRange.length > 500) {
+            return false;
+          }
+          const unchangedText = sequence1.getText(unchangedRange).trim();
+          if (unchangedText.length > 20 || unchangedText.split(/\r\n|\r|\n/).length > 1) {
+            return false;
+          }
+          const beforeLineCount1 = sequence1.countLinesIn(before.seq1Range);
+          const beforeSeq1Length = before.seq1Range.length;
+          const beforeLineCount2 = sequence2.countLinesIn(before.seq2Range);
+          const beforeSeq2Length = before.seq2Range.length;
+          const afterLineCount1 = sequence1.countLinesIn(after.seq1Range);
+          const afterSeq1Length = after.seq1Range.length;
+          const afterLineCount2 = sequence2.countLinesIn(after.seq2Range);
+          const afterSeq2Length = after.seq2Range.length;
+          const max = 2 * 40 + 50;
+          function cap(v) {
+            return Math.min(v, max);
+          }
+          if (Math.pow(Math.pow(cap(beforeLineCount1 * 40 + beforeSeq1Length), 1.5) + Math.pow(cap(beforeLineCount2 * 40 + beforeSeq2Length), 1.5), 1.5) + Math.pow(Math.pow(cap(afterLineCount1 * 40 + afterSeq1Length), 1.5) + Math.pow(cap(afterLineCount2 * 40 + afterSeq2Length), 1.5), 1.5) > Math.pow(Math.pow(max, 1.5), 1.5) * 1.3) {
+            return true;
+          }
+          return false;
+        };
+        const cur = diffs[i];
+        const lastResult = result[result.length - 1];
+        const shouldJoin = shouldJoinDiffs(lastResult, cur);
+        if (shouldJoin) {
+          shouldRepeat = true;
+          result[result.length - 1] = result[result.length - 1].join(cur);
+        } else {
+          result.push(cur);
+        }
+      }
+      diffs = result;
+    } while (counter++ < 10 && shouldRepeat);
+    return diffs;
+  }
+  function joinSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
+    if (sequenceDiffs.length === 0) {
+      return sequenceDiffs;
+    }
+    const result = [];
+    result.push(sequenceDiffs[0]);
     for (let i = 1; i < sequenceDiffs.length; i++) {
-      const lastResult = result[result.length - 1];
-      const cur = sequenceDiffs[i];
-      if (cur.seq1Range.isEmpty) {
-        let all = true;
-        const length = cur.seq1Range.start - lastResult.seq1Range.endExclusive;
-        for (let i2 = 1; i2 <= length; i2++) {
-          if (sequence2.getElement(cur.seq2Range.start - i2) !== sequence2.getElement(cur.seq2Range.endExclusive - i2)) {
-            all = false;
+      const prevResult = result[result.length - 1];
+      let cur = sequenceDiffs[i];
+      if (cur.seq1Range.isEmpty || cur.seq2Range.isEmpty) {
+        const length = cur.seq1Range.start - prevResult.seq1Range.endExclusive;
+        let d;
+        for (d = 1; d <= length; d++) {
+          if (sequence1.getElement(cur.seq1Range.start - d) !== sequence1.getElement(cur.seq1Range.endExclusive - d) || sequence2.getElement(cur.seq2Range.start - d) !== sequence2.getElement(cur.seq2Range.endExclusive - d)) {
             break;
           }
         }
-        if (all) {
-          result[result.length - 1] = new SequenceDiff(lastResult.seq1Range, new OffsetRange(lastResult.seq2Range.start, cur.seq2Range.endExclusive - length));
+        d--;
+        if (d === length) {
+          result[result.length - 1] = new SequenceDiff(new OffsetRange(prevResult.seq1Range.start, cur.seq1Range.endExclusive - length), new OffsetRange(prevResult.seq2Range.start, cur.seq2Range.endExclusive - length));
           continue;
         }
+        cur = cur.delta(-d);
       }
       result.push(cur);
     }
-    return result;
+    const result2 = [];
+    for (let i = 0; i < result.length - 1; i++) {
+      const nextResult = result[i + 1];
+      let cur = result[i];
+      if (cur.seq1Range.isEmpty || cur.seq2Range.isEmpty) {
+        const length = nextResult.seq1Range.start - cur.seq1Range.endExclusive;
+        let d;
+        for (d = 0; d < length; d++) {
+          if (sequence1.getElement(cur.seq1Range.start + d) !== sequence1.getElement(cur.seq1Range.endExclusive + d) || sequence2.getElement(cur.seq2Range.start + d) !== sequence2.getElement(cur.seq2Range.endExclusive + d)) {
+            break;
+          }
+        }
+        if (d === length) {
+          result[i + 1] = new SequenceDiff(new OffsetRange(cur.seq1Range.start + length, nextResult.seq1Range.endExclusive), new OffsetRange(cur.seq2Range.start + length, nextResult.seq2Range.endExclusive));
+          continue;
+        }
+        if (d > 0) {
+          cur = cur.delta(d);
+        }
+      }
+      result2.push(cur);
+    }
+    if (result.length > 0) {
+      result2.push(result[result.length - 1]);
+    }
+    return result2;
   }
   function shiftSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
     if (!sequence1.getBoundaryScore || !sequence2.getBoundaryScore) {
       return sequenceDiffs;
     }
     for (let i = 0; i < sequenceDiffs.length; i++) {
+      const prevDiff = i > 0 ? sequenceDiffs[i - 1] : void 0;
       const diff = sequenceDiffs[i];
+      const nextDiff = i + 1 < sequenceDiffs.length ? sequenceDiffs[i + 1] : void 0;
+      const seq1ValidRange = new OffsetRange(prevDiff ? prevDiff.seq1Range.start + 1 : 0, nextDiff ? nextDiff.seq1Range.endExclusive - 1 : sequence1.length);
+      const seq2ValidRange = new OffsetRange(prevDiff ? prevDiff.seq2Range.start + 1 : 0, nextDiff ? nextDiff.seq2Range.endExclusive - 1 : sequence2.length);
       if (diff.seq1Range.isEmpty) {
-        const seq2PrevEndExclusive = i > 0 ? sequenceDiffs[i - 1].seq2Range.endExclusive : -1;
-        const seq2NextStart = i + 1 < sequenceDiffs.length ? sequenceDiffs[i + 1].seq2Range.start : sequence2.length;
-        sequenceDiffs[i] = shiftDiffToBetterPosition(diff, sequence1, sequence2, seq2NextStart, seq2PrevEndExclusive);
+        sequenceDiffs[i] = shiftDiffToBetterPosition(diff, sequence1, sequence2, seq1ValidRange, seq2ValidRange);
       } else if (diff.seq2Range.isEmpty) {
-        const seq1PrevEndExclusive = i > 0 ? sequenceDiffs[i - 1].seq1Range.endExclusive : -1;
-        const seq1NextStart = i + 1 < sequenceDiffs.length ? sequenceDiffs[i + 1].seq1Range.start : sequence1.length;
-        sequenceDiffs[i] = shiftDiffToBetterPosition(diff.reverse(), sequence2, sequence1, seq1NextStart, seq1PrevEndExclusive).reverse();
+        sequenceDiffs[i] = shiftDiffToBetterPosition(diff.reverse(), sequence2, sequence1, seq2ValidRange, seq1ValidRange).reverse();
       }
     }
     return sequenceDiffs;
   }
-  function shiftDiffToBetterPosition(diff, sequence1, sequence2, seq2NextStart, seq2PrevEndExclusive) {
-    const maxShiftLimit = 20;
+  function shiftDiffToBetterPosition(diff, sequence1, sequence2, seq1ValidRange, seq2ValidRange) {
+    const maxShiftLimit = 100;
     let deltaBefore = 1;
-    while (diff.seq2Range.start - deltaBefore > seq2PrevEndExclusive && sequence2.getElement(diff.seq2Range.start - deltaBefore) === sequence2.getElement(diff.seq2Range.endExclusive - deltaBefore) && deltaBefore < maxShiftLimit) {
+    while (diff.seq1Range.start - deltaBefore >= seq1ValidRange.start && diff.seq2Range.start - deltaBefore >= seq2ValidRange.start && sequence2.getElement(diff.seq2Range.start - deltaBefore) === sequence2.getElement(diff.seq2Range.endExclusive - deltaBefore) && deltaBefore < maxShiftLimit) {
       deltaBefore++;
     }
     deltaBefore--;
     let deltaAfter = 0;
-    while (diff.seq2Range.start + deltaAfter < seq2NextStart && sequence2.getElement(diff.seq2Range.start + deltaAfter) === sequence2.getElement(diff.seq2Range.endExclusive + deltaAfter) && deltaAfter < maxShiftLimit) {
+    while (diff.seq1Range.start + deltaAfter < seq1ValidRange.endExclusive && diff.seq2Range.endExclusive + deltaAfter < seq2ValidRange.endExclusive && sequence2.getElement(diff.seq2Range.start + deltaAfter) === sequence2.getElement(diff.seq2Range.endExclusive + deltaAfter) && deltaAfter < maxShiftLimit) {
       deltaAfter++;
     }
     if (deltaBefore === 0 && deltaAfter === 0) {
@@ -9406,13 +9687,10 @@
         bestDelta = delta;
       }
     }
-    if (bestDelta !== 0) {
-      return new SequenceDiff(diff.seq1Range.delta(bestDelta), diff.seq2Range.delta(bestDelta));
-    }
-    return diff;
+    return diff.delta(bestDelta);
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/myersDiffAlgorithm.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/myersDiffAlgorithm.js
   var MyersDiffAlgorithm = class {
     compute(seq1, seq2, timeout = InfiniteTimeout.instance) {
       if (seq1.length === 0 || seq2.length === 0) {
@@ -9434,14 +9712,19 @@
       loop:
         while (true) {
           d++;
-          for (k = -d; k <= d; k += 2) {
-            if (!timeout.isValid()) {
-              return DiffAlgorithmResult.trivialTimedOut(seq1, seq2);
-            }
-            const maxXofDLineTop = k === d ? -1 : V.get(k + 1);
-            const maxXofDLineLeft = k === -d ? -1 : V.get(k - 1) + 1;
+          if (!timeout.isValid()) {
+            return DiffAlgorithmResult.trivialTimedOut(seq1, seq2);
+          }
+          const lowerBound = -Math.min(d, seq2.length + d % 2);
+          const upperBound = Math.min(d, seq1.length + d % 2);
+          for (k = lowerBound; k <= upperBound; k += 2) {
+            const maxXofDLineTop = k === upperBound ? -1 : V.get(k + 1);
+            const maxXofDLineLeft = k === lowerBound ? -1 : V.get(k - 1) + 1;
             const x = Math.min(Math.max(maxXofDLineTop, maxXofDLineLeft), seq1.length);
             const y = x - k;
+            if (x > seq1.length || y > seq2.length) {
+              continue;
+            }
             const newMaxX = getXAfterSnake(x, y);
             V.set(k, newMaxX);
             const lastPath = x === maxXofDLineTop ? paths.get(k + 1) : paths.get(k - 1);
@@ -9535,13 +9818,24 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/standardLinesDiffComputer.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/standardLinesDiffComputer.js
   var StandardLinesDiffComputer = class {
     constructor() {
       this.dynamicProgrammingDiffing = new DynamicProgrammingDiffing();
       this.myersDiffingAlgorithm = new MyersDiffAlgorithm();
     }
     computeDiff(originalLines, modifiedLines, options) {
+      if (originalLines.length === 1 && originalLines[0].length === 0 || modifiedLines.length === 1 && modifiedLines[0].length === 0) {
+        return {
+          changes: [
+            new LineRangeMapping(new LineRange(1, originalLines.length + 1), new LineRange(1, modifiedLines.length + 1), [
+              new RangeMapping(new Range(1, 1, originalLines.length, originalLines[0].length + 1), new Range(1, 1, modifiedLines.length, modifiedLines[0].length + 1))
+            ])
+          ],
+          hitTimeout: false,
+          moves: []
+        };
+      }
       const timeout = options.maxComputationTimeMs === 0 ? InfiniteTimeout.instance : new DateTimeout(options.maxComputationTimeMs);
       const considerWhitespaceChanges = !options.ignoreTrimWhitespace;
       const perfectHashes = /* @__PURE__ */ new Map();
@@ -9603,17 +9897,76 @@
       }
       scanForWhitespaceChanges(originalLines.length - seq1LastStart);
       const changes = lineRangeMappingFromRangeMappings(alignments, originalLines, modifiedLines);
-      return new LinesDiff(changes, hitTimeout);
+      const moves = [];
+      if (options.computeMoves) {
+        const deletions = changes.filter((c) => c.modifiedRange.isEmpty && c.originalRange.length >= 3).map((d) => new LineRangeFragment(d.originalRange, originalLines));
+        const insertions = new Set(changes.filter((c) => c.originalRange.isEmpty && c.modifiedRange.length >= 3).map((d) => new LineRangeFragment(d.modifiedRange, modifiedLines)));
+        for (const deletion of deletions) {
+          let highestSimilarity = -1;
+          let best;
+          for (const insertion of insertions) {
+            const similarity = deletion.computeSimilarity(insertion);
+            if (similarity > highestSimilarity) {
+              highestSimilarity = similarity;
+              best = insertion;
+            }
+          }
+          if (highestSimilarity > 0.9 && best) {
+            const moveChanges = this.refineDiff(originalLines, modifiedLines, new SequenceDiff(new OffsetRange(deletion.range.startLineNumber - 1, deletion.range.endLineNumberExclusive - 1), new OffsetRange(best.range.startLineNumber - 1, best.range.endLineNumberExclusive - 1)), timeout, considerWhitespaceChanges);
+            const mappings = lineRangeMappingFromRangeMappings(moveChanges.mappings, originalLines, modifiedLines, true);
+            insertions.delete(best);
+            moves.push(new MovedText(new SimpleLineRangeMapping(deletion.range, best.range), mappings));
+          }
+        }
+      }
+      assertFn(() => {
+        function validatePosition(pos, lines) {
+          if (pos.lineNumber < 1 || pos.lineNumber > lines.length) {
+            return false;
+          }
+          const line = lines[pos.lineNumber - 1];
+          if (pos.column < 1 || pos.column > line.length + 1) {
+            return false;
+          }
+          return true;
+        }
+        function validateRange(range, lines) {
+          if (range.startLineNumber < 1 || range.startLineNumber > lines.length + 1) {
+            return false;
+          }
+          if (range.endLineNumberExclusive < 1 || range.endLineNumberExclusive > lines.length + 1) {
+            return false;
+          }
+          return true;
+        }
+        for (const c of changes) {
+          if (!c.innerChanges) {
+            return false;
+          }
+          for (const ic of c.innerChanges) {
+            const valid = validatePosition(ic.modifiedRange.getStartPosition(), modifiedLines) && validatePosition(ic.modifiedRange.getEndPosition(), modifiedLines) && validatePosition(ic.originalRange.getStartPosition(), originalLines) && validatePosition(ic.originalRange.getEndPosition(), originalLines);
+            if (!valid) {
+              return false;
+            }
+          }
+          if (!validateRange(c.modifiedRange, modifiedLines) || !validateRange(c.originalRange, originalLines)) {
+            return false;
+          }
+        }
+        return true;
+      });
+      return new LinesDiff(changes, moves, hitTimeout);
     }
     refineDiff(originalLines, modifiedLines, diff, timeout, considerWhitespaceChanges) {
-      const sourceSlice = new Slice(originalLines, diff.seq1Range, considerWhitespaceChanges);
-      const targetSlice = new Slice(modifiedLines, diff.seq2Range, considerWhitespaceChanges);
-      const diffResult = sourceSlice.length + targetSlice.length < 500 ? this.dynamicProgrammingDiffing.compute(sourceSlice, targetSlice, timeout) : this.myersDiffingAlgorithm.compute(sourceSlice, targetSlice, timeout);
+      const slice1 = new LinesSliceCharSequence(originalLines, diff.seq1Range, considerWhitespaceChanges);
+      const slice2 = new LinesSliceCharSequence(modifiedLines, diff.seq2Range, considerWhitespaceChanges);
+      const diffResult = slice1.length + slice2.length < 500 ? this.dynamicProgrammingDiffing.compute(slice1, slice2, timeout) : this.myersDiffingAlgorithm.compute(slice1, slice2, timeout);
       let diffs = diffResult.diffs;
-      diffs = optimizeSequenceDiffs(sourceSlice, targetSlice, diffs);
-      diffs = coverFullWords(sourceSlice, targetSlice, diffs);
-      diffs = smoothenSequenceDiffs(sourceSlice, targetSlice, diffs);
-      const result = diffs.map((d) => new RangeMapping(sourceSlice.translateRange(d.seq1Range), targetSlice.translateRange(d.seq2Range)));
+      diffs = optimizeSequenceDiffs(slice1, slice2, diffs);
+      diffs = coverFullWords(slice1, slice2, diffs);
+      diffs = smoothenSequenceDiffs(slice1, slice2, diffs);
+      diffs = removeRandomMatches(slice1, slice2, diffs);
+      const result = diffs.map((d) => new RangeMapping(slice1.translateRange(d.seq1Range), slice2.translateRange(d.seq2Range)));
       return {
         mappings: result,
         hitTimeout: diffResult.hitTimeout
@@ -9696,7 +10049,7 @@
     }
     return result;
   }
-  function lineRangeMappingFromRangeMappings(alignments, originalLines, modifiedLines) {
+  function lineRangeMappingFromRangeMappings(alignments, originalLines, modifiedLines, dontAssertStartLine = false) {
     const changes = [];
     for (const g of group(alignments.map((a) => getLineRangeMapping(a, originalLines, modifiedLines)), (a1, a2) => a1.originalRange.overlapOrTouch(a2.originalRange) || a1.modifiedRange.overlapOrTouch(a2.modifiedRange))) {
       const first = g[0];
@@ -9704,6 +10057,11 @@
       changes.push(new LineRangeMapping(first.originalRange.join(last.originalRange), first.modifiedRange.join(last.modifiedRange), g.map((a) => a.innerChanges[0])));
     }
     assertFn(() => {
+      if (!dontAssertStartLine) {
+        if (changes.length > 0 && changes[0].originalRange.startLineNumber !== changes[0].modifiedRange.startLineNumber) {
+          return false;
+        }
+      }
       return checkAdjacentItems(changes, (m1, m2) => m2.originalRange.startLineNumber - m1.originalRange.endLineNumberExclusive === m2.modifiedRange.startLineNumber - m1.modifiedRange.endLineNumberExclusive && // There has to be an unchanged line in between (otherwise both diffs should have been joined)
       m1.originalRange.endLineNumberExclusive < m2.originalRange.startLineNumber && m1.modifiedRange.endLineNumberExclusive < m2.modifiedRange.startLineNumber);
     });
@@ -9712,11 +10070,11 @@
   function getLineRangeMapping(rangeMapping, originalLines, modifiedLines) {
     let lineStartDelta = 0;
     let lineEndDelta = 0;
-    if (rangeMapping.modifiedRange.startColumn - 1 >= modifiedLines[rangeMapping.modifiedRange.startLineNumber - 1].length && rangeMapping.originalRange.startColumn - 1 >= originalLines[rangeMapping.originalRange.startLineNumber - 1].length) {
-      lineStartDelta = 1;
-    }
     if (rangeMapping.modifiedRange.endColumn === 1 && rangeMapping.originalRange.endColumn === 1 && rangeMapping.originalRange.startLineNumber + lineStartDelta <= rangeMapping.originalRange.endLineNumber && rangeMapping.modifiedRange.startLineNumber + lineStartDelta <= rangeMapping.modifiedRange.endLineNumber) {
       lineEndDelta = -1;
+    }
+    if (rangeMapping.modifiedRange.startColumn - 1 >= modifiedLines[rangeMapping.modifiedRange.startLineNumber - 1].length && rangeMapping.originalRange.startColumn - 1 >= originalLines[rangeMapping.originalRange.startLineNumber - 1].length && rangeMapping.originalRange.startLineNumber <= rangeMapping.originalRange.endLineNumber + lineEndDelta && rangeMapping.modifiedRange.startLineNumber <= rangeMapping.modifiedRange.endLineNumber + lineEndDelta) {
+      lineStartDelta = 1;
     }
     const originalLineRange = new LineRange(rangeMapping.originalRange.startLineNumber + lineStartDelta, rangeMapping.originalRange.endLineNumber + 1 + lineEndDelta);
     const modifiedLineRange = new LineRange(rangeMapping.modifiedRange.startLineNumber + lineStartDelta, rangeMapping.modifiedRange.endLineNumber + 1 + lineEndDelta);
@@ -9764,7 +10122,7 @@
     }
     return i;
   }
-  var Slice = class {
+  var LinesSliceCharSequence = class {
     constructor(lines, lineRange, considerWhitespaceChanges) {
       this.lines = lines;
       this.considerWhitespaceChanges = considerWhitespaceChanges;
@@ -9804,7 +10162,10 @@
       return `Slice: "${this.text}"`;
     }
     get text() {
-      return [...this.elements].map((e) => String.fromCharCode(e)).join("");
+      return this.getText(new OffsetRange(0, this.length));
+    }
+    getText(range) {
+      return this.elements.slice(range.start, range.endExclusive).map((e) => String.fromCharCode(e)).join("");
     }
     getElement(offset) {
       return this.elements[offset];
@@ -9843,8 +10204,8 @@
           i = k + 1;
         }
       }
-      const offsetOfPrevLineBreak = i === 0 ? 0 : this.firstCharOffsetByLineMinusOne[i - 1];
-      return new Position(this.lineRange.start + i + 1, offset - offsetOfPrevLineBreak + 1 + this.offsetByLine[i]);
+      const offsetOfFirstCharInLine = i === 0 ? 0 : this.firstCharOffsetByLineMinusOne[i - 1];
+      return new Position(this.lineRange.start + i + 1, offset - offsetOfFirstCharInLine + 1 + this.offsetByLine[i]);
     }
     translateRange(range) {
       return Range.fromPositions(this.translateOffset(range.start), this.translateOffset(range.endExclusive));
@@ -9868,6 +10229,9 @@
         end++;
       }
       return new OffsetRange(start, end);
+    }
+    countLinesIn(range) {
+      return this.translateOffset(range.endExclusive).lineNumber - this.translateOffset(range.start).lineNumber;
     }
   };
   function isWordChar(charCode) {
@@ -9932,14 +10296,53 @@
   function isSpace(charCode) {
     return charCode === 32 || charCode === 9;
   }
-
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputers.js
-  var linesDiffComputers = {
-    legacy: new SmartLinesDiffComputer(),
-    advanced: new StandardLinesDiffComputer()
+  var chrKeys = /* @__PURE__ */ new Map();
+  function getKey(chr) {
+    let key = chrKeys.get(chr);
+    if (key === void 0) {
+      key = chrKeys.size;
+      chrKeys.set(chr, key);
+    }
+    return key;
+  }
+  var LineRangeFragment = class {
+    constructor(range, lines) {
+      this.range = range;
+      this.lines = lines;
+      this.histogram = [];
+      let counter = 0;
+      for (let i = range.startLineNumber - 1; i < range.endLineNumberExclusive - 1; i++) {
+        const line = lines[i];
+        for (let j = 0; j < line.length; j++) {
+          counter++;
+          const chr = line[j];
+          const key2 = getKey(chr);
+          this.histogram[key2] = (this.histogram[key2] || 0) + 1;
+        }
+        counter++;
+        const key = getKey("\n");
+        this.histogram[key] = (this.histogram[key] || 0) + 1;
+      }
+      this.totalCount = counter;
+    }
+    computeSimilarity(other) {
+      var _a3, _b;
+      let sumDifferences = 0;
+      const maxLength = Math.max(this.histogram.length, other.histogram.length);
+      for (let i = 0; i < maxLength; i++) {
+        sumDifferences += Math.abs(((_a3 = this.histogram[i]) !== null && _a3 !== void 0 ? _a3 : 0) - ((_b = other.histogram[i]) !== null && _b !== void 0 ? _b : 0));
+      }
+      return 1 - sumDifferences / (this.totalCount + other.totalCount);
+    }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/base/common/color.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputers.js
+  var linesDiffComputers = {
+    getLegacy: () => new SmartLinesDiffComputer(),
+    getAdvanced: () => new StandardLinesDiffComputer()
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/base/common/color.js
   function roundFloat(number, decimalPoints) {
     const decimal = Math.pow(10, decimalPoints);
     return Math.round(number * decimal) / decimal;
@@ -9956,7 +10359,7 @@
       return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
     }
   };
-  var HSLA = class {
+  var HSLA = class _HSLA {
     constructor(h, s, l, a) {
       this._hslaBrand = void 0;
       this.h = Math.max(Math.min(360, h), 0) | 0;
@@ -10000,7 +10403,7 @@
         h *= 60;
         h = Math.round(h);
       }
-      return new HSLA(h, s, l, a);
+      return new _HSLA(h, s, l, a);
     }
     static _hue2rgb(p, q, t) {
       if (t < 0) {
@@ -10035,14 +10438,14 @@
       } else {
         const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         const p = 2 * l - q;
-        r = HSLA._hue2rgb(p, q, h + 1 / 3);
-        g = HSLA._hue2rgb(p, q, h);
-        b = HSLA._hue2rgb(p, q, h - 1 / 3);
+        r = _HSLA._hue2rgb(p, q, h + 1 / 3);
+        g = _HSLA._hue2rgb(p, q, h);
+        b = _HSLA._hue2rgb(p, q, h - 1 / 3);
       }
       return new RGBA(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255), a);
     }
   };
-  var HSVA = class {
+  var HSVA = class _HSVA {
     constructor(h, s, v, a) {
       this._hsvaBrand = void 0;
       this.h = Math.max(Math.min(360, h), 0) | 0;
@@ -10072,7 +10475,7 @@
       } else {
         m = (r - g) / delta + 4;
       }
-      return new HSVA(Math.round(m * 60), s, cmax, rgba.a);
+      return new _HSVA(Math.round(m * 60), s, cmax, rgba.a);
     }
     // from http://www.rapidtables.com/convert/color/hsv-to-rgb.htm
     static toRGBA(hsva) {
@@ -10106,9 +10509,9 @@
       return new RGBA(r, g, b, a);
     }
   };
-  var Color = class {
+  var Color = class _Color {
     static fromHex(hex) {
-      return Color.Format.CSS.parseHex(hex) || Color.red;
+      return _Color.Format.CSS.parseHex(hex) || _Color.red;
     }
     static equals(a, b) {
       if (!a && !b) {
@@ -10155,9 +10558,9 @@
      * Returns the number in the set [0, 1]. O => Darkest Black. 1 => Lightest white.
      */
     getRelativeLuminance() {
-      const R = Color._relativeLuminanceForComponent(this.rgba.r);
-      const G = Color._relativeLuminanceForComponent(this.rgba.g);
-      const B = Color._relativeLuminanceForComponent(this.rgba.b);
+      const R = _Color._relativeLuminanceForComponent(this.rgba.r);
+      const G = _Color._relativeLuminanceForComponent(this.rgba.g);
+      const B = _Color._relativeLuminanceForComponent(this.rgba.b);
       const luminance = 0.2126 * R + 0.7152 * G + 0.0722 * B;
       return roundFloat(luminance, 4);
     }
@@ -10184,14 +10587,14 @@
       return lum1 < lum2;
     }
     lighten(factor) {
-      return new Color(new HSLA(this.hsla.h, this.hsla.s, this.hsla.l + this.hsla.l * factor, this.hsla.a));
+      return new _Color(new HSLA(this.hsla.h, this.hsla.s, this.hsla.l + this.hsla.l * factor, this.hsla.a));
     }
     darken(factor) {
-      return new Color(new HSLA(this.hsla.h, this.hsla.s, this.hsla.l - this.hsla.l * factor, this.hsla.a));
+      return new _Color(new HSLA(this.hsla.h, this.hsla.s, this.hsla.l - this.hsla.l * factor, this.hsla.a));
     }
     transparent(factor) {
       const { r, g, b, a } = this.rgba;
-      return new Color(new RGBA(r, g, b, a * factor));
+      return new _Color(new RGBA(r, g, b, a * factor));
     }
     isTransparent() {
       return this.rgba.a === 0;
@@ -10200,18 +10603,18 @@
       return this.rgba.a === 1;
     }
     opposite() {
-      return new Color(new RGBA(255 - this.rgba.r, 255 - this.rgba.g, 255 - this.rgba.b, this.rgba.a));
+      return new _Color(new RGBA(255 - this.rgba.r, 255 - this.rgba.g, 255 - this.rgba.b, this.rgba.a));
     }
     makeOpaque(opaqueBackground) {
       if (this.isOpaque() || opaqueBackground.rgba.a !== 1) {
         return this;
       }
       const { r, g, b, a } = this.rgba;
-      return new Color(new RGBA(opaqueBackground.rgba.r - a * (opaqueBackground.rgba.r - r), opaqueBackground.rgba.g - a * (opaqueBackground.rgba.g - g), opaqueBackground.rgba.b - a * (opaqueBackground.rgba.b - b), 1));
+      return new _Color(new RGBA(opaqueBackground.rgba.r - a * (opaqueBackground.rgba.r - r), opaqueBackground.rgba.g - a * (opaqueBackground.rgba.g - g), opaqueBackground.rgba.b - a * (opaqueBackground.rgba.b - b), 1));
     }
     toString() {
       if (!this._toString) {
-        this._toString = Color.Format.CSS.format(this);
+        this._toString = _Color.Format.CSS.format(this);
       }
       return this._toString;
     }
@@ -10383,7 +10786,7 @@
     })(Format = Color2.Format || (Color2.Format = {}));
   })(Color || (Color = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/languages/defaultDocumentColorsComputer.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/languages/defaultDocumentColorsComputer.js
   function _parseCaptureGroups(captureGroups) {
     const values = [];
     for (const captureGroup of captureGroups) {
@@ -10464,7 +10867,7 @@
   }
   function computeColors(model) {
     const result = [];
-    const initialValidationRegex = /\b(rgb|rgba|hsl|hsla)(\([0-9\s,.\%]*\))|(#)([A-Fa-f0-9]{6})\b|(#)([A-Fa-f0-9]{8})\b/gm;
+    const initialValidationRegex = /\b(rgb|rgba|hsl|hsla)(\([0-9\s,.\%]*\))|(#)([A-Fa-f0-9]{3})\b|(#)([A-Fa-f0-9]{4})\b|(#)([A-Fa-f0-9]{6})\b|(#)([A-Fa-f0-9]{8})\b/gm;
     const initialValidationMatches = _findMatches(model, initialValidationRegex);
     if (initialValidationMatches.length > 0) {
       for (const initialMatch of initialValidationMatches) {
@@ -10504,7 +10907,7 @@
     return computeColors(model);
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js
   var __awaiter2 = function(thisArg, _arguments, P, generator) {
     function adopt(value) {
       return value instanceof P ? value : new P(function(resolve2) {
@@ -10702,7 +11105,7 @@
       }
     }
   };
-  var EditorSimpleWorker = class {
+  var EditorSimpleWorker = class _EditorSimpleWorker {
     constructor(host, foreignModuleFactory) {
       this._host = host;
       this._models = /* @__PURE__ */ Object.create(null);
@@ -10753,19 +11156,17 @@
         if (!original || !modified) {
           return null;
         }
-        return EditorSimpleWorker.computeDiff(original, modified, options, algorithm);
+        return _EditorSimpleWorker.computeDiff(original, modified, options, algorithm);
       });
     }
     static computeDiff(originalTextModel, modifiedTextModel, options, algorithm) {
-      const diffAlgorithm = algorithm === "advanced" ? linesDiffComputers.advanced : linesDiffComputers.legacy;
+      const diffAlgorithm = algorithm === "advanced" ? linesDiffComputers.getAdvanced() : linesDiffComputers.getLegacy();
       const originalLines = originalTextModel.getLinesContent();
       const modifiedLines = modifiedTextModel.getLinesContent();
       const result = diffAlgorithm.computeDiff(originalLines, modifiedLines, options);
       const identical = result.changes.length > 0 ? false : this._modelsAreIdentical(originalTextModel, modifiedTextModel);
-      return {
-        identical,
-        quitEarly: result.hitTimeout,
-        changes: result.changes.map((m) => {
+      function getLineChanges(changes) {
+        return changes.map((m) => {
           var _a3;
           return [m.originalRange.startLineNumber, m.originalRange.endLineNumberExclusive, m.modifiedRange.startLineNumber, m.modifiedRange.endLineNumberExclusive, (_a3 = m.innerChanges) === null || _a3 === void 0 ? void 0 : _a3.map((m2) => [
             m2.originalRange.startLineNumber,
@@ -10777,7 +11178,19 @@
             m2.modifiedRange.endLineNumber,
             m2.modifiedRange.endColumn
           ])];
-        })
+        });
+      }
+      return {
+        identical,
+        quitEarly: result.hitTimeout,
+        changes: getLineChanges(result.changes),
+        moves: result.moves.map((m) => [
+          m.lineRangeMapping.original.startLineNumber,
+          m.lineRangeMapping.original.endLineNumberExclusive,
+          m.lineRangeMapping.modified.startLineNumber,
+          m.lineRangeMapping.modified.endLineNumberExclusive,
+          getLineChanges(m.changes)
+        ])
       };
     }
     static _modelsAreIdentical(original, modified) {
@@ -10823,7 +11236,7 @@
           if (original === text) {
             continue;
           }
-          if (Math.max(text.length, original.length) > EditorSimpleWorker._diffLimit) {
+          if (Math.max(text.length, original.length) > _EditorSimpleWorker._diffLimit) {
             result.push({ range, text });
             continue;
           }
@@ -10869,7 +11282,7 @@
     }
     textualSuggest(modelUrls, leadingWord, wordDef, wordDefFlags) {
       return __awaiter2(this, void 0, void 0, function* () {
-        const sw = new StopWatch(true);
+        const sw = new StopWatch();
         const wordDefRegExp = new RegExp(wordDef, wordDefFlags);
         const seen = /* @__PURE__ */ new Set();
         outer:
@@ -10883,7 +11296,7 @@
                 continue;
               }
               seen.add(word);
-              if (seen.size > EditorSimpleWorker._suggestionsLimit) {
+              if (seen.size > _EditorSimpleWorker._suggestionsLimit) {
                 break outer;
               }
             }
@@ -10985,7 +11398,7 @@
     globalThis.monaco = createMonacoBaseAPI();
   }
 
-  // node_modules/.pnpm/monaco-editor@0.39.0/node_modules/monaco-editor/esm/vs/editor/editor.worker.js
+  // node_modules/.pnpm/monaco-editor@0.41.0/node_modules/monaco-editor/esm/vs/editor/editor.worker.js
   var initialized = false;
   function initialize(foreignModule) {
     if (initialized) {
