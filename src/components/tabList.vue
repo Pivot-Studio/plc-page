@@ -19,7 +19,7 @@ async function run(params: string) {
   isRunning.value = true;
   try {
     let re = await axios.post<{ result: string }>(
-      "http://43.154.191.136:8080/coderunner",
+      "https://code.lang.pivotstudio.cn/coderunner",
       {
         code: params,
       }

@@ -101,7 +101,7 @@ pub fn main() i64 {
     return 0;
 }
 
-pub fn count(mp: [[i64 * 5] * 5]) i64 {
+pub fn count(mp: [[i64]]) i64 {
     let res = 0;
     let w = 5;
     let h = 5;
@@ -128,7 +128,8 @@ pub fn count(mp: [[i64 * 5] * 5]) i64 {
     }
     return res;
 }
-    
+
+      
 `,
   },
 ];
