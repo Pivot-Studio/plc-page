@@ -96,8 +96,9 @@ pub fn main() i64 {
     // 0, 1, 1, 0, 0
     // 1, 0, 0, 1, 1
     let mp = [[1, 0, 1, 1, 1], [1, 1, 0, 1, 1], [1, 0, 0, 1, 1], [0, 1, 1, 0, 0], [1, 0, 0, 1, 1]];
-    panic::assert(count(mp) == 5);
-    println!(count(mp));
+    let c = count(mp);
+    panic::assert(c == 5);
+    println!(c);
     return 0;
 }
 
@@ -129,7 +130,8 @@ pub fn count(mp: [[i64]]) i64 {
     return res;
 }
 
-      
+        
+    
 `,
   },
 ];

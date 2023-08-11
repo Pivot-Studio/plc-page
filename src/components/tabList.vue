@@ -18,18 +18,22 @@ let isRunning = ref(false);
 async function run(params: string) {
   isRunning.value = true;
   try {
-    let re = await axios.post<{ result: string }>(
+    let re = await axios.post<{ runOutput: string, status:number, compileOutput: string }>(
       "https://code.lang.pivotstudio.cn/coderunner",
       {
         code: params,
       }
     );
     isRunning.value = false;
-    if (!re.data.result) {
+    if (re.data.status === 1) {
+      emit("updateOutput", re.data.compileOutput);
+      return;
+    }
+    if (!re.data.runOutput && re.data.status === 0) {
       emit("updateOutput", "run success with no output");
       return;
     }
-    emit("updateOutput", re.data.result);
+    emit("updateOutput", re.data.runOutput);
   } catch (error) {
     isRunning.value = false;
     emit("updateOutput", error);
