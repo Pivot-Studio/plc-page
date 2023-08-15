@@ -16,13 +16,13 @@ import { ref, onMounted, watch } from "vue";
 import { basicCode } from "@/constant";
 import { memberList } from "@/constant";
 import createMonaco, { PlMonaco } from "@pivot-lang/create-monaco";
-import codeBlock from "@/components/codeBlock.vue";
+import CodeBlock from "@/components/codeBlock.vue";
 import { cp } from "fs";
 const tabVal = ref("hello world");
 const tabList = basicCode.map((item) => item.title);
 let monaco: PlMonaco;
 let code = ref("");
-let runresult = ref("");
+let runResult = ref("");
 function gotoEmail() {
   window.location.href = "mailto:lang@pivotstudio.cn";
 }
@@ -57,24 +57,28 @@ watch(
         With the help of Web Assembly technology, we are able to provide support
         for some of the Pivot Lang syntax in the browser for you to experience.
       </div>
-      <div class="code-box">
-        <TabList
-          @updateVal="(val:string) => (tabVal = val)"
-          @updateOutput="(re) => (runresult = re)"
-          :tablist="tabList"
-          :val="tabVal"
-          :code="code"
-        ></TabList>
-        <div class="code-container">
-          <div id="container"></div>
+      <div class="code-now-container">
+        <div class="code-box">
+          <TabList
+            @updateVal="(val:string) => (tabVal = val)"
+            @updateOutput="
+              (re) =>
+                (runResult = re[re.length - 1] === '\n' ? re.slice(0, -1) : re)
+            "
+            :tablist="tabList"
+            :val="tabVal"
+            :code="code"
+          ></TabList>
+          <div class="code-container">
+            <div id="container"></div>
+          </div>
+        </div>
+        <div class="execution">
+          <div class="execution-title">Execution</div>
+          <CodeBlock class="code-block" :code="runResult"></CodeBlock>
         </div>
       </div>
     </div>
-    <codeBlock
-      v-if="runresult"
-      class="code-block'"
-      :code="runresult"
-    ></codeBlock>
     <div id="advantage">
       <div class="gradient-font title">Immix Garbage Collector</div>
       <div class="detail-describe">
@@ -144,6 +148,10 @@ watch(
     .title {
       text-align: center;
       margin: 50px;
+
+      @media (max-width: 600px) {
+        margin: 50px 25px 15px 25px;
+      }
     }
     .detail-describe {
       margin: 0 auto;
@@ -156,20 +164,69 @@ watch(
   #code-show {
     min-height: calc(100vh - 100px);
   }
-  .code-box {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    max-width: 74.5vw;
-    .code-container {
-      border-bottom: 10px #1e1e1e solid;
-      border-radius: 10px;
+  .code-now-container {
+    display: flex;
+    justify-content: cen;
+    .code-box {
+      // position: absolute;
+      // left: 50%;
+      // transform: translate(-50%);
+      width: 60%;
+      max-width: 800px;
+      .code-container {
+        border-bottom: 10px #1e1e1e solid;
+        border-radius: 10px;
+        height: 100%;
+      }
+      #container {
+        height: 100%;
+        max-height: calc(100vh - 400px);
+        width: 100%;
+      }
     }
-    #container {
-      height: 800px;
-      width: 800px;
-      max-height: calc(100vh - 400px);
-      max-width: 80vw;
+
+    .execution {
+      width: 25%;
+      margin: 30px 0 0 50px;
+      .execution-title {
+        color: wheat;
+        margin-left: 5px;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      .code-toolbar {
+        pre {
+          height: 100%;
+          background-color: rgba(50, 50, 70, 0.5);
+        }
+      }
+      .toolbar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 800px) {
+      flex-direction: column;
+      align-items: center;
+      .code-box {
+        width: 70%;
+        height: 40vh;
+      }
+
+      .execution {
+        width: 70%;
+        margin: 80px 0 0;
+        max-height: 300px;
+
+        pre {
+          height: 100%;
+          max-height: 80px;
+        }
+        .code-toolbar {
+          width: 100%;
+        }
+      }
     }
   }
   .team-card {

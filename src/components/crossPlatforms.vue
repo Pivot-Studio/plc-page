@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { computed, Fragment, onMounted, reactive, ref, Ref } from 'vue';
-import codeBlock from './codeBlock.vue';
-import { useDetectDeviceType } from '@/hooks/detectDeviceType';
+import { computed, Fragment, onMounted, reactive, ref, Ref } from "vue";
+import CodeBlock from "./codeBlock.vue";
+import { useDetectDeviceType } from "@/hooks/detectDeviceType";
 
 const deviceType = useDetectDeviceType();
-const currenClickPlatform = ref('');
+const currenClickPlatform = ref("");
 
-if (deviceType.value !== 'other') {
+if (deviceType.value !== "other") {
   currenClickPlatform.value = deviceType.value;
 } else {
-  currenClickPlatform.value = 'apple';
+  currenClickPlatform.value = "apple";
 }
 
 function showCode(type: string) {
@@ -17,23 +17,23 @@ function showCode(type: string) {
 }
 const platforms = [
   {
-    type: 'apple',
-    icon: 'fa-brands fa-apple',
-    iconColor: '#8465ff',
+    type: "apple",
+    icon: "fa-brands fa-apple",
+    iconColor: "#8465ff",
     code: `brew tap pivot-studio/tap
 brew install pivot-lang`,
   },
   {
-    type: 'windows',
-    icon: 'fa-brands fa-windows',
-    iconColor: '#409eff',
+    type: "windows",
+    icon: "fa-brands fa-windows",
+    iconColor: "#409eff",
     code: `scoop bucket add pivot https://github.com/Pivot-Studio/scoop
 scoop install plc`,
   },
   {
-    type: 'linux',
-    icon: 'fa-brands fa-linux',
-    iconColor: 'rgb(200, 150, 50)',
+    type: "linux",
+    icon: "fa-brands fa-linux",
+    iconColor: "rgb(200, 150, 50)",
     code: `apt install wget gnupg
 wget -O -  https://lang.pivotstudio.cn/apt/public.key | apt-key add -
 echo "deb [arch=amd64] https://lang.pivotstudio.cn/apt/repo focal main
@@ -46,15 +46,25 @@ apt install pivot-lang`,
 ];
 
 const curShowCode = computed(() => {
-  return platforms.find((item) => item.type === currenClickPlatform.value)?.code;
+  return platforms.find((item) => item.type === currenClickPlatform.value)
+    ?.code;
 });
 </script>
 <template>
   <div id="advantage">
     <div class="gradient-font title">Cross Platforms</div>
-    <div class="detail-describe">Install Pivot Lang compiler with only a few commands!</div>
+    <div class="detail-describe">
+      Install Pivot Lang compiler with only a few commands!
+    </div>
     <div class="advantages">
-      <div v-for="item in platforms" :class="{ 'advantage-item': true, 'selected-item': item.type === currenClickPlatform }" :key="item.type">
+      <div
+        v-for="item in platforms"
+        :class="{
+          'advantage-item': true,
+          'selected-item': item.type === currenClickPlatform,
+        }"
+        :key="item.type"
+      >
         <font-awesome-icon
           @click="showCode(item.type)"
           inverse
@@ -67,7 +77,9 @@ const curShowCode = computed(() => {
         />
       </div>
     </div>
-    <codeBlock class="code-block'" :code="curShowCode"></codeBlock>
+    <div class="code-block-container">
+      <CodeBlock class="code-block'" :code="curShowCode"></CodeBlock>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -114,5 +126,10 @@ const curShowCode = computed(() => {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+.code-block-container {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0;
 }
 </style>

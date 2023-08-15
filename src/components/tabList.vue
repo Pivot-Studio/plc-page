@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import { PlMonaco } from "@pivot-lang/create-monaco";
 import axios from "axios";
-import { ref } from "vue";
+import { nextTick } from "vue";
+import { onMounted, ref } from "vue";
 
 const props = defineProps<{
   tablist: string[];
   val: string;
   code: string;
 }>();
+
 const emit = defineEmits(["updateVal", "updateOutput"]);
 function updateVal(val: string) {
   emit("updateVal", val);
@@ -15,15 +17,22 @@ function updateVal(val: string) {
 
 let isRunning = ref(false);
 
+onMounted(async () => {
+  // props.code于onMounted中更新
+  await nextTick();
+  run(props.code);
+});
+
 async function run(params: string) {
   isRunning.value = true;
   try {
-    let re = await axios.post<{ runOutput: string, status:number, compileOutput: string }>(
-      "https://code.lang.pivotstudio.cn/coderunner",
-      {
-        code: params,
-      }
-    );
+    let re = await axios.post<{
+      runOutput: string;
+      status: number;
+      compileOutput: string;
+    }>("https://code.lang.pivotstudio.cn/coderunner", {
+      code: params,
+    });
     isRunning.value = false;
     if (re.data.status === 1) {
       emit("updateOutput", re.data.compileOutput);
