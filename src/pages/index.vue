@@ -173,6 +173,8 @@ watch(
       // transform: translate(-50%);
       width: 60%;
       max-width: 800px;
+      height: 600px;
+      max-height: calc(100vh - 400px);
       .code-container {
         border-bottom: 10px #1e1e1e solid;
         border-radius: 10px;
@@ -180,7 +182,6 @@ watch(
       }
       #container {
         height: 100%;
-        max-height: calc(100vh - 400px);
         width: 100%;
       }
     }
