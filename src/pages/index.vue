@@ -166,7 +166,7 @@ watch(
   }
   .code-now-container {
     display: flex;
-    justify-content: cen;
+    justify-content: center;
     .code-box {
       // position: absolute;
       // left: 50%;
