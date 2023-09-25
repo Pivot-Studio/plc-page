@@ -147,7 +147,7 @@ function removeBackPointer(root:SunBurstData) {
 export const getTotalCov = async (): Promise<Coverages> => {
   return (
     await axios.get<Coverages>(
-      "https://codecov.io/api/v2/github/Pivot-Studio/repos/pivot-lang/totals/?branch=master",
+      "https://cov.lang.pivotstudio.cn/api/v2/github/Pivot-Studio/repos/pivot-lang/totals/?branch=master",
       {
         headers: {
           accept: "application/json",
