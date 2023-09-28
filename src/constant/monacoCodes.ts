@@ -136,7 +136,6 @@ pub fn count(mp: [[i64]]) i64 {
     title:"hash table",
     code:`use std::cols::hashtable;
 use core::panic::assert;
-use core::hash::Hash;
 use core::eq::*;
 
 fn main() i64 {

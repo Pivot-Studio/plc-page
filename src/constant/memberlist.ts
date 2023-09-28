@@ -57,6 +57,12 @@ export const memberList = [
     name: 'MoonOld',
     github: 'https://github.com/MoonOld',
     avatar: 'https://avatars.githubusercontent.com/u/47448870?v=4',
-    identity: 'page design',
+    identity: 'developer',
+  },
+  {
+    name: '^1e%',
+    github: 'https://github.com/Alex4210987',
+    avatar: 'https://avatars.githubusercontent.com/u/113411296?v=4',
+    identity: 'developer',
   },
 ];

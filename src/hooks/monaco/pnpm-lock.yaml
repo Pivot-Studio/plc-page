@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@pivot-lang/pivot-lang':
-    specifier: 0.1.2-aef0db6.0
-    version: 0.1.2-aef0db6.0
+    specifier: 0.1.2-be67dea.0
+    version: 0.1.2-be67dea.0
   monaco-editor:
     specifier: ^0.37.1
     version: 0.37.1
@@ -89,8 +89,8 @@ packages:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
 
-  /@pivot-lang/pivot-lang@0.1.2-aef0db6.0:
-    resolution: {integrity: sha512-blfuK+iR31kaj9wO6cb9vSjKNGkbuJFu/bdhRAzcnPBcngAru/M8LuoL0IjRRZ2lroQGjH0u0OZp1KsZKOzM3w==}
+  /@pivot-lang/pivot-lang@0.1.2-be67dea.0:
+    resolution: {integrity: sha512-JFsZDoD/aUFd9UAgEfij7rRM75HFRaoMXs/n+MByeautDvNukb4t8oNC0D74cTEfnT4dkxqvZkJrCTD+xNBXog==}
     dev: false
 
   /@types/body-parser@1.19.2:
