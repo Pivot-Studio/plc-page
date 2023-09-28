@@ -129,9 +129,26 @@ pub fn count(mp: [[i64]]) i64 {
     }
     return res;
 }
-
-        
-    
+  
 `,
   },
+  {
+    title:"hash table",
+    code:`use std::cols::hashtable;
+use core::panic::assert;
+use core::hash::Hash;
+use core::eq::*;
+
+fn main() i64 {
+    let table = hashtable::new_hash_table<string|string>(10 as u64, 1 as u64);
+    table.insert("hello","world");
+    table.insert("bye","bye");
+    assert(table.get("hello") is string);
+    let v = table.get("hello") as string!;
+    assert("world".eq(&v));
+    return 0;
+}
+
+`
+  }
 ];
