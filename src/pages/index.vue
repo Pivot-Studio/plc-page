@@ -18,6 +18,15 @@ import { memberList } from "@/constant";
 import createMonaco, { PlMonaco } from "@pivot-lang/create-monaco";
 import CodeBlock from "@/components/codeBlock.vue";
 import { cp } from "fs";
+import { AnsiUp } from "ansi_up";
+import Convert from "ansi-to-html";
+import "xterm/css/xterm.css";
+import { Terminal } from "xterm";
+import { Unicode11Addon } from "@xterm/addon-unicode11";
+import { CanvasAddon } from "@xterm/addon-canvas";
+import { WebglAddon } from "@xterm/addon-webgl";
+
+import { FitAddon } from "@xterm/addon-fit";
 const tabVal = ref("hello world");
 const tabList = basicCode.map((item) => item.title);
 let monaco: PlMonaco;
@@ -25,6 +34,24 @@ let code = ref("");
 let runResult = ref("");
 function gotoEmail() {
   window.location.href = "mailto:lang@pivotstudio.cn";
+}
+
+const ansiUp = new AnsiUp();
+const convert = new Convert();
+const terminal = new Terminal({
+  convertEol: true,
+  disableStdin: true, //是否应禁用输入
+  fontSize: 14,
+  theme: {
+    foreground: "#ECECEC", //字体
+    background: "#000000", //背景色
+  },
+});
+
+function handleOutput(re: string) {
+  runResult.value = re[re.length - 1] === "\n" ? re.slice(0, -1) : re;
+  terminal.reset();
+  terminal.write(runResult.value);
 }
 
 onMounted(async () => {
@@ -36,6 +63,10 @@ onMounted(async () => {
   monaco.editor.onDidChangeModelContent(() => {
     code.value = monaco.editor.getModel()!.getValue();
   });
+  const canvasAddon = new CanvasAddon();
+  terminal.loadAddon(canvasAddon);
+  terminal.open(document.querySelector(".code-block") as HTMLElement);
+  terminal.resize(44, 17);
 });
 watch(
   () => tabVal.value,
@@ -60,11 +91,8 @@ watch(
       <div class="code-now-container">
         <div class="code-box">
           <TabList
-            @updateVal="(val:string) => (tabVal = val)"
-            @updateOutput="
-              (re) =>
-                (runResult = re[re.length - 1] === '\n' ? re.slice(0, -1) : re)
-            "
+            @updateVal="(val) => (tabVal = val)"
+            @updateOutput="handleOutput"
             :tablist="tabList"
             :val="tabVal"
             :code="code"
@@ -75,7 +103,7 @@ watch(
         </div>
         <div class="execution">
           <div class="execution-title">Execution</div>
-          <CodeBlock class="code-block" :code="runResult"></CodeBlock>
+          <div class="code-block"></div>
         </div>
       </div>
     </div>
@@ -275,6 +303,41 @@ watch(
     .button {
       width: 10vw;
       margin: 50px auto;
+    }
+  }
+
+  .code-block {
+    white-space: pre-wrap;
+    padding: 10px 0 0 20px;
+    border-radius: 10px;
+    color: aliceblue;
+    width: fit-content;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border: 5px #666 solid;
+  }
+
+  .xterm-helpers {
+    visibility: hidden;
+    height: 0;
+  }
+  .xterm-cursor {
+    display: none !important;
+  }
+
+  .xterm .xterm-viewport {
+    &::-webkit-scrollbar {
+      height: 5px;
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #666;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      &:hover {
+        background-color: #999; // 轨道颜色
+      }
+    }
+    &::-webkit-scrollbar-track {
+      background-color: #222; // 轨道颜色
     }
   }
 }
