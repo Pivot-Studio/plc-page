@@ -1,5 +1,5 @@
 (() => {
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/errors.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/errors.js
   var ErrorHandler = class {
     constructor() {
       this.listeners = [];
@@ -88,8 +88,8 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/functional.js
-  function once(fn) {
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/functional.js
+  function createSingleCallFunction(fn) {
     const _this = this;
     let didCall = false;
     let result;
@@ -103,7 +103,7 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/iterator.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/iterator.js
   var Iterable;
   (function(Iterable2) {
     function is(thing) {
@@ -131,6 +131,12 @@
       return iterable || _empty2;
     }
     Iterable2.from = from;
+    function* reverse(array) {
+      for (let i = array.length - 1; i >= 0; i--) {
+        yield array[i];
+      }
+    }
+    Iterable2.reverse = reverse;
     function isEmpty(iterable) {
       return !iterable || iterable[Symbol.iterator]().next().done === true;
     }
@@ -222,7 +228,7 @@
     Iterable2.consume = consume;
   })(Iterable || (Iterable = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/lifecycle.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/lifecycle.js
   var TRACK_DISPOSABLES = false;
   var disposableTracker = null;
   function setDisposableTracker(tracker) {
@@ -243,7 +249,7 @@
         if (child && child !== Disposable.None) {
           try {
             child[__is_disposable_tracked__] = true;
-          } catch (_a3) {
+          } catch (_a4) {
           }
         }
       }
@@ -251,7 +257,7 @@
         if (disposable && disposable !== Disposable.None) {
           try {
             disposable[__is_disposable_tracked__] = true;
-          } catch (_a3) {
+          } catch (_a4) {
           }
         }
       }
@@ -307,7 +313,7 @@
   }
   function toDisposable(fn) {
     const self2 = trackDisposable({
-      dispose: once(() => {
+      dispose: createSingleCallFunction(() => {
         markAsDisposed(self2);
         fn();
       })
@@ -372,6 +378,18 @@
       }
       return o;
     }
+    /**
+     * Deletes the value from the store, but does not dispose it.
+     */
+    deleteAndLeak(o) {
+      if (!o) {
+        return;
+      }
+      if (this._toDispose.has(o)) {
+        this._toDispose.delete(o);
+        setParentOfDisposable(o, null);
+      }
+    }
   };
   DisposableStore.DISABLE_DISPOSED_WARNING = false;
   var Disposable = class {
@@ -429,12 +447,12 @@
       return this._store.get(key);
     }
     set(key, value, skipDisposeOnOverwrite = false) {
-      var _a3;
+      var _a4;
       if (this._isDisposed) {
         console.warn(new Error("Trying to add a disposable to a DisposableMap that has already been disposed of. The added object will be leaked!").stack);
       }
       if (!skipDisposeOnOverwrite) {
-        (_a3 = this._store.get(key)) === null || _a3 === void 0 ? void 0 : _a3.dispose();
+        (_a4 = this._store.get(key)) === null || _a4 === void 0 ? void 0 : _a4.dispose();
       }
       this._store.set(key, value);
     }
@@ -442,8 +460,8 @@
      * Delete the value stored for `key` from this map and also dispose of it.
      */
     deleteAndDispose(key) {
-      var _a3;
-      (_a3 = this._store.get(key)) === null || _a3 === void 0 ? void 0 : _a3.dispose();
+      var _a4;
+      (_a4 = this._store.get(key)) === null || _a4 === void 0 ? void 0 : _a4.dispose();
       this._store.delete(key);
     }
     [Symbol.iterator]() {
@@ -451,7 +469,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/linkedList.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/linkedList.js
   var Node = class _Node {
     constructor(element) {
       this.element = element;
@@ -559,7 +577,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/stopwatch.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/stopwatch.js
   var hasPerformanceNow = globalThis.performance && typeof globalThis.performance.now === "function";
   var StopWatch = class _StopWatch {
     static create(highResolution) {
@@ -581,7 +599,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/event.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/event.js
   var _enableDisposeWithListenerWarning = false;
   var _enableSnapshotPotentialLeakWarning = false;
   var Event;
@@ -605,7 +623,7 @@
       return debounce(event, () => void 0, 0, void 0, true, void 0, disposable);
     }
     Event2.defer = defer;
-    function once3(event) {
+    function once2(event) {
       return (listener, thisArgs = null, disposables) => {
         let didFire = false;
         let result = void 0;
@@ -625,7 +643,7 @@
         return result;
       };
     }
-    Event2.once = once3;
+    Event2.once = once2;
     function map(event, map2, disposable) {
       return snapshot((listener, thisArgs = null, disposables) => event((i) => listener.call(thisArgs, map2(i)), null, disposables), disposable);
     }
@@ -646,7 +664,10 @@
     }
     Event2.signal = signal;
     function any(...events) {
-      return (listener, thisArgs = null, disposables) => combinedDisposable(...events.map((event) => event((e) => listener.call(thisArgs, e), null, disposables)));
+      return (listener, thisArgs = null, disposables) => {
+        const disposable = combinedDisposable(...events.map((event) => event((e) => listener.call(thisArgs, e))));
+        return addAndReturnDisposable(disposable, disposables);
+      };
     }
     Event2.any = any;
     function reduce(event, merge, initial, disposable) {
@@ -673,6 +694,14 @@
       const emitter = new Emitter(options);
       disposable === null || disposable === void 0 ? void 0 : disposable.add(emitter);
       return emitter.event;
+    }
+    function addAndReturnDisposable(d, store) {
+      if (store instanceof Array) {
+        store.push(d);
+      } else if (store) {
+        store.add(d);
+      }
+      return d;
     }
     function debounce(event, merge, delay = 100, leading = false, flushOnListenerRemove = false, leakWarningThreshold, disposable) {
       let subscription;
@@ -756,7 +785,7 @@
       ];
     }
     Event2.split = split;
-    function buffer(event, flushAfterTimeout = false, _buffer = []) {
+    function buffer(event, flushAfterTimeout = false, _buffer = [], disposable) {
       let buffer2 = _buffer.slice();
       let listener = event((e) => {
         if (buffer2) {
@@ -765,6 +794,9 @@
           emitter.fire(e);
         }
       });
+      if (disposable) {
+        disposable.add(listener);
+      }
       const flush = () => {
         buffer2 === null || buffer2 === void 0 ? void 0 : buffer2.forEach((e) => emitter.fire(e));
         buffer2 = null;
@@ -773,6 +805,9 @@
         onWillAddFirstListener() {
           if (!listener) {
             listener = event((e) => emitter.fire(e));
+            if (disposable) {
+              disposable.add(listener);
+            }
           }
         },
         onDidAddFirstListener() {
@@ -791,54 +826,74 @@
           listener = null;
         }
       });
+      if (disposable) {
+        disposable.add(emitter);
+      }
       return emitter.event;
     }
     Event2.buffer = buffer;
-    class ChainableEvent {
-      constructor(event) {
-        this.event = event;
-        this.disposables = new DisposableStore();
-      }
-      /** @see {@link Event.map} */
-      map(fn) {
-        return new ChainableEvent(map(this.event, fn, this.disposables));
-      }
-      /** @see {@link Event.forEach} */
-      forEach(fn) {
-        return new ChainableEvent(forEach(this.event, fn, this.disposables));
-      }
-      filter(fn) {
-        return new ChainableEvent(filter(this.event, fn, this.disposables));
-      }
-      /** @see {@link Event.reduce} */
-      reduce(merge, initial) {
-        return new ChainableEvent(reduce(this.event, merge, initial, this.disposables));
-      }
-      /** @see {@link Event.reduce} */
-      latch() {
-        return new ChainableEvent(latch(this.event, void 0, this.disposables));
-      }
-      debounce(merge, delay = 100, leading = false, flushOnListenerRemove = false, leakWarningThreshold) {
-        return new ChainableEvent(debounce(this.event, merge, delay, leading, flushOnListenerRemove, leakWarningThreshold, this.disposables));
-      }
-      /**
-       * Attach a listener to the event.
-       */
-      on(listener, thisArgs, disposables) {
-        return this.event(listener, thisArgs, disposables);
-      }
-      /** @see {@link Event.once} */
-      once(listener, thisArgs, disposables) {
-        return once3(this.event)(listener, thisArgs, disposables);
-      }
-      dispose() {
-        this.disposables.dispose();
-      }
-    }
-    function chain(event) {
-      return new ChainableEvent(event);
+    function chain(event, sythensize) {
+      const fn = (listener, thisArgs, disposables) => {
+        const cs = sythensize(new ChainableSynthesis());
+        return event(function(value) {
+          const result = cs.evaluate(value);
+          if (result !== HaltChainable) {
+            listener.call(thisArgs, result);
+          }
+        }, void 0, disposables);
+      };
+      return fn;
     }
     Event2.chain = chain;
+    const HaltChainable = Symbol("HaltChainable");
+    class ChainableSynthesis {
+      constructor() {
+        this.steps = [];
+      }
+      map(fn) {
+        this.steps.push(fn);
+        return this;
+      }
+      forEach(fn) {
+        this.steps.push((v) => {
+          fn(v);
+          return v;
+        });
+        return this;
+      }
+      filter(fn) {
+        this.steps.push((v) => fn(v) ? v : HaltChainable);
+        return this;
+      }
+      reduce(merge, initial) {
+        let last = initial;
+        this.steps.push((v) => {
+          last = merge(last, v);
+          return last;
+        });
+        return this;
+      }
+      latch(equals4 = (a2, b) => a2 === b) {
+        let firstCall = true;
+        let cache;
+        this.steps.push((value) => {
+          const shouldEmit = firstCall || !equals4(value, cache);
+          firstCall = false;
+          cache = value;
+          return shouldEmit ? value : HaltChainable;
+        });
+        return this;
+      }
+      evaluate(value) {
+        for (const step of this.steps) {
+          value = step(value);
+          if (value === HaltChainable) {
+            break;
+          }
+        }
+        return value;
+      }
+    }
     function fromNodeEventEmitter(emitter, eventName, map2 = (id) => id) {
       const fn = (...args) => result.fire(map2(...args));
       const onFirstListenerAdd = () => emitter.on(eventName, fn);
@@ -856,7 +911,7 @@
     }
     Event2.fromDOMEventEmitter = fromDOMEventEmitter;
     function toPromise(event) {
-      return new Promise((resolve2) => once3(event)(resolve2));
+      return new Promise((resolve2) => once2(event)(resolve2));
     }
     Event2.toPromise = toPromise;
     function fromPromise(promise) {
@@ -1004,8 +1059,8 @@
       this._warnCountdown = 0;
     }
     dispose() {
-      var _a3;
-      (_a3 = this._stacks) === null || _a3 === void 0 ? void 0 : _a3.clear();
+      var _a4;
+      (_a4 = this._stacks) === null || _a4 === void 0 ? void 0 : _a4.clear();
     }
     check(stack, listenerCount) {
       const threshold = this.threshold;
@@ -1039,8 +1094,8 @@
   };
   var Stacktrace = class _Stacktrace {
     static create() {
-      var _a3;
-      return new _Stacktrace((_a3 = new Error().stack) !== null && _a3 !== void 0 ? _a3 : "");
+      var _a4;
+      return new _Stacktrace((_a4 = new Error().stack) !== null && _a4 !== void 0 ? _a4 : "");
     }
     constructor(value) {
       this.value = value;
@@ -1069,18 +1124,18 @@
   };
   var Emitter = class {
     constructor(options) {
-      var _a3, _b, _c, _d, _e;
+      var _a4, _b2, _c, _d, _e;
       this._size = 0;
       this._options = options;
-      this._leakageMon = _globalLeakWarningThreshold > 0 || ((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.leakWarningThreshold) ? new LeakageMonitor((_c = (_b = this._options) === null || _b === void 0 ? void 0 : _b.leakWarningThreshold) !== null && _c !== void 0 ? _c : _globalLeakWarningThreshold) : void 0;
+      this._leakageMon = _globalLeakWarningThreshold > 0 || ((_a4 = this._options) === null || _a4 === void 0 ? void 0 : _a4.leakWarningThreshold) ? new LeakageMonitor((_c = (_b2 = this._options) === null || _b2 === void 0 ? void 0 : _b2.leakWarningThreshold) !== null && _c !== void 0 ? _c : _globalLeakWarningThreshold) : void 0;
       this._perfMon = ((_d = this._options) === null || _d === void 0 ? void 0 : _d._profName) ? new EventProfiling(this._options._profName) : void 0;
       this._deliveryQueue = (_e = this._options) === null || _e === void 0 ? void 0 : _e.deliveryQueue;
     }
     dispose() {
-      var _a3, _b, _c, _d;
+      var _a4, _b2, _c, _d;
       if (!this._disposed) {
         this._disposed = true;
-        if (((_a3 = this._deliveryQueue) === null || _a3 === void 0 ? void 0 : _a3.current) === this) {
+        if (((_a4 = this._deliveryQueue) === null || _a4 === void 0 ? void 0 : _a4.current) === this) {
           this._deliveryQueue.reset();
         }
         if (this._listeners) {
@@ -1088,15 +1143,15 @@
             const listeners = this._listeners;
             queueMicrotask(() => {
               forEachListener(listeners, (l) => {
-                var _a4;
-                return (_a4 = l.stack) === null || _a4 === void 0 ? void 0 : _a4.print();
+                var _a5;
+                return (_a5 = l.stack) === null || _a5 === void 0 ? void 0 : _a5.print();
               });
             });
           }
           this._listeners = void 0;
           this._size = 0;
         }
-        (_c = (_b = this._options) === null || _b === void 0 ? void 0 : _b.onDidRemoveLastListener) === null || _c === void 0 ? void 0 : _c.call(_b);
+        (_c = (_b2 = this._options) === null || _b2 === void 0 ? void 0 : _b2.onDidRemoveLastListener) === null || _c === void 0 ? void 0 : _c.call(_b2);
         (_d = this._leakageMon) === null || _d === void 0 ? void 0 : _d.dispose();
       }
     }
@@ -1105,9 +1160,9 @@
      * to events from this Emitter
      */
     get event() {
-      var _a3;
-      (_a3 = this._event) !== null && _a3 !== void 0 ? _a3 : this._event = (callback, thisArgs, disposables) => {
-        var _a4, _b, _c, _d, _e;
+      var _a4;
+      (_a4 = this._event) !== null && _a4 !== void 0 ? _a4 : this._event = (callback, thisArgs, disposables) => {
+        var _a5, _b2, _c, _d, _e;
         if (this._leakageMon && this._size > this._leakageMon.threshold * 3) {
           console.warn(`[${this._leakageMon.name}] REFUSES to accept new listeners because it exceeded its threshold by far`);
           return Disposable.None;
@@ -1129,7 +1184,7 @@
           contained.stack = stack !== null && stack !== void 0 ? stack : Stacktrace.create();
         }
         if (!this._listeners) {
-          (_b = (_a4 = this._options) === null || _a4 === void 0 ? void 0 : _a4.onWillAddFirstListener) === null || _b === void 0 ? void 0 : _b.call(_a4, this);
+          (_b2 = (_a5 = this._options) === null || _a5 === void 0 ? void 0 : _a5.onWillAddFirstListener) === null || _b2 === void 0 ? void 0 : _b2.call(_a5, this);
           this._listeners = contained;
           (_d = (_c = this._options) === null || _c === void 0 ? void 0 : _c.onDidAddFirstListener) === null || _d === void 0 ? void 0 : _d.call(_c, this);
         } else if (this._listeners instanceof UniqueContainer) {
@@ -1153,8 +1208,8 @@
       return this._event;
     }
     _removeListener(listener) {
-      var _a3, _b, _c, _d;
-      (_b = (_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.onWillRemoveListener) === null || _b === void 0 ? void 0 : _b.call(_a3, this);
+      var _a4, _b2, _c, _d;
+      (_b2 = (_a4 = this._options) === null || _a4 === void 0 ? void 0 : _a4.onWillRemoveListener) === null || _b2 === void 0 ? void 0 : _b2.call(_a4, this);
       if (!this._listeners) {
         return;
       }
@@ -1191,11 +1246,11 @@
       }
     }
     _deliver(listener, value) {
-      var _a3;
+      var _a4;
       if (!listener) {
         return;
       }
-      const errorHandler2 = ((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.onListenerError) || onUnexpectedError;
+      const errorHandler2 = ((_a4 = this._options) === null || _a4 === void 0 ? void 0 : _a4.onListenerError) || onUnexpectedError;
       if (!errorHandler2) {
         listener.value(value);
         return;
@@ -1219,10 +1274,10 @@
      * subscribers
      */
     fire(event) {
-      var _a3, _b, _c, _d;
-      if ((_a3 = this._deliveryQueue) === null || _a3 === void 0 ? void 0 : _a3.current) {
+      var _a4, _b2, _c, _d;
+      if ((_a4 = this._deliveryQueue) === null || _a4 === void 0 ? void 0 : _a4.current) {
         this._deliverQueue(this._deliveryQueue);
-        (_b = this._perfMon) === null || _b === void 0 ? void 0 : _b.stop();
+        (_b2 = this._perfMon) === null || _b2 === void 0 ? void 0 : _b2.stop();
       }
       (_c = this._perfMon) === null || _c === void 0 ? void 0 : _c.start(this._size);
       if (!this._listeners) {
@@ -1257,12 +1312,12 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/types.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/types.js
   function isString(str) {
     return typeof str === "string";
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/objects.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/objects.js
   function getAllPropertyNames(obj) {
     let res = [];
     while (Object.prototype !== obj) {
@@ -1294,7 +1349,7 @@
     return result;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/nls.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/nls.js
   var isPseudo = typeof document !== "undefined" && document.location && document.location.hash.indexOf("pseudo=true") >= 0;
   function _format(message, args) {
     let result;
@@ -1325,7 +1380,7 @@
     return void 0;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/platform.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/platform.js
   var _a;
   var LANGUAGE_DEFAULT = "en";
   var _isWindows = false;
@@ -1441,7 +1496,7 @@
   var isEdge = !!(userAgent && userAgent.indexOf("Edg/") >= 0);
   var isAndroid = !!(userAgent && userAgent.indexOf("Android") >= 0);
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/cache.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/cache.js
   var LRUCachedFunction = class {
     constructor(fn) {
       this.fn = fn;
@@ -1458,7 +1513,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/lazy.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/lazy.js
   var Lazy = class {
     constructor(executor) {
       this.executor = executor;
@@ -1493,7 +1548,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/strings.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/strings.js
   var _a2;
   function escapeRegExpCharacters(value) {
     return value.replace(/[\\\{\}\*\+\?\|\^\$\.\[\]\(\)]/g, "\\$&");
@@ -1680,7 +1735,7 @@
   };
   InvisibleCharacters._data = void 0;
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/worker/simpleWorker.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/worker/simpleWorker.js
   var INITIALIZE = "$initialize";
   var RequestMessage = class {
     constructor(vsWorker, req, method, args) {
@@ -1977,7 +2032,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/diff/diffChange.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/diff/diffChange.js
   var DiffChange = class {
     /**
      * Constructs a new DiffChange with the given sequence information
@@ -2003,7 +2058,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/hash.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/hash.js
   function numberHash(val, initialHashVal) {
     return (initialHashVal << 5) - initialHashVal + val | 0;
   }
@@ -2201,7 +2256,7 @@
   };
   StringSHA1._bigBlock32 = new DataView(new ArrayBuffer(320));
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/diff/diff.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/diff/diff.js
   var StringDiffSequence = class {
     constructor(source) {
       this.source = source;
@@ -2938,7 +2993,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/process.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/process.js
   var safeProcess;
   if (typeof globals.vscode !== "undefined" && typeof globals.vscode.process !== "undefined") {
     const sandboxProcess = globals.vscode.process;
@@ -2993,7 +3048,7 @@
   var env = safeProcess.env;
   var platform = safeProcess.platform;
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/path.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/path.js
   var CHAR_UPPERCASE_A = 65;
   var CHAR_LOWERCASE_A = 97;
   var CHAR_UPPERCASE_Z = 90;
@@ -4041,7 +4096,7 @@
   var extname = platformIsWin32 ? win32.extname : posix.extname;
   var sep = platformIsWin32 ? win32.sep : posix.sep;
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/uri.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/uri.js
   var _schemePattern = /^\w[\w\d+.-]*$/;
   var _singleSlashStart = /^\//;
   var _doubleSlashStart = /^\/\//;
@@ -4281,15 +4336,15 @@
       return this;
     }
     static revive(data) {
-      var _a3, _b;
+      var _a4, _b2;
       if (!data) {
         return data;
       } else if (data instanceof _URI) {
         return data;
       } else {
         const result = new Uri(data);
-        result._formatted = (_a3 = data.external) !== null && _a3 !== void 0 ? _a3 : null;
-        result._fsPath = data._sep === _pathSepMarker ? (_b = data.fsPath) !== null && _b !== void 0 ? _b : null : null;
+        result._formatted = (_a4 = data.external) !== null && _a4 !== void 0 ? _a4 : null;
+        result._fsPath = data._sep === _pathSepMarker ? (_b2 = data.fsPath) !== null && _b2 !== void 0 ? _b2 : null : null;
         return result;
       }
     }
@@ -4352,6 +4407,7 @@
       58
       /* CharCode.Colon */
     ]: "%3A",
+    // gen-delims
     [
       47
       /* CharCode.Slash */
@@ -4380,6 +4436,7 @@
       33
       /* CharCode.ExclamationMark */
     ]: "%21",
+    // sub-delims
     [
       36
       /* CharCode.DollarSign */
@@ -4557,7 +4614,7 @@
   function decodeURIComponentGraceful(str) {
     try {
       return decodeURIComponent(str);
-    } catch (_a3) {
+    } catch (_a4) {
       if (str.length > 3) {
         return str.substr(0, 3) + decodeURIComponentGraceful(str.substr(3));
       } else {
@@ -4573,7 +4630,7 @@
     return str.replace(_rEncodedAsHex, (match) => decodeURIComponentGraceful(match));
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/position.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/position.js
   var Position = class _Position {
     constructor(lineNumber, column) {
       this.lineNumber = lineNumber;
@@ -4696,7 +4753,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/range.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/range.js
   var Range = class _Range {
     constructor(startLineNumber, startColumn, endLineNumber, endColumn) {
       if (startLineNumber > endLineNumber || startLineNumber === endLineNumber && startColumn > endColumn) {
@@ -5067,7 +5124,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/arrays.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/arrays.js
   function equals(one, other, itemEquals = (a2, b) => a2 === b) {
     if (one === other) {
       return true;
@@ -5085,14 +5142,38 @@
     }
     return true;
   }
-  function findLastIndex(array, fn) {
-    for (let i = array.length - 1; i >= 0; i--) {
-      const element = array[i];
-      if (fn(element)) {
-        return i;
+  function* groupAdjacentBy(items, shouldBeGrouped) {
+    let currentGroup;
+    let last;
+    for (const item of items) {
+      if (last !== void 0 && shouldBeGrouped(last, item)) {
+        currentGroup.push(item);
+      } else {
+        if (currentGroup) {
+          yield currentGroup;
+        }
+        currentGroup = [item];
       }
+      last = item;
     }
-    return -1;
+    if (currentGroup) {
+      yield currentGroup;
+    }
+  }
+  function forEachAdjacent(arr, f2) {
+    for (let i = 0; i <= arr.length; i++) {
+      f2(i === 0 ? void 0 : arr[i - 1], i === arr.length ? void 0 : arr[i]);
+    }
+  }
+  function forEachWithNeighbors(arr, f2) {
+    for (let i = 0; i < arr.length; i++) {
+      f2(i === 0 ? void 0 : arr[i - 1], arr[i], i + 1 === arr.length ? void 0 : arr[i + 1]);
+    }
+  }
+  function pushMany(arr, items) {
+    for (const item of items) {
+      arr.push(item);
+    }
   }
   var CompareResult;
   (function(CompareResult2) {
@@ -5167,7 +5248,7 @@
   CallbackIterable.empty = new CallbackIterable((_callback) => {
   });
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/uint.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/uint.js
   function toUint8(v) {
     if (v < 0) {
       return 0;
@@ -5187,7 +5268,7 @@
     return v | 0;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/model/prefixSumComputer.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/model/prefixSumComputer.js
   var PrefixSumComputer = class {
     constructor(values) {
       this.values = values;
@@ -5323,7 +5404,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/model/mirrorTextModel.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/model/mirrorTextModel.js
   var MirrorTextModel = class {
     constructor(uri, lines, eol, versionId) {
       this._uri = uri;
@@ -5414,7 +5495,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordHelper.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordHelper.js
   var USUAL_WORD_SEPARATORS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
   function createWordRegExp(allowInWords = "") {
     let source = "(-?\\d*\\.\\d\\w*)|([^";
@@ -5514,7 +5595,7 @@
     return null;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/characterClassifier.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/characterClassifier.js
   var CharacterClassifier = class _CharacterClassifier {
     constructor(_defaultValue) {
       const defaultValue = toUint8(_defaultValue);
@@ -5548,7 +5629,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/languages/linkComputer.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/languages/linkComputer.js
   var Uint8Matrix = class {
     constructor(rows, cols, defaultValue) {
       const data = new Uint8Array(rows * cols);
@@ -5911,7 +5992,7 @@
     return LinkComputer.computeLinks(model);
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/languages/supports/inplaceReplaceSupport.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/languages/supports/inplaceReplaceSupport.js
   var BasicInplaceReplace = class {
     constructor() {
       this._defaultValueSet = [
@@ -5990,7 +6071,7 @@
   };
   BasicInplaceReplace.INSTANCE = new BasicInplaceReplace();
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/cancellation.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/cancellation.js
   var shortcutEvent = Object.freeze(function(callback, context) {
     const handle = setTimeout(callback.bind(context), 0);
     return { dispose() {
@@ -6074,11 +6155,11 @@
       }
     }
     dispose(cancel = false) {
-      var _a3;
+      var _a4;
       if (cancel) {
         this.cancel();
       }
-      (_a3 = this._parentListener) === null || _a3 === void 0 ? void 0 : _a3.dispose();
+      (_a4 = this._parentListener) === null || _a4 === void 0 ? void 0 : _a4.dispose();
       if (!this._token) {
         this._token = CancellationToken.None;
       } else if (this._token instanceof MutableToken) {
@@ -6087,7 +6168,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/keyCodes.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/keyCodes.js
   var KeyCodeStrMap = class {
     constructor() {
       this._keyCodeToStr = [];
@@ -6181,6 +6262,7 @@
       [0, 54, "BracketRight", 94, "]", 221, "VK_OEM_6", "]", "OEM_6"],
       [0, 55, "Backslash", 93, "\\", 220, "VK_OEM_5", "\\", "OEM_5"],
       [0, 56, "IntlHash", 0, empty, 0, empty, empty, empty],
+      // has been dropped from the w3c spec
       [0, 57, "Semicolon", 85, ";", 186, "VK_OEM_1", ";", "OEM_1"],
       [0, 58, "Quote", 95, "'", 222, "VK_OEM_7", "'", "OEM_7"],
       [0, 59, "Backquote", 91, "`", 192, "VK_OEM_3", "`", "OEM_3"],
@@ -6438,7 +6520,7 @@
     return (firstPart | chordPart) >>> 0;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/selection.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/selection.js
   var Selection = class _Selection extends Range {
     constructor(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn) {
       super(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn);
@@ -6564,7 +6646,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/codicons.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/codicons.js
   var _codiconFontCharacters = /* @__PURE__ */ Object.create(null);
   function register(id, fontCharacter) {
     if (isString(fontCharacter)) {
@@ -6860,7 +6942,7 @@
     note: register("note", 60198),
     octoface: register("octoface", 60199),
     openPreview: register("open-preview", 60200),
-    package_: register("package", 60201),
+    package: register("package", 60201),
     paintcan: register("paintcan", 60202),
     pin: register("pin", 60203),
     play: register("play", 60204),
@@ -7110,6 +7192,7 @@
     dialogInfo: register("dialog-info", "info"),
     dialogClose: register("dialog-close", "close"),
     treeItemExpanded: register("tree-item-expanded", "chevron-down"),
+    // collapsed is done with rotation
     treeFilterOnTypeOn: register("tree-filter-on-type-on", "list-filter"),
     treeFilterOnTypeOff: register("tree-filter-on-type-off", "list-selection"),
     treeFilterClear: register("tree-filter-clear", "close"),
@@ -7125,7 +7208,7 @@
     quickInputBack: register("quick-input-back", "arrow-left")
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/tokenizationRegistry.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/tokenizationRegistry.js
   var __awaiter = function(thisArg, _arguments, P, generator) {
     function adopt(value) {
       return value instanceof P ? value : new P(function(resolve2) {
@@ -7182,8 +7265,8 @@
       return this._tokenizationSupports.get(languageId) || null;
     }
     registerFactory(languageId, factory) {
-      var _a3;
-      (_a3 = this._factories.get(languageId)) === null || _a3 === void 0 ? void 0 : _a3.dispose();
+      var _a4;
+      (_a4 = this._factories.get(languageId)) === null || _a4 === void 0 ? void 0 : _a4.dispose();
       const myData = new TokenizationSupportFactoryData(this, languageId, factory);
       this._factories.set(languageId, myData);
       return toDisposable(() => {
@@ -7276,7 +7359,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/languages.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/languages.js
   var Token = class {
     constructor(offset, type, language) {
       this.offset = offset;
@@ -7697,7 +7780,7 @@
   })(InlayHintKind || (InlayHintKind = {}));
   var TokenizationRegistry2 = new TokenizationRegistry();
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/standalone/standaloneEnums.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/standalone/standaloneEnums.js
   var AccessibilitySupport;
   (function(AccessibilitySupport2) {
     AccessibilitySupport2[AccessibilitySupport2["Unknown"] = 0] = "Unknown";
@@ -7800,146 +7883,147 @@
     EditorOption2[EditorOption2["ariaLabel"] = 4] = "ariaLabel";
     EditorOption2[EditorOption2["ariaRequired"] = 5] = "ariaRequired";
     EditorOption2[EditorOption2["autoClosingBrackets"] = 6] = "autoClosingBrackets";
-    EditorOption2[EditorOption2["screenReaderAnnounceInlineSuggestion"] = 7] = "screenReaderAnnounceInlineSuggestion";
-    EditorOption2[EditorOption2["autoClosingDelete"] = 8] = "autoClosingDelete";
-    EditorOption2[EditorOption2["autoClosingOvertype"] = 9] = "autoClosingOvertype";
-    EditorOption2[EditorOption2["autoClosingQuotes"] = 10] = "autoClosingQuotes";
-    EditorOption2[EditorOption2["autoIndent"] = 11] = "autoIndent";
-    EditorOption2[EditorOption2["automaticLayout"] = 12] = "automaticLayout";
-    EditorOption2[EditorOption2["autoSurround"] = 13] = "autoSurround";
-    EditorOption2[EditorOption2["bracketPairColorization"] = 14] = "bracketPairColorization";
-    EditorOption2[EditorOption2["guides"] = 15] = "guides";
-    EditorOption2[EditorOption2["codeLens"] = 16] = "codeLens";
-    EditorOption2[EditorOption2["codeLensFontFamily"] = 17] = "codeLensFontFamily";
-    EditorOption2[EditorOption2["codeLensFontSize"] = 18] = "codeLensFontSize";
-    EditorOption2[EditorOption2["colorDecorators"] = 19] = "colorDecorators";
-    EditorOption2[EditorOption2["colorDecoratorsLimit"] = 20] = "colorDecoratorsLimit";
-    EditorOption2[EditorOption2["columnSelection"] = 21] = "columnSelection";
-    EditorOption2[EditorOption2["comments"] = 22] = "comments";
-    EditorOption2[EditorOption2["contextmenu"] = 23] = "contextmenu";
-    EditorOption2[EditorOption2["copyWithSyntaxHighlighting"] = 24] = "copyWithSyntaxHighlighting";
-    EditorOption2[EditorOption2["cursorBlinking"] = 25] = "cursorBlinking";
-    EditorOption2[EditorOption2["cursorSmoothCaretAnimation"] = 26] = "cursorSmoothCaretAnimation";
-    EditorOption2[EditorOption2["cursorStyle"] = 27] = "cursorStyle";
-    EditorOption2[EditorOption2["cursorSurroundingLines"] = 28] = "cursorSurroundingLines";
-    EditorOption2[EditorOption2["cursorSurroundingLinesStyle"] = 29] = "cursorSurroundingLinesStyle";
-    EditorOption2[EditorOption2["cursorWidth"] = 30] = "cursorWidth";
-    EditorOption2[EditorOption2["disableLayerHinting"] = 31] = "disableLayerHinting";
-    EditorOption2[EditorOption2["disableMonospaceOptimizations"] = 32] = "disableMonospaceOptimizations";
-    EditorOption2[EditorOption2["domReadOnly"] = 33] = "domReadOnly";
-    EditorOption2[EditorOption2["dragAndDrop"] = 34] = "dragAndDrop";
-    EditorOption2[EditorOption2["dropIntoEditor"] = 35] = "dropIntoEditor";
-    EditorOption2[EditorOption2["emptySelectionClipboard"] = 36] = "emptySelectionClipboard";
-    EditorOption2[EditorOption2["experimentalWhitespaceRendering"] = 37] = "experimentalWhitespaceRendering";
-    EditorOption2[EditorOption2["extraEditorClassName"] = 38] = "extraEditorClassName";
-    EditorOption2[EditorOption2["fastScrollSensitivity"] = 39] = "fastScrollSensitivity";
-    EditorOption2[EditorOption2["find"] = 40] = "find";
-    EditorOption2[EditorOption2["fixedOverflowWidgets"] = 41] = "fixedOverflowWidgets";
-    EditorOption2[EditorOption2["folding"] = 42] = "folding";
-    EditorOption2[EditorOption2["foldingStrategy"] = 43] = "foldingStrategy";
-    EditorOption2[EditorOption2["foldingHighlight"] = 44] = "foldingHighlight";
-    EditorOption2[EditorOption2["foldingImportsByDefault"] = 45] = "foldingImportsByDefault";
-    EditorOption2[EditorOption2["foldingMaximumRegions"] = 46] = "foldingMaximumRegions";
-    EditorOption2[EditorOption2["unfoldOnClickAfterEndOfLine"] = 47] = "unfoldOnClickAfterEndOfLine";
-    EditorOption2[EditorOption2["fontFamily"] = 48] = "fontFamily";
-    EditorOption2[EditorOption2["fontInfo"] = 49] = "fontInfo";
-    EditorOption2[EditorOption2["fontLigatures"] = 50] = "fontLigatures";
-    EditorOption2[EditorOption2["fontSize"] = 51] = "fontSize";
-    EditorOption2[EditorOption2["fontWeight"] = 52] = "fontWeight";
-    EditorOption2[EditorOption2["fontVariations"] = 53] = "fontVariations";
-    EditorOption2[EditorOption2["formatOnPaste"] = 54] = "formatOnPaste";
-    EditorOption2[EditorOption2["formatOnType"] = 55] = "formatOnType";
-    EditorOption2[EditorOption2["glyphMargin"] = 56] = "glyphMargin";
-    EditorOption2[EditorOption2["gotoLocation"] = 57] = "gotoLocation";
-    EditorOption2[EditorOption2["hideCursorInOverviewRuler"] = 58] = "hideCursorInOverviewRuler";
-    EditorOption2[EditorOption2["hover"] = 59] = "hover";
-    EditorOption2[EditorOption2["inDiffEditor"] = 60] = "inDiffEditor";
-    EditorOption2[EditorOption2["inlineSuggest"] = 61] = "inlineSuggest";
-    EditorOption2[EditorOption2["letterSpacing"] = 62] = "letterSpacing";
-    EditorOption2[EditorOption2["lightbulb"] = 63] = "lightbulb";
-    EditorOption2[EditorOption2["lineDecorationsWidth"] = 64] = "lineDecorationsWidth";
-    EditorOption2[EditorOption2["lineHeight"] = 65] = "lineHeight";
-    EditorOption2[EditorOption2["lineNumbers"] = 66] = "lineNumbers";
-    EditorOption2[EditorOption2["lineNumbersMinChars"] = 67] = "lineNumbersMinChars";
-    EditorOption2[EditorOption2["linkedEditing"] = 68] = "linkedEditing";
-    EditorOption2[EditorOption2["links"] = 69] = "links";
-    EditorOption2[EditorOption2["matchBrackets"] = 70] = "matchBrackets";
-    EditorOption2[EditorOption2["minimap"] = 71] = "minimap";
-    EditorOption2[EditorOption2["mouseStyle"] = 72] = "mouseStyle";
-    EditorOption2[EditorOption2["mouseWheelScrollSensitivity"] = 73] = "mouseWheelScrollSensitivity";
-    EditorOption2[EditorOption2["mouseWheelZoom"] = 74] = "mouseWheelZoom";
-    EditorOption2[EditorOption2["multiCursorMergeOverlapping"] = 75] = "multiCursorMergeOverlapping";
-    EditorOption2[EditorOption2["multiCursorModifier"] = 76] = "multiCursorModifier";
-    EditorOption2[EditorOption2["multiCursorPaste"] = 77] = "multiCursorPaste";
-    EditorOption2[EditorOption2["multiCursorLimit"] = 78] = "multiCursorLimit";
-    EditorOption2[EditorOption2["occurrencesHighlight"] = 79] = "occurrencesHighlight";
-    EditorOption2[EditorOption2["overviewRulerBorder"] = 80] = "overviewRulerBorder";
-    EditorOption2[EditorOption2["overviewRulerLanes"] = 81] = "overviewRulerLanes";
-    EditorOption2[EditorOption2["padding"] = 82] = "padding";
-    EditorOption2[EditorOption2["pasteAs"] = 83] = "pasteAs";
-    EditorOption2[EditorOption2["parameterHints"] = 84] = "parameterHints";
-    EditorOption2[EditorOption2["peekWidgetDefaultFocus"] = 85] = "peekWidgetDefaultFocus";
-    EditorOption2[EditorOption2["definitionLinkOpensInPeek"] = 86] = "definitionLinkOpensInPeek";
-    EditorOption2[EditorOption2["quickSuggestions"] = 87] = "quickSuggestions";
-    EditorOption2[EditorOption2["quickSuggestionsDelay"] = 88] = "quickSuggestionsDelay";
-    EditorOption2[EditorOption2["readOnly"] = 89] = "readOnly";
-    EditorOption2[EditorOption2["readOnlyMessage"] = 90] = "readOnlyMessage";
-    EditorOption2[EditorOption2["renameOnType"] = 91] = "renameOnType";
-    EditorOption2[EditorOption2["renderControlCharacters"] = 92] = "renderControlCharacters";
-    EditorOption2[EditorOption2["renderFinalNewline"] = 93] = "renderFinalNewline";
-    EditorOption2[EditorOption2["renderLineHighlight"] = 94] = "renderLineHighlight";
-    EditorOption2[EditorOption2["renderLineHighlightOnlyWhenFocus"] = 95] = "renderLineHighlightOnlyWhenFocus";
-    EditorOption2[EditorOption2["renderValidationDecorations"] = 96] = "renderValidationDecorations";
-    EditorOption2[EditorOption2["renderWhitespace"] = 97] = "renderWhitespace";
-    EditorOption2[EditorOption2["revealHorizontalRightPadding"] = 98] = "revealHorizontalRightPadding";
-    EditorOption2[EditorOption2["roundedSelection"] = 99] = "roundedSelection";
-    EditorOption2[EditorOption2["rulers"] = 100] = "rulers";
-    EditorOption2[EditorOption2["scrollbar"] = 101] = "scrollbar";
-    EditorOption2[EditorOption2["scrollBeyondLastColumn"] = 102] = "scrollBeyondLastColumn";
-    EditorOption2[EditorOption2["scrollBeyondLastLine"] = 103] = "scrollBeyondLastLine";
-    EditorOption2[EditorOption2["scrollPredominantAxis"] = 104] = "scrollPredominantAxis";
-    EditorOption2[EditorOption2["selectionClipboard"] = 105] = "selectionClipboard";
-    EditorOption2[EditorOption2["selectionHighlight"] = 106] = "selectionHighlight";
-    EditorOption2[EditorOption2["selectOnLineNumbers"] = 107] = "selectOnLineNumbers";
-    EditorOption2[EditorOption2["showFoldingControls"] = 108] = "showFoldingControls";
-    EditorOption2[EditorOption2["showUnused"] = 109] = "showUnused";
-    EditorOption2[EditorOption2["snippetSuggestions"] = 110] = "snippetSuggestions";
-    EditorOption2[EditorOption2["smartSelect"] = 111] = "smartSelect";
-    EditorOption2[EditorOption2["smoothScrolling"] = 112] = "smoothScrolling";
-    EditorOption2[EditorOption2["stickyScroll"] = 113] = "stickyScroll";
-    EditorOption2[EditorOption2["stickyTabStops"] = 114] = "stickyTabStops";
-    EditorOption2[EditorOption2["stopRenderingLineAfter"] = 115] = "stopRenderingLineAfter";
-    EditorOption2[EditorOption2["suggest"] = 116] = "suggest";
-    EditorOption2[EditorOption2["suggestFontSize"] = 117] = "suggestFontSize";
-    EditorOption2[EditorOption2["suggestLineHeight"] = 118] = "suggestLineHeight";
-    EditorOption2[EditorOption2["suggestOnTriggerCharacters"] = 119] = "suggestOnTriggerCharacters";
-    EditorOption2[EditorOption2["suggestSelection"] = 120] = "suggestSelection";
-    EditorOption2[EditorOption2["tabCompletion"] = 121] = "tabCompletion";
-    EditorOption2[EditorOption2["tabIndex"] = 122] = "tabIndex";
-    EditorOption2[EditorOption2["unicodeHighlighting"] = 123] = "unicodeHighlighting";
-    EditorOption2[EditorOption2["unusualLineTerminators"] = 124] = "unusualLineTerminators";
-    EditorOption2[EditorOption2["useShadowDOM"] = 125] = "useShadowDOM";
-    EditorOption2[EditorOption2["useTabStops"] = 126] = "useTabStops";
-    EditorOption2[EditorOption2["wordBreak"] = 127] = "wordBreak";
-    EditorOption2[EditorOption2["wordSeparators"] = 128] = "wordSeparators";
-    EditorOption2[EditorOption2["wordWrap"] = 129] = "wordWrap";
-    EditorOption2[EditorOption2["wordWrapBreakAfterCharacters"] = 130] = "wordWrapBreakAfterCharacters";
-    EditorOption2[EditorOption2["wordWrapBreakBeforeCharacters"] = 131] = "wordWrapBreakBeforeCharacters";
-    EditorOption2[EditorOption2["wordWrapColumn"] = 132] = "wordWrapColumn";
-    EditorOption2[EditorOption2["wordWrapOverride1"] = 133] = "wordWrapOverride1";
-    EditorOption2[EditorOption2["wordWrapOverride2"] = 134] = "wordWrapOverride2";
-    EditorOption2[EditorOption2["wrappingIndent"] = 135] = "wrappingIndent";
-    EditorOption2[EditorOption2["wrappingStrategy"] = 136] = "wrappingStrategy";
-    EditorOption2[EditorOption2["showDeprecated"] = 137] = "showDeprecated";
-    EditorOption2[EditorOption2["inlayHints"] = 138] = "inlayHints";
-    EditorOption2[EditorOption2["editorClassName"] = 139] = "editorClassName";
-    EditorOption2[EditorOption2["pixelRatio"] = 140] = "pixelRatio";
-    EditorOption2[EditorOption2["tabFocusMode"] = 141] = "tabFocusMode";
-    EditorOption2[EditorOption2["layoutInfo"] = 142] = "layoutInfo";
-    EditorOption2[EditorOption2["wrappingInfo"] = 143] = "wrappingInfo";
-    EditorOption2[EditorOption2["defaultColorDecorators"] = 144] = "defaultColorDecorators";
-    EditorOption2[EditorOption2["colorDecoratorsActivatedOn"] = 145] = "colorDecoratorsActivatedOn";
-    EditorOption2[EditorOption2["inlineCompletionsAccessibilityVerbose"] = 146] = "inlineCompletionsAccessibilityVerbose";
+    EditorOption2[EditorOption2["autoClosingComments"] = 7] = "autoClosingComments";
+    EditorOption2[EditorOption2["screenReaderAnnounceInlineSuggestion"] = 8] = "screenReaderAnnounceInlineSuggestion";
+    EditorOption2[EditorOption2["autoClosingDelete"] = 9] = "autoClosingDelete";
+    EditorOption2[EditorOption2["autoClosingOvertype"] = 10] = "autoClosingOvertype";
+    EditorOption2[EditorOption2["autoClosingQuotes"] = 11] = "autoClosingQuotes";
+    EditorOption2[EditorOption2["autoIndent"] = 12] = "autoIndent";
+    EditorOption2[EditorOption2["automaticLayout"] = 13] = "automaticLayout";
+    EditorOption2[EditorOption2["autoSurround"] = 14] = "autoSurround";
+    EditorOption2[EditorOption2["bracketPairColorization"] = 15] = "bracketPairColorization";
+    EditorOption2[EditorOption2["guides"] = 16] = "guides";
+    EditorOption2[EditorOption2["codeLens"] = 17] = "codeLens";
+    EditorOption2[EditorOption2["codeLensFontFamily"] = 18] = "codeLensFontFamily";
+    EditorOption2[EditorOption2["codeLensFontSize"] = 19] = "codeLensFontSize";
+    EditorOption2[EditorOption2["colorDecorators"] = 20] = "colorDecorators";
+    EditorOption2[EditorOption2["colorDecoratorsLimit"] = 21] = "colorDecoratorsLimit";
+    EditorOption2[EditorOption2["columnSelection"] = 22] = "columnSelection";
+    EditorOption2[EditorOption2["comments"] = 23] = "comments";
+    EditorOption2[EditorOption2["contextmenu"] = 24] = "contextmenu";
+    EditorOption2[EditorOption2["copyWithSyntaxHighlighting"] = 25] = "copyWithSyntaxHighlighting";
+    EditorOption2[EditorOption2["cursorBlinking"] = 26] = "cursorBlinking";
+    EditorOption2[EditorOption2["cursorSmoothCaretAnimation"] = 27] = "cursorSmoothCaretAnimation";
+    EditorOption2[EditorOption2["cursorStyle"] = 28] = "cursorStyle";
+    EditorOption2[EditorOption2["cursorSurroundingLines"] = 29] = "cursorSurroundingLines";
+    EditorOption2[EditorOption2["cursorSurroundingLinesStyle"] = 30] = "cursorSurroundingLinesStyle";
+    EditorOption2[EditorOption2["cursorWidth"] = 31] = "cursorWidth";
+    EditorOption2[EditorOption2["disableLayerHinting"] = 32] = "disableLayerHinting";
+    EditorOption2[EditorOption2["disableMonospaceOptimizations"] = 33] = "disableMonospaceOptimizations";
+    EditorOption2[EditorOption2["domReadOnly"] = 34] = "domReadOnly";
+    EditorOption2[EditorOption2["dragAndDrop"] = 35] = "dragAndDrop";
+    EditorOption2[EditorOption2["dropIntoEditor"] = 36] = "dropIntoEditor";
+    EditorOption2[EditorOption2["emptySelectionClipboard"] = 37] = "emptySelectionClipboard";
+    EditorOption2[EditorOption2["experimentalWhitespaceRendering"] = 38] = "experimentalWhitespaceRendering";
+    EditorOption2[EditorOption2["extraEditorClassName"] = 39] = "extraEditorClassName";
+    EditorOption2[EditorOption2["fastScrollSensitivity"] = 40] = "fastScrollSensitivity";
+    EditorOption2[EditorOption2["find"] = 41] = "find";
+    EditorOption2[EditorOption2["fixedOverflowWidgets"] = 42] = "fixedOverflowWidgets";
+    EditorOption2[EditorOption2["folding"] = 43] = "folding";
+    EditorOption2[EditorOption2["foldingStrategy"] = 44] = "foldingStrategy";
+    EditorOption2[EditorOption2["foldingHighlight"] = 45] = "foldingHighlight";
+    EditorOption2[EditorOption2["foldingImportsByDefault"] = 46] = "foldingImportsByDefault";
+    EditorOption2[EditorOption2["foldingMaximumRegions"] = 47] = "foldingMaximumRegions";
+    EditorOption2[EditorOption2["unfoldOnClickAfterEndOfLine"] = 48] = "unfoldOnClickAfterEndOfLine";
+    EditorOption2[EditorOption2["fontFamily"] = 49] = "fontFamily";
+    EditorOption2[EditorOption2["fontInfo"] = 50] = "fontInfo";
+    EditorOption2[EditorOption2["fontLigatures"] = 51] = "fontLigatures";
+    EditorOption2[EditorOption2["fontSize"] = 52] = "fontSize";
+    EditorOption2[EditorOption2["fontWeight"] = 53] = "fontWeight";
+    EditorOption2[EditorOption2["fontVariations"] = 54] = "fontVariations";
+    EditorOption2[EditorOption2["formatOnPaste"] = 55] = "formatOnPaste";
+    EditorOption2[EditorOption2["formatOnType"] = 56] = "formatOnType";
+    EditorOption2[EditorOption2["glyphMargin"] = 57] = "glyphMargin";
+    EditorOption2[EditorOption2["gotoLocation"] = 58] = "gotoLocation";
+    EditorOption2[EditorOption2["hideCursorInOverviewRuler"] = 59] = "hideCursorInOverviewRuler";
+    EditorOption2[EditorOption2["hover"] = 60] = "hover";
+    EditorOption2[EditorOption2["inDiffEditor"] = 61] = "inDiffEditor";
+    EditorOption2[EditorOption2["inlineSuggest"] = 62] = "inlineSuggest";
+    EditorOption2[EditorOption2["letterSpacing"] = 63] = "letterSpacing";
+    EditorOption2[EditorOption2["lightbulb"] = 64] = "lightbulb";
+    EditorOption2[EditorOption2["lineDecorationsWidth"] = 65] = "lineDecorationsWidth";
+    EditorOption2[EditorOption2["lineHeight"] = 66] = "lineHeight";
+    EditorOption2[EditorOption2["lineNumbers"] = 67] = "lineNumbers";
+    EditorOption2[EditorOption2["lineNumbersMinChars"] = 68] = "lineNumbersMinChars";
+    EditorOption2[EditorOption2["linkedEditing"] = 69] = "linkedEditing";
+    EditorOption2[EditorOption2["links"] = 70] = "links";
+    EditorOption2[EditorOption2["matchBrackets"] = 71] = "matchBrackets";
+    EditorOption2[EditorOption2["minimap"] = 72] = "minimap";
+    EditorOption2[EditorOption2["mouseStyle"] = 73] = "mouseStyle";
+    EditorOption2[EditorOption2["mouseWheelScrollSensitivity"] = 74] = "mouseWheelScrollSensitivity";
+    EditorOption2[EditorOption2["mouseWheelZoom"] = 75] = "mouseWheelZoom";
+    EditorOption2[EditorOption2["multiCursorMergeOverlapping"] = 76] = "multiCursorMergeOverlapping";
+    EditorOption2[EditorOption2["multiCursorModifier"] = 77] = "multiCursorModifier";
+    EditorOption2[EditorOption2["multiCursorPaste"] = 78] = "multiCursorPaste";
+    EditorOption2[EditorOption2["multiCursorLimit"] = 79] = "multiCursorLimit";
+    EditorOption2[EditorOption2["occurrencesHighlight"] = 80] = "occurrencesHighlight";
+    EditorOption2[EditorOption2["overviewRulerBorder"] = 81] = "overviewRulerBorder";
+    EditorOption2[EditorOption2["overviewRulerLanes"] = 82] = "overviewRulerLanes";
+    EditorOption2[EditorOption2["padding"] = 83] = "padding";
+    EditorOption2[EditorOption2["pasteAs"] = 84] = "pasteAs";
+    EditorOption2[EditorOption2["parameterHints"] = 85] = "parameterHints";
+    EditorOption2[EditorOption2["peekWidgetDefaultFocus"] = 86] = "peekWidgetDefaultFocus";
+    EditorOption2[EditorOption2["definitionLinkOpensInPeek"] = 87] = "definitionLinkOpensInPeek";
+    EditorOption2[EditorOption2["quickSuggestions"] = 88] = "quickSuggestions";
+    EditorOption2[EditorOption2["quickSuggestionsDelay"] = 89] = "quickSuggestionsDelay";
+    EditorOption2[EditorOption2["readOnly"] = 90] = "readOnly";
+    EditorOption2[EditorOption2["readOnlyMessage"] = 91] = "readOnlyMessage";
+    EditorOption2[EditorOption2["renameOnType"] = 92] = "renameOnType";
+    EditorOption2[EditorOption2["renderControlCharacters"] = 93] = "renderControlCharacters";
+    EditorOption2[EditorOption2["renderFinalNewline"] = 94] = "renderFinalNewline";
+    EditorOption2[EditorOption2["renderLineHighlight"] = 95] = "renderLineHighlight";
+    EditorOption2[EditorOption2["renderLineHighlightOnlyWhenFocus"] = 96] = "renderLineHighlightOnlyWhenFocus";
+    EditorOption2[EditorOption2["renderValidationDecorations"] = 97] = "renderValidationDecorations";
+    EditorOption2[EditorOption2["renderWhitespace"] = 98] = "renderWhitespace";
+    EditorOption2[EditorOption2["revealHorizontalRightPadding"] = 99] = "revealHorizontalRightPadding";
+    EditorOption2[EditorOption2["roundedSelection"] = 100] = "roundedSelection";
+    EditorOption2[EditorOption2["rulers"] = 101] = "rulers";
+    EditorOption2[EditorOption2["scrollbar"] = 102] = "scrollbar";
+    EditorOption2[EditorOption2["scrollBeyondLastColumn"] = 103] = "scrollBeyondLastColumn";
+    EditorOption2[EditorOption2["scrollBeyondLastLine"] = 104] = "scrollBeyondLastLine";
+    EditorOption2[EditorOption2["scrollPredominantAxis"] = 105] = "scrollPredominantAxis";
+    EditorOption2[EditorOption2["selectionClipboard"] = 106] = "selectionClipboard";
+    EditorOption2[EditorOption2["selectionHighlight"] = 107] = "selectionHighlight";
+    EditorOption2[EditorOption2["selectOnLineNumbers"] = 108] = "selectOnLineNumbers";
+    EditorOption2[EditorOption2["showFoldingControls"] = 109] = "showFoldingControls";
+    EditorOption2[EditorOption2["showUnused"] = 110] = "showUnused";
+    EditorOption2[EditorOption2["snippetSuggestions"] = 111] = "snippetSuggestions";
+    EditorOption2[EditorOption2["smartSelect"] = 112] = "smartSelect";
+    EditorOption2[EditorOption2["smoothScrolling"] = 113] = "smoothScrolling";
+    EditorOption2[EditorOption2["stickyScroll"] = 114] = "stickyScroll";
+    EditorOption2[EditorOption2["stickyTabStops"] = 115] = "stickyTabStops";
+    EditorOption2[EditorOption2["stopRenderingLineAfter"] = 116] = "stopRenderingLineAfter";
+    EditorOption2[EditorOption2["suggest"] = 117] = "suggest";
+    EditorOption2[EditorOption2["suggestFontSize"] = 118] = "suggestFontSize";
+    EditorOption2[EditorOption2["suggestLineHeight"] = 119] = "suggestLineHeight";
+    EditorOption2[EditorOption2["suggestOnTriggerCharacters"] = 120] = "suggestOnTriggerCharacters";
+    EditorOption2[EditorOption2["suggestSelection"] = 121] = "suggestSelection";
+    EditorOption2[EditorOption2["tabCompletion"] = 122] = "tabCompletion";
+    EditorOption2[EditorOption2["tabIndex"] = 123] = "tabIndex";
+    EditorOption2[EditorOption2["unicodeHighlighting"] = 124] = "unicodeHighlighting";
+    EditorOption2[EditorOption2["unusualLineTerminators"] = 125] = "unusualLineTerminators";
+    EditorOption2[EditorOption2["useShadowDOM"] = 126] = "useShadowDOM";
+    EditorOption2[EditorOption2["useTabStops"] = 127] = "useTabStops";
+    EditorOption2[EditorOption2["wordBreak"] = 128] = "wordBreak";
+    EditorOption2[EditorOption2["wordSeparators"] = 129] = "wordSeparators";
+    EditorOption2[EditorOption2["wordWrap"] = 130] = "wordWrap";
+    EditorOption2[EditorOption2["wordWrapBreakAfterCharacters"] = 131] = "wordWrapBreakAfterCharacters";
+    EditorOption2[EditorOption2["wordWrapBreakBeforeCharacters"] = 132] = "wordWrapBreakBeforeCharacters";
+    EditorOption2[EditorOption2["wordWrapColumn"] = 133] = "wordWrapColumn";
+    EditorOption2[EditorOption2["wordWrapOverride1"] = 134] = "wordWrapOverride1";
+    EditorOption2[EditorOption2["wordWrapOverride2"] = 135] = "wordWrapOverride2";
+    EditorOption2[EditorOption2["wrappingIndent"] = 136] = "wrappingIndent";
+    EditorOption2[EditorOption2["wrappingStrategy"] = 137] = "wrappingStrategy";
+    EditorOption2[EditorOption2["showDeprecated"] = 138] = "showDeprecated";
+    EditorOption2[EditorOption2["inlayHints"] = 139] = "inlayHints";
+    EditorOption2[EditorOption2["editorClassName"] = 140] = "editorClassName";
+    EditorOption2[EditorOption2["pixelRatio"] = 141] = "pixelRatio";
+    EditorOption2[EditorOption2["tabFocusMode"] = 142] = "tabFocusMode";
+    EditorOption2[EditorOption2["layoutInfo"] = 143] = "layoutInfo";
+    EditorOption2[EditorOption2["wrappingInfo"] = 144] = "wrappingInfo";
+    EditorOption2[EditorOption2["defaultColorDecorators"] = 145] = "defaultColorDecorators";
+    EditorOption2[EditorOption2["colorDecoratorsActivatedOn"] = 146] = "colorDecoratorsActivatedOn";
+    EditorOption2[EditorOption2["inlineCompletionsAccessibilityVerbose"] = 147] = "inlineCompletionsAccessibilityVerbose";
   })(EditorOption || (EditorOption = {}));
   var EndOfLinePreference;
   (function(EndOfLinePreference2) {
@@ -8275,7 +8359,7 @@
     WrappingIndent2[WrappingIndent2["DeepIndent"] = 3] = "DeepIndent";
   })(WrappingIndent || (WrappingIndent = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorBaseApi.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorBaseApi.js
   var KeyMod = class {
     static chord(firstPart, secondPart) {
       return KeyChord(firstPart, secondPart);
@@ -8288,7 +8372,9 @@
   function createMonacoBaseAPI() {
     return {
       editor: void 0,
+      // undefined override expected here
       languages: void 0,
+      // undefined override expected here
       CancellationTokenSource,
       Emitter,
       KeyCode,
@@ -8304,7 +8390,7 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordCharacterClassifier.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordCharacterClassifier.js
   var WordCharacterClassifier = class extends CharacterClassifier {
     constructor(wordSeparators) {
       super(
@@ -8330,7 +8416,7 @@
       );
     }
   };
-  function once2(computeFn) {
+  function once(computeFn) {
     const cache = {};
     return (input) => {
       if (!cache.hasOwnProperty(input)) {
@@ -8339,9 +8425,9 @@
       return cache[input];
     };
   }
-  var getMapForWordSeparators = once2((input) => new WordCharacterClassifier(input));
+  var getMapForWordSeparators = once((input) => new WordCharacterClassifier(input));
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/model.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/model.js
   var OverviewRulerLane2;
   (function(OverviewRulerLane3) {
     OverviewRulerLane3[OverviewRulerLane3["Left"] = 1] = "Left";
@@ -8367,7 +8453,7 @@
     InjectedTextCursorStops3[InjectedTextCursorStops3["None"] = 3] = "None";
   })(InjectedTextCursorStops2 || (InjectedTextCursorStops2 = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/model/textModelSearch.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/model/textModelSearch.js
   function leftIsWordBounday(wordSeparators, text, textLength, matchStartIndex, matchLength) {
     if (matchStartIndex === 0) {
       return true;
@@ -8455,7 +8541,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/assert.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/assert.js
   function assertNever(value, message = "Unreachable") {
     throw new Error(message);
   }
@@ -8479,7 +8565,7 @@
     return true;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/services/unicodeTextModelHighlighter.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/services/unicodeTextModelHighlighter.js
   var UnicodeTextModelHighlighter = class {
     static computeUnicodeHighlights(model, options, range) {
       const startLine = range ? range.startLineNumber : 1;
@@ -8656,7 +8742,22 @@
     return character === " " || character === "\n" || character === "	";
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/offsetRange.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputer.js
+  var LinesDiff = class {
+    constructor(changes, moves, hitTimeout) {
+      this.changes = changes;
+      this.moves = moves;
+      this.hitTimeout = hitTimeout;
+    }
+  };
+  var MovedText = class {
+    constructor(lineRangeMapping, changes) {
+      this.lineRangeMapping = lineRangeMapping;
+      this.changes = changes;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/offsetRange.js
   var OffsetRange = class _OffsetRange {
     static addRange(range, sortedRanges) {
       let i = 0;
@@ -8770,29 +8871,79 @@
       }
       return value;
     }
+    forEach(f2) {
+      for (let i = this.start; i < this.endExclusive; i++) {
+        f2(i);
+      }
+    }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/core/lineRange.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/arraysFind.js
+  function findLastMonotonous(array, predicate) {
+    const idx = findLastIdxMonotonous(array, predicate);
+    return idx === -1 ? void 0 : array[idx];
+  }
+  function findLastIdxMonotonous(array, predicate, startIdx = 0, endIdxEx = array.length) {
+    let i = startIdx;
+    let j = endIdxEx;
+    while (i < j) {
+      const k = Math.floor((i + j) / 2);
+      if (predicate(array[k])) {
+        i = k + 1;
+      } else {
+        j = k;
+      }
+    }
+    return i - 1;
+  }
+  function findFirstMonotonous(array, predicate) {
+    const idx = findFirstIdxMonotonousOrArrLen(array, predicate);
+    return idx === array.length ? void 0 : array[idx];
+  }
+  function findFirstIdxMonotonousOrArrLen(array, predicate, startIdx = 0, endIdxEx = array.length) {
+    let i = startIdx;
+    let j = endIdxEx;
+    while (i < j) {
+      const k = Math.floor((i + j) / 2);
+      if (predicate(array[k])) {
+        j = k;
+      } else {
+        i = k + 1;
+      }
+    }
+    return i;
+  }
+  var MonotonousArray = class _MonotonousArray {
+    constructor(_array) {
+      this._array = _array;
+      this._findLastMonotonousLastIdx = 0;
+    }
+    /**
+     * The predicate must be monotonous, i.e. `arr.map(predicate)` must be like `[true, ..., true, false, ..., false]`!
+     * For subsequent calls, current predicate must be weaker than (or equal to) the previous predicate, i.e. more entries must be `true`.
+     */
+    findLastMonotonous(predicate) {
+      if (_MonotonousArray.assertInvariants) {
+        if (this._prevFindLastPredicate) {
+          for (const item of this._array) {
+            if (this._prevFindLastPredicate(item) && !predicate(item)) {
+              throw new Error("MonotonousArray: current predicate must be weaker than (or equal to) the previous predicate.");
+            }
+          }
+        }
+        this._prevFindLastPredicate = predicate;
+      }
+      const idx = findLastIdxMonotonous(this._array, predicate, this._findLastMonotonousLastIdx);
+      this._findLastMonotonousLastIdx = idx + 1;
+      return idx === -1 ? void 0 : this._array[idx];
+    }
+  };
+  MonotonousArray.assertInvariants = false;
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/core/lineRange.js
   var LineRange = class _LineRange {
     static fromRange(range) {
       return new _LineRange(range.startLineNumber, range.endLineNumber);
-    }
-    static subtract(a2, b) {
-      if (!b) {
-        return [a2];
-      }
-      if (a2.startLineNumber < b.startLineNumber && b.endLineNumberExclusive < a2.endLineNumberExclusive) {
-        return [
-          new _LineRange(a2.startLineNumber, b.startLineNumber),
-          new _LineRange(b.endLineNumberExclusive, a2.endLineNumberExclusive)
-        ];
-      } else if (b.startLineNumber <= a2.startLineNumber && a2.endLineNumberExclusive <= b.endLineNumberExclusive) {
-        return [];
-      } else if (b.endLineNumberExclusive < a2.endLineNumberExclusive) {
-        return [new _LineRange(Math.max(b.endLineNumberExclusive, a2.startLineNumber), a2.endLineNumberExclusive)];
-      } else {
-        return [new _LineRange(a2.startLineNumber, Math.min(b.startLineNumber, a2.endLineNumberExclusive))];
-      }
     }
     /**
      * @param lineRanges An array of sorted line ranges.
@@ -8801,61 +8952,11 @@
       if (lineRanges.length === 0) {
         return [];
       }
-      let result = lineRanges[0];
+      let result = new LineRangeSet(lineRanges[0].slice());
       for (let i = 1; i < lineRanges.length; i++) {
-        result = this.join(result, lineRanges[i]);
+        result = result.getUnion(new LineRangeSet(lineRanges[i].slice()));
       }
-      return result;
-    }
-    /**
-     * @param lineRanges1 Must be sorted.
-     * @param lineRanges2 Must be sorted.
-     */
-    static join(lineRanges1, lineRanges2) {
-      if (lineRanges1.length === 0) {
-        return lineRanges2;
-      }
-      if (lineRanges2.length === 0) {
-        return lineRanges1;
-      }
-      const result = [];
-      let i1 = 0;
-      let i2 = 0;
-      let current = null;
-      while (i1 < lineRanges1.length || i2 < lineRanges2.length) {
-        let next = null;
-        if (i1 < lineRanges1.length && i2 < lineRanges2.length) {
-          const lineRange1 = lineRanges1[i1];
-          const lineRange2 = lineRanges2[i2];
-          if (lineRange1.startLineNumber < lineRange2.startLineNumber) {
-            next = lineRange1;
-            i1++;
-          } else {
-            next = lineRange2;
-            i2++;
-          }
-        } else if (i1 < lineRanges1.length) {
-          next = lineRanges1[i1];
-          i1++;
-        } else {
-          next = lineRanges2[i2];
-          i2++;
-        }
-        if (current === null) {
-          current = next;
-        } else {
-          if (current.endLineNumberExclusive >= next.startLineNumber) {
-            current = new _LineRange(current.startLineNumber, Math.max(current.endLineNumberExclusive, next.endLineNumberExclusive));
-          } else {
-            result.push(current);
-            current = next;
-          }
-        }
-      }
-      if (current !== null) {
-        result.push(current);
-      }
-      return result;
+      return result.ranges;
     }
     static ofLength(startLineNumber, length) {
       return new _LineRange(startLineNumber, startLineNumber + length);
@@ -8968,48 +9069,171 @@
       return new OffsetRange(this.startLineNumber - 1, this.endLineNumberExclusive - 1);
     }
   };
-
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputer.js
-  var LinesDiff = class {
-    constructor(changes, moves, hitTimeout) {
-      this.changes = changes;
-      this.moves = moves;
-      this.hitTimeout = hitTimeout;
+  var LineRangeSet = class _LineRangeSet {
+    constructor(_normalizedRanges = []) {
+      this._normalizedRanges = _normalizedRanges;
+    }
+    get ranges() {
+      return this._normalizedRanges;
+    }
+    addRange(range) {
+      if (range.length === 0) {
+        return;
+      }
+      const joinRangeStartIdx = findFirstIdxMonotonousOrArrLen(this._normalizedRanges, (r) => r.endLineNumberExclusive >= range.startLineNumber);
+      const joinRangeEndIdxExclusive = findLastIdxMonotonous(this._normalizedRanges, (r) => r.startLineNumber <= range.endLineNumberExclusive) + 1;
+      if (joinRangeStartIdx === joinRangeEndIdxExclusive) {
+        this._normalizedRanges.splice(joinRangeStartIdx, 0, range);
+      } else if (joinRangeStartIdx === joinRangeEndIdxExclusive - 1) {
+        const joinRange = this._normalizedRanges[joinRangeStartIdx];
+        this._normalizedRanges[joinRangeStartIdx] = joinRange.join(range);
+      } else {
+        const joinRange = this._normalizedRanges[joinRangeStartIdx].join(this._normalizedRanges[joinRangeEndIdxExclusive - 1]).join(range);
+        this._normalizedRanges.splice(joinRangeStartIdx, joinRangeEndIdxExclusive - joinRangeStartIdx, joinRange);
+      }
+    }
+    contains(lineNumber) {
+      const rangeThatStartsBeforeEnd = findLastMonotonous(this._normalizedRanges, (r) => r.startLineNumber <= lineNumber);
+      return !!rangeThatStartsBeforeEnd && rangeThatStartsBeforeEnd.endLineNumberExclusive > lineNumber;
+    }
+    getUnion(other) {
+      if (this._normalizedRanges.length === 0) {
+        return other;
+      }
+      if (other._normalizedRanges.length === 0) {
+        return this;
+      }
+      const result = [];
+      let i1 = 0;
+      let i2 = 0;
+      let current = null;
+      while (i1 < this._normalizedRanges.length || i2 < other._normalizedRanges.length) {
+        let next = null;
+        if (i1 < this._normalizedRanges.length && i2 < other._normalizedRanges.length) {
+          const lineRange1 = this._normalizedRanges[i1];
+          const lineRange2 = other._normalizedRanges[i2];
+          if (lineRange1.startLineNumber < lineRange2.startLineNumber) {
+            next = lineRange1;
+            i1++;
+          } else {
+            next = lineRange2;
+            i2++;
+          }
+        } else if (i1 < this._normalizedRanges.length) {
+          next = this._normalizedRanges[i1];
+          i1++;
+        } else {
+          next = other._normalizedRanges[i2];
+          i2++;
+        }
+        if (current === null) {
+          current = next;
+        } else {
+          if (current.endLineNumberExclusive >= next.startLineNumber) {
+            current = new LineRange(current.startLineNumber, Math.max(current.endLineNumberExclusive, next.endLineNumberExclusive));
+          } else {
+            result.push(current);
+            current = next;
+          }
+        }
+      }
+      if (current !== null) {
+        result.push(current);
+      }
+      return new _LineRangeSet(result);
+    }
+    /**
+     * Subtracts all ranges in this set from `range` and returns the result.
+     */
+    subtractFrom(range) {
+      const joinRangeStartIdx = findFirstIdxMonotonousOrArrLen(this._normalizedRanges, (r) => r.endLineNumberExclusive >= range.startLineNumber);
+      const joinRangeEndIdxExclusive = findLastIdxMonotonous(this._normalizedRanges, (r) => r.startLineNumber <= range.endLineNumberExclusive) + 1;
+      if (joinRangeStartIdx === joinRangeEndIdxExclusive) {
+        return new _LineRangeSet([range]);
+      }
+      const result = [];
+      let startLineNumber = range.startLineNumber;
+      for (let i = joinRangeStartIdx; i < joinRangeEndIdxExclusive; i++) {
+        const r = this._normalizedRanges[i];
+        if (r.startLineNumber > startLineNumber) {
+          result.push(new LineRange(startLineNumber, r.startLineNumber));
+        }
+        startLineNumber = r.endLineNumberExclusive;
+      }
+      if (startLineNumber < range.endLineNumberExclusive) {
+        result.push(new LineRange(startLineNumber, range.endLineNumberExclusive));
+      }
+      return new _LineRangeSet(result);
+    }
+    toString() {
+      return this._normalizedRanges.map((r) => r.toString()).join(", ");
+    }
+    getIntersection(other) {
+      const result = [];
+      let i1 = 0;
+      let i2 = 0;
+      while (i1 < this._normalizedRanges.length && i2 < other._normalizedRanges.length) {
+        const r1 = this._normalizedRanges[i1];
+        const r2 = other._normalizedRanges[i2];
+        const i = r1.intersect(r2);
+        if (i && !i.isEmpty) {
+          result.push(i);
+        }
+        if (r1.endLineNumberExclusive < r2.endLineNumberExclusive) {
+          i1++;
+        } else {
+          i2++;
+        }
+      }
+      return new _LineRangeSet(result);
+    }
+    getWithDelta(value) {
+      return new _LineRangeSet(this._normalizedRanges.map((r) => r.delta(value)));
     }
   };
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/rangeMapping.js
   var LineRangeMapping = class _LineRangeMapping {
     static inverse(mapping, originalLineCount, modifiedLineCount) {
       const result = [];
       let lastOriginalEndLineNumber = 1;
       let lastModifiedEndLineNumber = 1;
       for (const m of mapping) {
-        const r2 = new _LineRangeMapping(new LineRange(lastOriginalEndLineNumber, m.originalRange.startLineNumber), new LineRange(lastModifiedEndLineNumber, m.modifiedRange.startLineNumber), void 0);
-        if (!r2.modifiedRange.isEmpty) {
+        const r2 = new DetailedLineRangeMapping(new LineRange(lastOriginalEndLineNumber, m.original.startLineNumber), new LineRange(lastModifiedEndLineNumber, m.modified.startLineNumber), void 0);
+        if (!r2.modified.isEmpty) {
           result.push(r2);
         }
-        lastOriginalEndLineNumber = m.originalRange.endLineNumberExclusive;
-        lastModifiedEndLineNumber = m.modifiedRange.endLineNumberExclusive;
+        lastOriginalEndLineNumber = m.original.endLineNumberExclusive;
+        lastModifiedEndLineNumber = m.modified.endLineNumberExclusive;
       }
-      const r = new _LineRangeMapping(new LineRange(lastOriginalEndLineNumber, originalLineCount + 1), new LineRange(lastModifiedEndLineNumber, modifiedLineCount + 1), void 0);
-      if (!r.modifiedRange.isEmpty) {
+      const r = new DetailedLineRangeMapping(new LineRange(lastOriginalEndLineNumber, originalLineCount + 1), new LineRange(lastModifiedEndLineNumber, modifiedLineCount + 1), void 0);
+      if (!r.modified.isEmpty) {
         result.push(r);
       }
       return result;
     }
-    constructor(originalRange, modifiedRange, innerChanges) {
-      this.originalRange = originalRange;
-      this.modifiedRange = modifiedRange;
-      this.innerChanges = innerChanges;
+    constructor(originalRange, modifiedRange) {
+      this.original = originalRange;
+      this.modified = modifiedRange;
     }
     toString() {
-      return `{${this.originalRange.toString()}->${this.modifiedRange.toString()}}`;
-    }
-    get changedLineCount() {
-      return Math.max(this.originalRange.length, this.modifiedRange.length);
+      return `{${this.original.toString()}->${this.modified.toString()}}`;
     }
     flip() {
-      var _a3;
-      return new _LineRangeMapping(this.modifiedRange, this.originalRange, (_a3 = this.innerChanges) === null || _a3 === void 0 ? void 0 : _a3.map((c) => c.flip()));
+      return new _LineRangeMapping(this.modified, this.original);
+    }
+    join(other) {
+      return new _LineRangeMapping(this.original.join(other.original), this.modified.join(other.modified));
+    }
+  };
+  var DetailedLineRangeMapping = class _DetailedLineRangeMapping extends LineRangeMapping {
+    constructor(originalRange, modifiedRange, innerChanges) {
+      super(originalRange, modifiedRange);
+      this.innerChanges = innerChanges;
+    }
+    flip() {
+      var _a4;
+      return new _DetailedLineRangeMapping(this.modified, this.original, (_a4 = this.innerChanges) === null || _a4 === void 0 ? void 0 : _a4.map((c) => c.flip()));
     }
   };
   var RangeMapping = class _RangeMapping {
@@ -9024,36 +9248,12 @@
       return new _RangeMapping(this.modifiedRange, this.originalRange);
     }
   };
-  var SimpleLineRangeMapping = class _SimpleLineRangeMapping {
-    constructor(original, modified) {
-      this.original = original;
-      this.modified = modified;
-    }
-    toString() {
-      return `{${this.original.toString()}->${this.modified.toString()}}`;
-    }
-    flip() {
-      return new _SimpleLineRangeMapping(this.modified, this.original);
-    }
-    join(other) {
-      return new _SimpleLineRangeMapping(this.original.join(other.original), this.modified.join(other.modified));
-    }
-  };
-  var MovedText = class _MovedText {
-    constructor(lineRangeMapping, changes) {
-      this.lineRangeMapping = lineRangeMapping;
-      this.changes = changes;
-    }
-    flip() {
-      return new _MovedText(this.lineRangeMapping.flip(), this.changes.map((c) => c.flip()));
-    }
-  };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/legacyLinesDiffComputer.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/legacyLinesDiffComputer.js
   var MINIMUM_MATCHING_CHARACTER_LENGTH = 3;
   var LegacyLinesDiffComputer = class {
     computeDiff(originalLines, modifiedLines, options) {
-      var _a3;
+      var _a4;
       const diffComputer = new DiffComputer(originalLines, modifiedLines, {
         maxComputationTime: options.maxComputationTimeMs,
         shouldIgnoreTrimWhitespace: options.ignoreTrimWhitespace,
@@ -9077,10 +9277,10 @@
         } else {
           modifiedRange = new LineRange(c.modifiedStartLineNumber, c.modifiedEndLineNumber + 1);
         }
-        let change = new LineRangeMapping(originalRange, modifiedRange, (_a3 = c.charChanges) === null || _a3 === void 0 ? void 0 : _a3.map((c2) => new RangeMapping(new Range(c2.originalStartLineNumber, c2.originalStartColumn, c2.originalEndLineNumber, c2.originalEndColumn), new Range(c2.modifiedStartLineNumber, c2.modifiedStartColumn, c2.modifiedEndLineNumber, c2.modifiedEndColumn))));
+        let change = new DetailedLineRangeMapping(originalRange, modifiedRange, (_a4 = c.charChanges) === null || _a4 === void 0 ? void 0 : _a4.map((c2) => new RangeMapping(new Range(c2.originalStartLineNumber, c2.originalStartColumn, c2.originalEndLineNumber, c2.originalEndColumn), new Range(c2.modifiedStartLineNumber, c2.modifiedStartColumn, c2.modifiedEndLineNumber, c2.modifiedEndColumn))));
         if (lastChange) {
-          if (lastChange.modifiedRange.endLineNumberExclusive === change.modifiedRange.startLineNumber || lastChange.originalRange.endLineNumberExclusive === change.originalRange.startLineNumber) {
-            change = new LineRangeMapping(lastChange.originalRange.join(change.originalRange), lastChange.modifiedRange.join(change.modifiedRange), lastChange.innerChanges && change.innerChanges ? lastChange.innerChanges.concat(change.innerChanges) : void 0);
+          if (lastChange.modified.endLineNumberExclusive === change.modified.startLineNumber || lastChange.original.endLineNumberExclusive === change.original.startLineNumber) {
+            change = new DetailedLineRangeMapping(lastChange.original.join(change.original), lastChange.modified.join(change.modified), lastChange.innerChanges && change.innerChanges ? lastChange.innerChanges.concat(change.innerChanges) : void 0);
             changes.pop();
           }
         }
@@ -9088,8 +9288,8 @@
         lastChange = change;
       }
       assertFn(() => {
-        return checkAdjacentItems(changes, (m1, m2) => m2.originalRange.startLineNumber - m1.originalRange.endLineNumberExclusive === m2.modifiedRange.startLineNumber - m1.modifiedRange.endLineNumberExclusive && // There has to be an unchanged line in between (otherwise both diffs should have been joined)
-        m1.originalRange.endLineNumberExclusive < m2.originalRange.startLineNumber && m1.modifiedRange.endLineNumberExclusive < m2.modifiedRange.startLineNumber);
+        return checkAdjacentItems(changes, (m1, m2) => m2.original.startLineNumber - m1.original.endLineNumberExclusive === m2.modified.startLineNumber - m1.modified.endLineNumberExclusive && // There has to be an unchanged line in between (otherwise both diffs should have been joined)
+        m1.original.endLineNumberExclusive < m2.original.startLineNumber && m1.modified.endLineNumberExclusive < m2.modified.startLineNumber);
       });
       return new LinesDiff(changes, [], result.quitEarly);
     }
@@ -9469,52 +9669,13 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/collections.js
-  var SetMap = class {
-    constructor() {
-      this.map = /* @__PURE__ */ new Map();
-    }
-    add(key, value) {
-      let values = this.map.get(key);
-      if (!values) {
-        values = /* @__PURE__ */ new Set();
-        this.map.set(key, values);
-      }
-      values.add(value);
-    }
-    delete(key, value) {
-      const values = this.map.get(key);
-      if (!values) {
-        return;
-      }
-      values.delete(value);
-      if (values.size === 0) {
-        this.map.delete(key);
-      }
-    }
-    forEach(key, fn) {
-      const values = this.map.get(key);
-      if (!values) {
-        return;
-      }
-      values.forEach(fn);
-    }
-    get(key) {
-      const values = this.map.get(key);
-      if (!values) {
-        return /* @__PURE__ */ new Set();
-      }
-      return values;
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/diffAlgorithm.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/diffAlgorithm.js
   var DiffAlgorithmResult = class _DiffAlgorithmResult {
     static trivial(seq1, seq2) {
-      return new _DiffAlgorithmResult([new SequenceDiff(new OffsetRange(0, seq1.length), new OffsetRange(0, seq2.length))], false);
+      return new _DiffAlgorithmResult([new SequenceDiff(OffsetRange.ofLength(seq1.length), OffsetRange.ofLength(seq2.length))], false);
     }
     static trivialTimedOut(seq1, seq2) {
-      return new _DiffAlgorithmResult([new SequenceDiff(new OffsetRange(0, seq1.length), new OffsetRange(0, seq2.length))], true);
+      return new _DiffAlgorithmResult([new SequenceDiff(OffsetRange.ofLength(seq1.length), OffsetRange.ofLength(seq2.length))], true);
     }
     constructor(diffs, hitTimeout) {
       this.diffs = diffs;
@@ -9522,11 +9683,21 @@
     }
   };
   var SequenceDiff = class _SequenceDiff {
+    static invert(sequenceDiffs, doc1Length) {
+      const result = [];
+      forEachAdjacent(sequenceDiffs, (a2, b) => {
+        result.push(_SequenceDiff.fromOffsetPairs(a2 ? a2.getEndExclusives() : OffsetPair.zero, b ? b.getStarts() : new OffsetPair(doc1Length, (a2 ? a2.seq2Range.endExclusive - a2.seq1Range.endExclusive : 0) + doc1Length)));
+      });
+      return result;
+    }
+    static fromOffsetPairs(start, endExclusive) {
+      return new _SequenceDiff(new OffsetRange(start.offset1, endExclusive.offset1), new OffsetRange(start.offset2, endExclusive.offset2));
+    }
     constructor(seq1Range, seq2Range) {
       this.seq1Range = seq1Range;
       this.seq2Range = seq2Range;
     }
-    reverse() {
+    swap() {
       return new _SequenceDiff(this.seq2Range, this.seq1Range);
     }
     toString() {
@@ -9541,7 +9712,44 @@
       }
       return new _SequenceDiff(this.seq1Range.delta(offset), this.seq2Range.delta(offset));
     }
+    deltaStart(offset) {
+      if (offset === 0) {
+        return this;
+      }
+      return new _SequenceDiff(this.seq1Range.deltaStart(offset), this.seq2Range.deltaStart(offset));
+    }
+    deltaEnd(offset) {
+      if (offset === 0) {
+        return this;
+      }
+      return new _SequenceDiff(this.seq1Range.deltaEnd(offset), this.seq2Range.deltaEnd(offset));
+    }
+    intersect(other) {
+      const i1 = this.seq1Range.intersect(other.seq1Range);
+      const i2 = this.seq2Range.intersect(other.seq2Range);
+      if (!i1 || !i2) {
+        return void 0;
+      }
+      return new _SequenceDiff(i1, i2);
+    }
+    getStarts() {
+      return new OffsetPair(this.seq1Range.start, this.seq2Range.start);
+    }
+    getEndExclusives() {
+      return new OffsetPair(this.seq1Range.endExclusive, this.seq2Range.endExclusive);
+    }
   };
+  var OffsetPair = class {
+    constructor(offset1, offset2) {
+      this.offset1 = offset1;
+      this.offset2 = offset2;
+    }
+    toString() {
+      return `${this.offset1} <-> ${this.offset2}`;
+    }
+  };
+  OffsetPair.zero = new OffsetPair(0, 0);
+  OffsetPair.max = new OffsetPair(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
   var InfiniteTimeout = class {
     isValid() {
       return true;
@@ -9568,7 +9776,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/utils.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/utils.js
   var Array2D = class {
     constructor(width, height) {
       this.width = width;
@@ -9583,8 +9791,51 @@
       this.array[x + y * this.width] = value;
     }
   };
+  function isSpace(charCode) {
+    return charCode === 32 || charCode === 9;
+  }
+  var LineRangeFragment = class _LineRangeFragment {
+    static getKey(chr) {
+      let key = this.chrKeys.get(chr);
+      if (key === void 0) {
+        key = this.chrKeys.size;
+        this.chrKeys.set(chr, key);
+      }
+      return key;
+    }
+    constructor(range, lines, source) {
+      this.range = range;
+      this.lines = lines;
+      this.source = source;
+      this.histogram = [];
+      let counter = 0;
+      for (let i = range.startLineNumber - 1; i < range.endLineNumberExclusive - 1; i++) {
+        const line = lines[i];
+        for (let j = 0; j < line.length; j++) {
+          counter++;
+          const chr = line[j];
+          const key2 = _LineRangeFragment.getKey(chr);
+          this.histogram[key2] = (this.histogram[key2] || 0) + 1;
+        }
+        counter++;
+        const key = _LineRangeFragment.getKey("\n");
+        this.histogram[key] = (this.histogram[key] || 0) + 1;
+      }
+      this.totalCount = counter;
+    }
+    computeSimilarity(other) {
+      var _a4, _b2;
+      let sumDifferences = 0;
+      const maxLength = Math.max(this.histogram.length, other.histogram.length);
+      for (let i = 0; i < maxLength; i++) {
+        sumDifferences += Math.abs(((_a4 = this.histogram[i]) !== null && _a4 !== void 0 ? _a4 : 0) - ((_b2 = other.histogram[i]) !== null && _b2 !== void 0 ? _b2 : 0));
+      }
+      return 1 - sumDifferences / (this.totalCount + other.totalCount);
+    }
+  };
+  LineRangeFragment.chrKeys = /* @__PURE__ */ new Map();
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/dynamicProgrammingDiffing.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/dynamicProgrammingDiffing.js
   var DynamicProgrammingDiffing = class {
     compute(sequence1, sequence2, timeout = InfiniteTimeout.instance, equalityScore) {
       if (sequence1.length === 0 || sequence2.length === 0) {
@@ -9660,244 +9911,16 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/joinSequenceDiffs.js
-  function optimizeSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
-    let result = sequenceDiffs;
-    result = joinSequenceDiffs(sequence1, sequence2, result);
-    result = shiftSequenceDiffs(sequence1, sequence2, result);
-    return result;
-  }
-  function smoothenSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
-    const result = [];
-    for (const s of sequenceDiffs) {
-      const last = result[result.length - 1];
-      if (!last) {
-        result.push(s);
-        continue;
-      }
-      if (s.seq1Range.start - last.seq1Range.endExclusive <= 2 || s.seq2Range.start - last.seq2Range.endExclusive <= 2) {
-        result[result.length - 1] = new SequenceDiff(last.seq1Range.join(s.seq1Range), last.seq2Range.join(s.seq2Range));
-      } else {
-        result.push(s);
-      }
-    }
-    return result;
-  }
-  function removeRandomLineMatches(sequence1, _sequence2, sequenceDiffs) {
-    let diffs = sequenceDiffs;
-    if (diffs.length === 0) {
-      return diffs;
-    }
-    let counter = 0;
-    let shouldRepeat;
-    do {
-      shouldRepeat = false;
-      const result = [
-        diffs[0]
-      ];
-      for (let i = 1; i < diffs.length; i++) {
-        let shouldJoinDiffs = function(before, after) {
-          const unchangedRange = new OffsetRange(lastResult.seq1Range.endExclusive, cur.seq1Range.start);
-          const unchangedText = sequence1.getText(unchangedRange);
-          const unchangedTextWithoutWs = unchangedText.replace(/\s/g, "");
-          if (unchangedTextWithoutWs.length <= 4 && (before.seq1Range.length + before.seq2Range.length > 5 || after.seq1Range.length + after.seq2Range.length > 5)) {
-            return true;
-          }
-          return false;
-        };
-        const cur = diffs[i];
-        const lastResult = result[result.length - 1];
-        const shouldJoin = shouldJoinDiffs(lastResult, cur);
-        if (shouldJoin) {
-          shouldRepeat = true;
-          result[result.length - 1] = result[result.length - 1].join(cur);
-        } else {
-          result.push(cur);
-        }
-      }
-      diffs = result;
-    } while (counter++ < 10 && shouldRepeat);
-    return diffs;
-  }
-  function removeRandomMatches(sequence1, sequence2, sequenceDiffs) {
-    let diffs = sequenceDiffs;
-    if (diffs.length === 0) {
-      return diffs;
-    }
-    let counter = 0;
-    let shouldRepeat;
-    do {
-      shouldRepeat = false;
-      const result = [
-        diffs[0]
-      ];
-      for (let i = 1; i < diffs.length; i++) {
-        let shouldJoinDiffs = function(before, after) {
-          const unchangedRange = new OffsetRange(lastResult.seq1Range.endExclusive, cur.seq1Range.start);
-          const unchangedLineCount = sequence1.countLinesIn(unchangedRange);
-          if (unchangedLineCount > 5 || unchangedRange.length > 500) {
-            return false;
-          }
-          const unchangedText = sequence1.getText(unchangedRange).trim();
-          if (unchangedText.length > 20 || unchangedText.split(/\r\n|\r|\n/).length > 1) {
-            return false;
-          }
-          const beforeLineCount1 = sequence1.countLinesIn(before.seq1Range);
-          const beforeSeq1Length = before.seq1Range.length;
-          const beforeLineCount2 = sequence2.countLinesIn(before.seq2Range);
-          const beforeSeq2Length = before.seq2Range.length;
-          const afterLineCount1 = sequence1.countLinesIn(after.seq1Range);
-          const afterSeq1Length = after.seq1Range.length;
-          const afterLineCount2 = sequence2.countLinesIn(after.seq2Range);
-          const afterSeq2Length = after.seq2Range.length;
-          const max = 2 * 40 + 50;
-          function cap(v) {
-            return Math.min(v, max);
-          }
-          if (Math.pow(Math.pow(cap(beforeLineCount1 * 40 + beforeSeq1Length), 1.5) + Math.pow(cap(beforeLineCount2 * 40 + beforeSeq2Length), 1.5), 1.5) + Math.pow(Math.pow(cap(afterLineCount1 * 40 + afterSeq1Length), 1.5) + Math.pow(cap(afterLineCount2 * 40 + afterSeq2Length), 1.5), 1.5) > Math.pow(Math.pow(max, 1.5), 1.5) * 1.3) {
-            return true;
-          }
-          return false;
-        };
-        const cur = diffs[i];
-        const lastResult = result[result.length - 1];
-        const shouldJoin = shouldJoinDiffs(lastResult, cur);
-        if (shouldJoin) {
-          shouldRepeat = true;
-          result[result.length - 1] = result[result.length - 1].join(cur);
-        } else {
-          result.push(cur);
-        }
-      }
-      diffs = result;
-    } while (counter++ < 10 && shouldRepeat);
-    for (let i = 0; i < diffs.length; i++) {
-      const cur = diffs[i];
-      let range1 = cur.seq1Range;
-      let range2 = cur.seq2Range;
-      const fullRange1 = sequence1.extendToFullLines(cur.seq1Range);
-      const prefix = sequence1.getText(new OffsetRange(fullRange1.start, cur.seq1Range.start));
-      if (prefix.length > 0 && prefix.trim().length <= 3 && cur.seq1Range.length + cur.seq2Range.length > 100) {
-        range1 = cur.seq1Range.deltaStart(-prefix.length);
-        range2 = cur.seq2Range.deltaStart(-prefix.length);
-      }
-      const suffix = sequence1.getText(new OffsetRange(cur.seq1Range.endExclusive, fullRange1.endExclusive));
-      if (suffix.length > 0 && (suffix.trim().length <= 3 && cur.seq1Range.length + cur.seq2Range.length > 150)) {
-        range1 = range1.deltaEnd(suffix.length);
-        range2 = range2.deltaEnd(suffix.length);
-      }
-      diffs[i] = new SequenceDiff(range1, range2);
-    }
-    return diffs;
-  }
-  function joinSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
-    if (sequenceDiffs.length === 0) {
-      return sequenceDiffs;
-    }
-    const result = [];
-    result.push(sequenceDiffs[0]);
-    for (let i = 1; i < sequenceDiffs.length; i++) {
-      const prevResult = result[result.length - 1];
-      let cur = sequenceDiffs[i];
-      if (cur.seq1Range.isEmpty || cur.seq2Range.isEmpty) {
-        const length = cur.seq1Range.start - prevResult.seq1Range.endExclusive;
-        let d;
-        for (d = 1; d <= length; d++) {
-          if (sequence1.getElement(cur.seq1Range.start - d) !== sequence1.getElement(cur.seq1Range.endExclusive - d) || sequence2.getElement(cur.seq2Range.start - d) !== sequence2.getElement(cur.seq2Range.endExclusive - d)) {
-            break;
-          }
-        }
-        d--;
-        if (d === length) {
-          result[result.length - 1] = new SequenceDiff(new OffsetRange(prevResult.seq1Range.start, cur.seq1Range.endExclusive - length), new OffsetRange(prevResult.seq2Range.start, cur.seq2Range.endExclusive - length));
-          continue;
-        }
-        cur = cur.delta(-d);
-      }
-      result.push(cur);
-    }
-    const result2 = [];
-    for (let i = 0; i < result.length - 1; i++) {
-      const nextResult = result[i + 1];
-      let cur = result[i];
-      if (cur.seq1Range.isEmpty || cur.seq2Range.isEmpty) {
-        const length = nextResult.seq1Range.start - cur.seq1Range.endExclusive;
-        let d;
-        for (d = 0; d < length; d++) {
-          if (sequence1.getElement(cur.seq1Range.start + d) !== sequence1.getElement(cur.seq1Range.endExclusive + d) || sequence2.getElement(cur.seq2Range.start + d) !== sequence2.getElement(cur.seq2Range.endExclusive + d)) {
-            break;
-          }
-        }
-        if (d === length) {
-          result[i + 1] = new SequenceDiff(new OffsetRange(cur.seq1Range.start + length, nextResult.seq1Range.endExclusive), new OffsetRange(cur.seq2Range.start + length, nextResult.seq2Range.endExclusive));
-          continue;
-        }
-        if (d > 0) {
-          cur = cur.delta(d);
-        }
-      }
-      result2.push(cur);
-    }
-    if (result.length > 0) {
-      result2.push(result[result.length - 1]);
-    }
-    return result2;
-  }
-  function shiftSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
-    if (!sequence1.getBoundaryScore || !sequence2.getBoundaryScore) {
-      return sequenceDiffs;
-    }
-    for (let i = 0; i < sequenceDiffs.length; i++) {
-      const prevDiff = i > 0 ? sequenceDiffs[i - 1] : void 0;
-      const diff = sequenceDiffs[i];
-      const nextDiff = i + 1 < sequenceDiffs.length ? sequenceDiffs[i + 1] : void 0;
-      const seq1ValidRange = new OffsetRange(prevDiff ? prevDiff.seq1Range.start + 1 : 0, nextDiff ? nextDiff.seq1Range.endExclusive - 1 : sequence1.length);
-      const seq2ValidRange = new OffsetRange(prevDiff ? prevDiff.seq2Range.start + 1 : 0, nextDiff ? nextDiff.seq2Range.endExclusive - 1 : sequence2.length);
-      if (diff.seq1Range.isEmpty) {
-        sequenceDiffs[i] = shiftDiffToBetterPosition(diff, sequence1, sequence2, seq1ValidRange, seq2ValidRange);
-      } else if (diff.seq2Range.isEmpty) {
-        sequenceDiffs[i] = shiftDiffToBetterPosition(diff.reverse(), sequence2, sequence1, seq2ValidRange, seq1ValidRange).reverse();
-      }
-    }
-    return sequenceDiffs;
-  }
-  function shiftDiffToBetterPosition(diff, sequence1, sequence2, seq1ValidRange, seq2ValidRange) {
-    const maxShiftLimit = 100;
-    let deltaBefore = 1;
-    while (diff.seq1Range.start - deltaBefore >= seq1ValidRange.start && diff.seq2Range.start - deltaBefore >= seq2ValidRange.start && sequence2.isStronglyEqual(diff.seq2Range.start - deltaBefore, diff.seq2Range.endExclusive - deltaBefore) && deltaBefore < maxShiftLimit) {
-      deltaBefore++;
-    }
-    deltaBefore--;
-    let deltaAfter = 0;
-    while (diff.seq1Range.start + deltaAfter < seq1ValidRange.endExclusive && diff.seq2Range.endExclusive + deltaAfter < seq2ValidRange.endExclusive && sequence2.isStronglyEqual(diff.seq2Range.start + deltaAfter, diff.seq2Range.endExclusive + deltaAfter) && deltaAfter < maxShiftLimit) {
-      deltaAfter++;
-    }
-    if (deltaBefore === 0 && deltaAfter === 0) {
-      return diff;
-    }
-    let bestDelta = 0;
-    let bestScore = -1;
-    for (let delta = -deltaBefore; delta <= deltaAfter; delta++) {
-      const seq2OffsetStart = diff.seq2Range.start + delta;
-      const seq2OffsetEndExclusive = diff.seq2Range.endExclusive + delta;
-      const seq1Offset = diff.seq1Range.start + delta;
-      const score2 = sequence1.getBoundaryScore(seq1Offset) + sequence2.getBoundaryScore(seq2OffsetStart) + sequence2.getBoundaryScore(seq2OffsetEndExclusive);
-      if (score2 > bestScore) {
-        bestScore = score2;
-        bestDelta = delta;
-      }
-    }
-    return diff.delta(bestDelta);
-  }
-
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/algorithms/myersDiffAlgorithm.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/myersDiffAlgorithm.js
   var MyersDiffAlgorithm = class {
     compute(seq1, seq2, timeout = InfiniteTimeout.instance) {
       if (seq1.length === 0 || seq2.length === 0) {
         return DiffAlgorithmResult.trivial(seq1, seq2);
       }
+      const seqX = seq1;
+      const seqY = seq2;
       function getXAfterSnake(x, y) {
-        while (x < seq1.length && y < seq2.length && seq1.getElement(x) === seq2.getElement(y)) {
+        while (x < seqX.length && y < seqY.length && seqX.getElement(x) === seqY.getElement(y)) {
           x++;
           y++;
         }
@@ -9913,31 +9936,34 @@
         while (true) {
           d++;
           if (!timeout.isValid()) {
-            return DiffAlgorithmResult.trivialTimedOut(seq1, seq2);
+            return DiffAlgorithmResult.trivialTimedOut(seqX, seqY);
           }
-          const lowerBound = -Math.min(d, seq2.length + d % 2);
-          const upperBound = Math.min(d, seq1.length + d % 2);
+          const lowerBound = -Math.min(d, seqY.length + d % 2);
+          const upperBound = Math.min(d, seqX.length + d % 2);
           for (k = lowerBound; k <= upperBound; k += 2) {
+            let step = 0;
             const maxXofDLineTop = k === upperBound ? -1 : V.get(k + 1);
             const maxXofDLineLeft = k === lowerBound ? -1 : V.get(k - 1) + 1;
-            const x = Math.min(Math.max(maxXofDLineTop, maxXofDLineLeft), seq1.length);
+            step++;
+            const x = Math.min(Math.max(maxXofDLineTop, maxXofDLineLeft), seqX.length);
             const y = x - k;
-            if (x > seq1.length || y > seq2.length) {
+            step++;
+            if (x > seqX.length || y > seqY.length) {
               continue;
             }
             const newMaxX = getXAfterSnake(x, y);
             V.set(k, newMaxX);
             const lastPath = x === maxXofDLineTop ? paths.get(k + 1) : paths.get(k - 1);
             paths.set(k, newMaxX !== x ? new SnakePath(lastPath, x, y, newMaxX - x) : lastPath);
-            if (V.get(k) === seq1.length && V.get(k) - k === seq2.length) {
+            if (V.get(k) === seqX.length && V.get(k) - k === seqY.length) {
               break loop;
             }
           }
         }
       let path = paths.get(k);
       const result = [];
-      let lastAligningPosS1 = seq1.length;
-      let lastAligningPosS2 = seq2.length;
+      let lastAligningPosS1 = seqX.length;
+      let lastAligningPosS2 = seqY.length;
       while (true) {
         const endX = path ? path.x + path.length : 0;
         const endY = path ? path.y + path.length : 0;
@@ -10018,517 +10044,448 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/advancedLinesDiffComputer.js
-  var AdvancedLinesDiffComputer = class {
-    constructor() {
-      this.dynamicProgrammingDiffing = new DynamicProgrammingDiffing();
-      this.myersDiffingAlgorithm = new MyersDiffAlgorithm();
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/map.js
+  var _a3;
+  var _b;
+  var ResourceMapEntry = class {
+    constructor(uri, value) {
+      this.uri = uri;
+      this.value = value;
     }
-    computeDiff(originalLines, modifiedLines, options) {
-      if (originalLines.length <= 1 && equals(originalLines, modifiedLines, (a2, b) => a2 === b)) {
-        return new LinesDiff([], [], false);
-      }
-      if (originalLines.length === 1 && originalLines[0].length === 0 || modifiedLines.length === 1 && modifiedLines[0].length === 0) {
-        return new LinesDiff([
-          new LineRangeMapping(new LineRange(1, originalLines.length + 1), new LineRange(1, modifiedLines.length + 1), [
-            new RangeMapping(new Range(1, 1, originalLines.length, originalLines[0].length + 1), new Range(1, 1, modifiedLines.length, modifiedLines[0].length + 1))
-          ])
-        ], [], false);
-      }
-      const timeout = options.maxComputationTimeMs === 0 ? InfiniteTimeout.instance : new DateTimeout(options.maxComputationTimeMs);
-      const considerWhitespaceChanges = !options.ignoreTrimWhitespace;
-      const perfectHashes = /* @__PURE__ */ new Map();
-      function getOrCreateHash(text) {
-        let hash = perfectHashes.get(text);
-        if (hash === void 0) {
-          hash = perfectHashes.size;
-          perfectHashes.set(text, hash);
+  };
+  function isEntries(arg) {
+    return Array.isArray(arg);
+  }
+  var ResourceMap = class _ResourceMap {
+    constructor(arg, toKey) {
+      this[_a3] = "ResourceMap";
+      if (arg instanceof _ResourceMap) {
+        this.map = new Map(arg.map);
+        this.toKey = toKey !== null && toKey !== void 0 ? toKey : _ResourceMap.defaultToKey;
+      } else if (isEntries(arg)) {
+        this.map = /* @__PURE__ */ new Map();
+        this.toKey = toKey !== null && toKey !== void 0 ? toKey : _ResourceMap.defaultToKey;
+        for (const [resource, value] of arg) {
+          this.set(resource, value);
         }
-        return hash;
+      } else {
+        this.map = /* @__PURE__ */ new Map();
+        this.toKey = arg !== null && arg !== void 0 ? arg : _ResourceMap.defaultToKey;
       }
-      const srcDocLines = originalLines.map((l) => getOrCreateHash(l.trim()));
-      const tgtDocLines = modifiedLines.map((l) => getOrCreateHash(l.trim()));
-      const sequence1 = new LineSequence2(srcDocLines, originalLines);
-      const sequence2 = new LineSequence2(tgtDocLines, modifiedLines);
-      const lineAlignmentResult = (() => {
-        if (sequence1.length + sequence2.length < 1700) {
-          return this.dynamicProgrammingDiffing.compute(sequence1, sequence2, timeout, (offset1, offset2) => originalLines[offset1] === modifiedLines[offset2] ? modifiedLines[offset2].length === 0 ? 0.1 : 1 + Math.log(1 + modifiedLines[offset2].length) : 0.99);
+    }
+    set(resource, value) {
+      this.map.set(this.toKey(resource), new ResourceMapEntry(resource, value));
+      return this;
+    }
+    get(resource) {
+      var _c;
+      return (_c = this.map.get(this.toKey(resource))) === null || _c === void 0 ? void 0 : _c.value;
+    }
+    has(resource) {
+      return this.map.has(this.toKey(resource));
+    }
+    get size() {
+      return this.map.size;
+    }
+    clear() {
+      this.map.clear();
+    }
+    delete(resource) {
+      return this.map.delete(this.toKey(resource));
+    }
+    forEach(clb, thisArg) {
+      if (typeof thisArg !== "undefined") {
+        clb = clb.bind(thisArg);
+      }
+      for (const [_, entry] of this.map) {
+        clb(entry.value, entry.uri, this);
+      }
+    }
+    *values() {
+      for (const entry of this.map.values()) {
+        yield entry.value;
+      }
+    }
+    *keys() {
+      for (const entry of this.map.values()) {
+        yield entry.uri;
+      }
+    }
+    *entries() {
+      for (const entry of this.map.values()) {
+        yield [entry.uri, entry.value];
+      }
+    }
+    *[(_a3 = Symbol.toStringTag, Symbol.iterator)]() {
+      for (const [, entry] of this.map) {
+        yield [entry.uri, entry.value];
+      }
+    }
+  };
+  ResourceMap.defaultToKey = (resource) => resource.toString();
+  var LinkedMap = class {
+    constructor() {
+      this[_b] = "LinkedMap";
+      this._map = /* @__PURE__ */ new Map();
+      this._head = void 0;
+      this._tail = void 0;
+      this._size = 0;
+      this._state = 0;
+    }
+    clear() {
+      this._map.clear();
+      this._head = void 0;
+      this._tail = void 0;
+      this._size = 0;
+      this._state++;
+    }
+    isEmpty() {
+      return !this._head && !this._tail;
+    }
+    get size() {
+      return this._size;
+    }
+    get first() {
+      var _c;
+      return (_c = this._head) === null || _c === void 0 ? void 0 : _c.value;
+    }
+    get last() {
+      var _c;
+      return (_c = this._tail) === null || _c === void 0 ? void 0 : _c.value;
+    }
+    has(key) {
+      return this._map.has(key);
+    }
+    get(key, touch = 0) {
+      const item = this._map.get(key);
+      if (!item) {
+        return void 0;
+      }
+      if (touch !== 0) {
+        this.touch(item, touch);
+      }
+      return item.value;
+    }
+    set(key, value, touch = 0) {
+      let item = this._map.get(key);
+      if (item) {
+        item.value = value;
+        if (touch !== 0) {
+          this.touch(item, touch);
         }
-        return this.myersDiffingAlgorithm.compute(sequence1, sequence2);
-      })();
-      let lineAlignments = lineAlignmentResult.diffs;
-      let hitTimeout = lineAlignmentResult.hitTimeout;
-      lineAlignments = optimizeSequenceDiffs(sequence1, sequence2, lineAlignments);
-      lineAlignments = removeRandomLineMatches(sequence1, sequence2, lineAlignments);
-      const alignments = [];
-      const scanForWhitespaceChanges = (equalLinesCount) => {
-        if (!considerWhitespaceChanges) {
-          return;
+      } else {
+        item = { key, value, next: void 0, previous: void 0 };
+        switch (touch) {
+          case 0:
+            this.addItemLast(item);
+            break;
+          case 1:
+            this.addItemFirst(item);
+            break;
+          case 2:
+            this.addItemLast(item);
+            break;
+          default:
+            this.addItemLast(item);
+            break;
         }
-        for (let i = 0; i < equalLinesCount; i++) {
-          const seq1Offset = seq1LastStart + i;
-          const seq2Offset = seq2LastStart + i;
-          if (originalLines[seq1Offset] !== modifiedLines[seq2Offset]) {
-            const characterDiffs = this.refineDiff(originalLines, modifiedLines, new SequenceDiff(new OffsetRange(seq1Offset, seq1Offset + 1), new OffsetRange(seq2Offset, seq2Offset + 1)), timeout, considerWhitespaceChanges);
-            for (const a2 of characterDiffs.mappings) {
-              alignments.push(a2);
-            }
-            if (characterDiffs.hitTimeout) {
-              hitTimeout = true;
-            }
+        this._map.set(key, item);
+        this._size++;
+      }
+      return this;
+    }
+    delete(key) {
+      return !!this.remove(key);
+    }
+    remove(key) {
+      const item = this._map.get(key);
+      if (!item) {
+        return void 0;
+      }
+      this._map.delete(key);
+      this.removeItem(item);
+      this._size--;
+      return item.value;
+    }
+    shift() {
+      if (!this._head && !this._tail) {
+        return void 0;
+      }
+      if (!this._head || !this._tail) {
+        throw new Error("Invalid list");
+      }
+      const item = this._head;
+      this._map.delete(item.key);
+      this.removeItem(item);
+      this._size--;
+      return item.value;
+    }
+    forEach(callbackfn, thisArg) {
+      const state = this._state;
+      let current = this._head;
+      while (current) {
+        if (thisArg) {
+          callbackfn.bind(thisArg)(current.value, current.key, this);
+        } else {
+          callbackfn(current.value, current.key, this);
+        }
+        if (this._state !== state) {
+          throw new Error(`LinkedMap got modified during iteration.`);
+        }
+        current = current.next;
+      }
+    }
+    keys() {
+      const map = this;
+      const state = this._state;
+      let current = this._head;
+      const iterator = {
+        [Symbol.iterator]() {
+          return iterator;
+        },
+        next() {
+          if (map._state !== state) {
+            throw new Error(`LinkedMap got modified during iteration.`);
+          }
+          if (current) {
+            const result = { value: current.key, done: false };
+            current = current.next;
+            return result;
+          } else {
+            return { value: void 0, done: true };
           }
         }
       };
-      let seq1LastStart = 0;
-      let seq2LastStart = 0;
-      for (const diff of lineAlignments) {
-        assertFn(() => diff.seq1Range.start - seq1LastStart === diff.seq2Range.start - seq2LastStart);
-        const equalLinesCount = diff.seq1Range.start - seq1LastStart;
-        scanForWhitespaceChanges(equalLinesCount);
-        seq1LastStart = diff.seq1Range.endExclusive;
-        seq2LastStart = diff.seq2Range.endExclusive;
-        const characterDiffs = this.refineDiff(originalLines, modifiedLines, diff, timeout, considerWhitespaceChanges);
-        if (characterDiffs.hitTimeout) {
-          hitTimeout = true;
-        }
-        for (const a2 of characterDiffs.mappings) {
-          alignments.push(a2);
-        }
-      }
-      scanForWhitespaceChanges(originalLines.length - seq1LastStart);
-      const changes = lineRangeMappingFromRangeMappings(alignments, originalLines, modifiedLines);
-      let moves = [];
-      if (options.computeMoves) {
-        moves = this.computeMoves(changes, originalLines, modifiedLines, srcDocLines, tgtDocLines, timeout, considerWhitespaceChanges);
-      }
-      assertFn(() => {
-        function validatePosition(pos, lines) {
-          if (pos.lineNumber < 1 || pos.lineNumber > lines.length) {
-            return false;
-          }
-          const line = lines[pos.lineNumber - 1];
-          if (pos.column < 1 || pos.column > line.length + 1) {
-            return false;
-          }
-          return true;
-        }
-        function validateRange(range, lines) {
-          if (range.startLineNumber < 1 || range.startLineNumber > lines.length + 1) {
-            return false;
-          }
-          if (range.endLineNumberExclusive < 1 || range.endLineNumberExclusive > lines.length + 1) {
-            return false;
-          }
-          return true;
-        }
-        for (const c of changes) {
-          if (!c.innerChanges) {
-            return false;
-          }
-          for (const ic of c.innerChanges) {
-            const valid = validatePosition(ic.modifiedRange.getStartPosition(), modifiedLines) && validatePosition(ic.modifiedRange.getEndPosition(), modifiedLines) && validatePosition(ic.originalRange.getStartPosition(), originalLines) && validatePosition(ic.originalRange.getEndPosition(), originalLines);
-            if (!valid) {
-              return false;
-            }
-          }
-          if (!validateRange(c.modifiedRange, modifiedLines) || !validateRange(c.originalRange, originalLines)) {
-            return false;
-          }
-        }
-        return true;
-      });
-      return new LinesDiff(changes, moves, hitTimeout);
+      return iterator;
     }
-    computeMoves(changes, originalLines, modifiedLines, hashedOriginalLines, hashedModifiedLines, timeout, considerWhitespaceChanges) {
-      const moves = [];
-      const deletions = changes.filter((c) => c.modifiedRange.isEmpty && c.originalRange.length >= 3).map((d) => new LineRangeFragment(d.originalRange, originalLines, d));
-      const insertions = new Set(changes.filter((c) => c.originalRange.isEmpty && c.modifiedRange.length >= 3).map((d) => new LineRangeFragment(d.modifiedRange, modifiedLines, d)));
-      const excludedChanges = /* @__PURE__ */ new Set();
-      for (const deletion of deletions) {
-        let highestSimilarity = -1;
-        let best;
-        for (const insertion of insertions) {
-          const similarity = deletion.computeSimilarity(insertion);
-          if (similarity > highestSimilarity) {
-            highestSimilarity = similarity;
-            best = insertion;
+    values() {
+      const map = this;
+      const state = this._state;
+      let current = this._head;
+      const iterator = {
+        [Symbol.iterator]() {
+          return iterator;
+        },
+        next() {
+          if (map._state !== state) {
+            throw new Error(`LinkedMap got modified during iteration.`);
+          }
+          if (current) {
+            const result = { value: current.value, done: false };
+            current = current.next;
+            return result;
+          } else {
+            return { value: void 0, done: true };
           }
         }
-        if (highestSimilarity > 0.9 && best) {
-          insertions.delete(best);
-          moves.push(new SimpleLineRangeMapping(deletion.range, best.range));
-          excludedChanges.add(deletion.source);
-          excludedChanges.add(best.source);
-        }
-        if (!timeout.isValid()) {
-          return [];
-        }
-      }
-      const original3LineHashes = new SetMap();
-      for (const change of changes) {
-        if (excludedChanges.has(change)) {
-          continue;
-        }
-        for (let i = change.originalRange.startLineNumber; i < change.originalRange.endLineNumberExclusive - 2; i++) {
-          const key = `${hashedOriginalLines[i - 1]}:${hashedOriginalLines[i + 1 - 1]}:${hashedOriginalLines[i + 2 - 1]}`;
-          original3LineHashes.add(key, { range: new LineRange(i, i + 3) });
-        }
-      }
-      const possibleMappings = [];
-      changes.sort(compareBy((c) => c.modifiedRange.startLineNumber, numberComparator));
-      for (const change of changes) {
-        if (excludedChanges.has(change)) {
-          continue;
-        }
-        let lastMappings = [];
-        for (let i = change.modifiedRange.startLineNumber; i < change.modifiedRange.endLineNumberExclusive - 2; i++) {
-          const key = `${hashedModifiedLines[i - 1]}:${hashedModifiedLines[i + 1 - 1]}:${hashedModifiedLines[i + 2 - 1]}`;
-          const currentModifiedRange = new LineRange(i, i + 3);
-          const nextMappings = [];
-          original3LineHashes.forEach(key, ({ range }) => {
-            for (const lastMapping of lastMappings) {
-              if (lastMapping.originalLineRange.endLineNumberExclusive + 1 === range.endLineNumberExclusive && lastMapping.modifiedLineRange.endLineNumberExclusive + 1 === currentModifiedRange.endLineNumberExclusive) {
-                lastMapping.originalLineRange = new LineRange(lastMapping.originalLineRange.startLineNumber, range.endLineNumberExclusive);
-                lastMapping.modifiedLineRange = new LineRange(lastMapping.modifiedLineRange.startLineNumber, currentModifiedRange.endLineNumberExclusive);
-                nextMappings.push(lastMapping);
-                return;
-              }
-            }
-            const mapping = {
-              modifiedLineRange: currentModifiedRange,
-              originalLineRange: range
-            };
-            possibleMappings.push(mapping);
-            nextMappings.push(mapping);
-          });
-          lastMappings = nextMappings;
-        }
-        if (!timeout.isValid()) {
-          return [];
-        }
-      }
-      possibleMappings.sort(reverseOrder(compareBy((m) => m.modifiedLineRange.length, numberComparator)));
-      const modifiedSet = new LineRangeSet();
-      const originalSet = new LineRangeSet();
-      for (const mapping of possibleMappings) {
-        const diffOrigToMod = mapping.modifiedLineRange.startLineNumber - mapping.originalLineRange.startLineNumber;
-        const modifiedSections = modifiedSet.subtractFrom(mapping.modifiedLineRange);
-        const originalTranslatedSections = originalSet.subtractFrom(mapping.originalLineRange).map((r) => r.delta(diffOrigToMod));
-        const modifiedIntersectedSections = intersectRanges(modifiedSections, originalTranslatedSections);
-        for (const s of modifiedIntersectedSections) {
-          if (s.length < 3) {
-            continue;
-          }
-          const modifiedLineRange = s;
-          const originalLineRange = s.delta(-diffOrigToMod);
-          moves.push(new SimpleLineRangeMapping(originalLineRange, modifiedLineRange));
-          modifiedSet.addRange(modifiedLineRange);
-          originalSet.addRange(originalLineRange);
-        }
-      }
-      moves.sort(compareBy((m) => m.original.startLineNumber, numberComparator));
-      if (moves.length === 0) {
-        return [];
-      }
-      let joinedMoves = [moves[0]];
-      for (let i = 1; i < moves.length; i++) {
-        const last = joinedMoves[joinedMoves.length - 1];
-        const current = moves[i];
-        const originalDist = current.original.startLineNumber - last.original.endLineNumberExclusive;
-        const modifiedDist = current.modified.startLineNumber - last.modified.endLineNumberExclusive;
-        const currentMoveAfterLast = originalDist >= 0 && modifiedDist >= 0;
-        if (currentMoveAfterLast && originalDist + modifiedDist <= 2) {
-          joinedMoves[joinedMoves.length - 1] = last.join(current);
-          continue;
-        }
-        const originalText = current.original.toOffsetRange().slice(originalLines).map((l) => l.trim()).join("\n");
-        if (originalText.length <= 10) {
-          continue;
-        }
-        joinedMoves.push(current);
-      }
-      const originalChanges = MonotonousFinder.createOfSorted(changes, (c) => c.originalRange.endLineNumberExclusive, numberComparator);
-      joinedMoves = joinedMoves.filter((m) => {
-        const diffBeforeOriginalMove = originalChanges.findLastItemBeforeOrEqual(m.original.startLineNumber) || new LineRangeMapping(new LineRange(1, 1), new LineRange(1, 1), []);
-        const modifiedDistToPrevDiff = m.modified.startLineNumber - diffBeforeOriginalMove.modifiedRange.endLineNumberExclusive;
-        const originalDistToPrevDiff = m.original.startLineNumber - diffBeforeOriginalMove.originalRange.endLineNumberExclusive;
-        const differentDistances = modifiedDistToPrevDiff !== originalDistToPrevDiff;
-        return differentDistances;
-      });
-      const fullMoves = joinedMoves.map((m) => {
-        const moveChanges = this.refineDiff(originalLines, modifiedLines, new SequenceDiff(m.original.toOffsetRange(), m.modified.toOffsetRange()), timeout, considerWhitespaceChanges);
-        const mappings = lineRangeMappingFromRangeMappings(moveChanges.mappings, originalLines, modifiedLines, true);
-        return new MovedText(m, mappings);
-      });
-      return fullMoves;
-    }
-    refineDiff(originalLines, modifiedLines, diff, timeout, considerWhitespaceChanges) {
-      const slice1 = new LinesSliceCharSequence(originalLines, diff.seq1Range, considerWhitespaceChanges);
-      const slice2 = new LinesSliceCharSequence(modifiedLines, diff.seq2Range, considerWhitespaceChanges);
-      const diffResult = slice1.length + slice2.length < 500 ? this.dynamicProgrammingDiffing.compute(slice1, slice2, timeout) : this.myersDiffingAlgorithm.compute(slice1, slice2, timeout);
-      let diffs = diffResult.diffs;
-      diffs = optimizeSequenceDiffs(slice1, slice2, diffs);
-      diffs = coverFullWords(slice1, slice2, diffs);
-      diffs = smoothenSequenceDiffs(slice1, slice2, diffs);
-      diffs = removeRandomMatches(slice1, slice2, diffs);
-      const result = diffs.map((d) => new RangeMapping(slice1.translateRange(d.seq1Range), slice2.translateRange(d.seq2Range)));
-      return {
-        mappings: result,
-        hitTimeout: diffResult.hitTimeout
       };
+      return iterator;
     }
-  };
-  var MonotonousFinder = class _MonotonousFinder {
-    static createOfSorted(items, itemToDomain, domainComparator) {
-      return new _MonotonousFinder(items, itemToDomain, domainComparator);
-    }
-    constructor(_items, _itemToDomain, _domainComparator) {
-      this._items = _items;
-      this._itemToDomain = _itemToDomain;
-      this._domainComparator = _domainComparator;
-      this._currentIdx = 0;
-      this._lastValue = void 0;
-      this._hasLastValue = false;
-    }
-    /**
-     * Assumes the values are monotonously increasing.
-     */
-    findLastItemBeforeOrEqual(value) {
-      if (this._hasLastValue && CompareResult.isLessThan(this._domainComparator(value, this._lastValue))) {
-        throw new BugIndicatingError();
-      }
-      this._lastValue = value;
-      this._hasLastValue = true;
-      while (this._currentIdx < this._items.length && CompareResult.isLessThanOrEqual(this._domainComparator(this._itemToDomain(this._items[this._currentIdx]), value))) {
-        this._currentIdx++;
-      }
-      return this._currentIdx === 0 ? void 0 : this._items[this._currentIdx - 1];
-    }
-  };
-  function intersectRanges(ranges1, ranges2) {
-    const result = [];
-    let i1 = 0;
-    let i2 = 0;
-    while (i1 < ranges1.length && i2 < ranges2.length) {
-      const r1 = ranges1[i1];
-      const r2 = ranges2[i2];
-      const i = r1.intersect(r2);
-      if (i && !i.isEmpty) {
-        result.push(i);
-      }
-      if (r1.endLineNumberExclusive < r2.endLineNumberExclusive) {
-        i1++;
-      } else {
-        i2++;
-      }
-    }
-    return result;
-  }
-  var LineRangeSet = class {
-    constructor() {
-      this._normalizedRanges = [];
-    }
-    addRange(range) {
-      const joinRangeStartIdx = mapMinusOne(this._normalizedRanges.findIndex((r) => r.endLineNumberExclusive >= range.startLineNumber), this._normalizedRanges.length);
-      const joinRangeEndIdxExclusive = findLastIndex(this._normalizedRanges, (r) => r.startLineNumber <= range.endLineNumberExclusive) + 1;
-      if (joinRangeStartIdx === joinRangeEndIdxExclusive) {
-        this._normalizedRanges.splice(joinRangeStartIdx, 0, range);
-      } else if (joinRangeStartIdx === joinRangeEndIdxExclusive - 1) {
-        const joinRange = this._normalizedRanges[joinRangeStartIdx];
-        this._normalizedRanges[joinRangeStartIdx] = joinRange.join(range);
-      } else {
-        const joinRange = this._normalizedRanges[joinRangeStartIdx].join(this._normalizedRanges[joinRangeEndIdxExclusive - 1]).join(range);
-        this._normalizedRanges.splice(joinRangeStartIdx, joinRangeEndIdxExclusive - joinRangeStartIdx, joinRange);
-      }
-    }
-    /**
-     * Subtracts all ranges in this set from `range` and returns the result.
-     */
-    subtractFrom(range) {
-      const joinRangeStartIdx = mapMinusOne(this._normalizedRanges.findIndex((r) => r.endLineNumberExclusive >= range.startLineNumber), this._normalizedRanges.length);
-      const joinRangeEndIdxExclusive = findLastIndex(this._normalizedRanges, (r) => r.startLineNumber <= range.endLineNumberExclusive) + 1;
-      if (joinRangeStartIdx === joinRangeEndIdxExclusive) {
-        return [range];
-      }
-      const result = [];
-      let startLineNumber = range.startLineNumber;
-      for (let i = joinRangeStartIdx; i < joinRangeEndIdxExclusive; i++) {
-        const r = this._normalizedRanges[i];
-        if (r.startLineNumber > startLineNumber) {
-          result.push(new LineRange(startLineNumber, r.startLineNumber));
+    entries() {
+      const map = this;
+      const state = this._state;
+      let current = this._head;
+      const iterator = {
+        [Symbol.iterator]() {
+          return iterator;
+        },
+        next() {
+          if (map._state !== state) {
+            throw new Error(`LinkedMap got modified during iteration.`);
+          }
+          if (current) {
+            const result = { value: [current.key, current.value], done: false };
+            current = current.next;
+            return result;
+          } else {
+            return { value: void 0, done: true };
+          }
         }
-        startLineNumber = r.endLineNumberExclusive;
-      }
-      if (startLineNumber < range.endLineNumberExclusive) {
-        result.push(new LineRange(startLineNumber, range.endLineNumberExclusive));
-      }
-      return result;
+      };
+      return iterator;
     }
-  };
-  function mapMinusOne(idx, mapTo) {
-    return idx === -1 ? mapTo : idx;
-  }
-  function coverFullWords(sequence1, sequence2, sequenceDiffs) {
-    const additional = [];
-    let lastModifiedWord = void 0;
-    function maybePushWordToAdditional() {
-      if (!lastModifiedWord) {
+    [(_b = Symbol.toStringTag, Symbol.iterator)]() {
+      return this.entries();
+    }
+    trimOld(newSize) {
+      if (newSize >= this.size) {
         return;
       }
-      const originalLength1 = lastModifiedWord.s1Range.length - lastModifiedWord.deleted;
-      const originalLength2 = lastModifiedWord.s2Range.length - lastModifiedWord.added;
-      if (originalLength1 !== originalLength2) {
+      if (newSize === 0) {
+        this.clear();
+        return;
       }
-      if (Math.max(lastModifiedWord.deleted, lastModifiedWord.added) + (lastModifiedWord.count - 1) > originalLength1) {
-        additional.push(new SequenceDiff(lastModifiedWord.s1Range, lastModifiedWord.s2Range));
+      let current = this._head;
+      let currentSize = this.size;
+      while (current && currentSize > newSize) {
+        this._map.delete(current.key);
+        current = current.next;
+        currentSize--;
       }
-      lastModifiedWord = void 0;
+      this._head = current;
+      this._size = currentSize;
+      if (current) {
+        current.previous = void 0;
+      }
+      this._state++;
     }
-    for (const s of sequenceDiffs) {
-      let processWord = function(s1Range, s2Range) {
-        var _a3, _b, _c, _d;
-        if (!lastModifiedWord || !lastModifiedWord.s1Range.containsRange(s1Range) || !lastModifiedWord.s2Range.containsRange(s2Range)) {
-          if (lastModifiedWord && !(lastModifiedWord.s1Range.endExclusive < s1Range.start && lastModifiedWord.s2Range.endExclusive < s2Range.start)) {
-            const s1Added = OffsetRange.tryCreate(lastModifiedWord.s1Range.endExclusive, s1Range.start);
-            const s2Added = OffsetRange.tryCreate(lastModifiedWord.s2Range.endExclusive, s2Range.start);
-            lastModifiedWord.deleted += (_a3 = s1Added === null || s1Added === void 0 ? void 0 : s1Added.length) !== null && _a3 !== void 0 ? _a3 : 0;
-            lastModifiedWord.added += (_b = s2Added === null || s2Added === void 0 ? void 0 : s2Added.length) !== null && _b !== void 0 ? _b : 0;
-            lastModifiedWord.s1Range = lastModifiedWord.s1Range.join(s1Range);
-            lastModifiedWord.s2Range = lastModifiedWord.s2Range.join(s2Range);
-          } else {
-            maybePushWordToAdditional();
-            lastModifiedWord = { added: 0, deleted: 0, count: 0, s1Range, s2Range };
-          }
-        }
-        const changedS1 = s1Range.intersect(s.seq1Range);
-        const changedS2 = s2Range.intersect(s.seq2Range);
-        lastModifiedWord.count++;
-        lastModifiedWord.deleted += (_c = changedS1 === null || changedS1 === void 0 ? void 0 : changedS1.length) !== null && _c !== void 0 ? _c : 0;
-        lastModifiedWord.added += (_d = changedS2 === null || changedS2 === void 0 ? void 0 : changedS2.length) !== null && _d !== void 0 ? _d : 0;
-      };
-      const w1Before = sequence1.findWordContaining(s.seq1Range.start - 1);
-      const w2Before = sequence2.findWordContaining(s.seq2Range.start - 1);
-      const w1After = sequence1.findWordContaining(s.seq1Range.endExclusive);
-      const w2After = sequence2.findWordContaining(s.seq2Range.endExclusive);
-      if (w1Before && w1After && w2Before && w2After && w1Before.equals(w1After) && w2Before.equals(w2After)) {
-        processWord(w1Before, w2Before);
+    addItemFirst(item) {
+      if (!this._head && !this._tail) {
+        this._tail = item;
+      } else if (!this._head) {
+        throw new Error("Invalid list");
       } else {
-        if (w1Before && w2Before) {
-          processWord(w1Before, w2Before);
-        }
-        if (w1After && w2After) {
-          processWord(w1After, w2After);
-        }
+        item.next = this._head;
+        this._head.previous = item;
       }
+      this._head = item;
+      this._state++;
     }
-    maybePushWordToAdditional();
-    const merged = mergeSequenceDiffs(sequenceDiffs, additional);
-    return merged;
-  }
-  function mergeSequenceDiffs(sequenceDiffs1, sequenceDiffs2) {
-    const result = [];
-    while (sequenceDiffs1.length > 0 || sequenceDiffs2.length > 0) {
-      const sd1 = sequenceDiffs1[0];
-      const sd2 = sequenceDiffs2[0];
-      let next;
-      if (sd1 && (!sd2 || sd1.seq1Range.start < sd2.seq1Range.start)) {
-        next = sequenceDiffs1.shift();
+    addItemLast(item) {
+      if (!this._head && !this._tail) {
+        this._head = item;
+      } else if (!this._tail) {
+        throw new Error("Invalid list");
       } else {
-        next = sequenceDiffs2.shift();
+        item.previous = this._tail;
+        this._tail.next = item;
       }
-      if (result.length > 0 && result[result.length - 1].seq1Range.endExclusive >= next.seq1Range.start) {
-        result[result.length - 1] = result[result.length - 1].join(next);
-      } else {
-        result.push(next);
-      }
+      this._tail = item;
+      this._state++;
     }
-    return result;
-  }
-  function lineRangeMappingFromRangeMappings(alignments, originalLines, modifiedLines, dontAssertStartLine = false) {
-    const changes = [];
-    for (const g of group(alignments.map((a2) => getLineRangeMapping(a2, originalLines, modifiedLines)), (a1, a2) => a1.originalRange.overlapOrTouch(a2.originalRange) || a1.modifiedRange.overlapOrTouch(a2.modifiedRange))) {
-      const first = g[0];
-      const last = g[g.length - 1];
-      changes.push(new LineRangeMapping(first.originalRange.join(last.originalRange), first.modifiedRange.join(last.modifiedRange), g.map((a2) => a2.innerChanges[0])));
-    }
-    assertFn(() => {
-      if (!dontAssertStartLine) {
-        if (changes.length > 0 && changes[0].originalRange.startLineNumber !== changes[0].modifiedRange.startLineNumber) {
-          return false;
+    removeItem(item) {
+      if (item === this._head && item === this._tail) {
+        this._head = void 0;
+        this._tail = void 0;
+      } else if (item === this._head) {
+        if (!item.next) {
+          throw new Error("Invalid list");
         }
-      }
-      return checkAdjacentItems(changes, (m1, m2) => m2.originalRange.startLineNumber - m1.originalRange.endLineNumberExclusive === m2.modifiedRange.startLineNumber - m1.modifiedRange.endLineNumberExclusive && // There has to be an unchanged line in between (otherwise both diffs should have been joined)
-      m1.originalRange.endLineNumberExclusive < m2.originalRange.startLineNumber && m1.modifiedRange.endLineNumberExclusive < m2.modifiedRange.startLineNumber);
-    });
-    return changes;
-  }
-  function getLineRangeMapping(rangeMapping, originalLines, modifiedLines) {
-    let lineStartDelta = 0;
-    let lineEndDelta = 0;
-    if (rangeMapping.modifiedRange.endColumn === 1 && rangeMapping.originalRange.endColumn === 1 && rangeMapping.originalRange.startLineNumber + lineStartDelta <= rangeMapping.originalRange.endLineNumber && rangeMapping.modifiedRange.startLineNumber + lineStartDelta <= rangeMapping.modifiedRange.endLineNumber) {
-      lineEndDelta = -1;
-    }
-    if (rangeMapping.modifiedRange.startColumn - 1 >= modifiedLines[rangeMapping.modifiedRange.startLineNumber - 1].length && rangeMapping.originalRange.startColumn - 1 >= originalLines[rangeMapping.originalRange.startLineNumber - 1].length && rangeMapping.originalRange.startLineNumber <= rangeMapping.originalRange.endLineNumber + lineEndDelta && rangeMapping.modifiedRange.startLineNumber <= rangeMapping.modifiedRange.endLineNumber + lineEndDelta) {
-      lineStartDelta = 1;
-    }
-    const originalLineRange = new LineRange(rangeMapping.originalRange.startLineNumber + lineStartDelta, rangeMapping.originalRange.endLineNumber + 1 + lineEndDelta);
-    const modifiedLineRange = new LineRange(rangeMapping.modifiedRange.startLineNumber + lineStartDelta, rangeMapping.modifiedRange.endLineNumber + 1 + lineEndDelta);
-    return new LineRangeMapping(originalLineRange, modifiedLineRange, [rangeMapping]);
-  }
-  function* group(items, shouldBeGrouped) {
-    let currentGroup;
-    let last;
-    for (const item of items) {
-      if (last !== void 0 && shouldBeGrouped(last, item)) {
-        currentGroup.push(item);
-      } else {
-        if (currentGroup) {
-          yield currentGroup;
+        item.next.previous = void 0;
+        this._head = item.next;
+      } else if (item === this._tail) {
+        if (!item.previous) {
+          throw new Error("Invalid list");
         }
-        currentGroup = [item];
+        item.previous.next = void 0;
+        this._tail = item.previous;
+      } else {
+        const next = item.next;
+        const previous = item.previous;
+        if (!next || !previous) {
+          throw new Error("Invalid list");
+        }
+        next.previous = previous;
+        previous.next = next;
       }
-      last = item;
+      item.next = void 0;
+      item.previous = void 0;
+      this._state++;
     }
-    if (currentGroup) {
-      yield currentGroup;
+    touch(item, touch) {
+      if (!this._head || !this._tail) {
+        throw new Error("Invalid list");
+      }
+      if (touch !== 1 && touch !== 2) {
+        return;
+      }
+      if (touch === 1) {
+        if (item === this._head) {
+          return;
+        }
+        const next = item.next;
+        const previous = item.previous;
+        if (item === this._tail) {
+          previous.next = void 0;
+          this._tail = previous;
+        } else {
+          next.previous = previous;
+          previous.next = next;
+        }
+        item.previous = void 0;
+        item.next = this._head;
+        this._head.previous = item;
+        this._head = item;
+        this._state++;
+      } else if (touch === 2) {
+        if (item === this._tail) {
+          return;
+        }
+        const next = item.next;
+        const previous = item.previous;
+        if (item === this._head) {
+          next.previous = void 0;
+          this._head = next;
+        } else {
+          next.previous = previous;
+          previous.next = next;
+        }
+        item.next = void 0;
+        item.previous = this._tail;
+        this._tail.next = item;
+        this._tail = item;
+        this._state++;
+      }
     }
-  }
-  var LineSequence2 = class {
-    constructor(trimmedHash, lines) {
-      this.trimmedHash = trimmedHash;
-      this.lines = lines;
+    toJSON() {
+      const data = [];
+      this.forEach((value, key) => {
+        data.push([key, value]);
+      });
+      return data;
     }
-    getElement(offset) {
-      return this.trimmedHash[offset];
-    }
-    get length() {
-      return this.trimmedHash.length;
-    }
-    getBoundaryScore(length) {
-      const indentationBefore = length === 0 ? 0 : getIndentation(this.lines[length - 1]);
-      const indentationAfter = length === this.lines.length ? 0 : getIndentation(this.lines[length]);
-      return 1e3 - (indentationBefore + indentationAfter);
-    }
-    getText(range) {
-      return this.lines.slice(range.start, range.endExclusive).join("\n");
-    }
-    isStronglyEqual(offset1, offset2) {
-      return this.lines[offset1] === this.lines[offset2];
+    fromJSON(data) {
+      this.clear();
+      for (const [key, value] of data) {
+        this.set(key, value);
+      }
     }
   };
-  function getIndentation(str) {
-    let i = 0;
-    while (i < str.length && (str.charCodeAt(i) === 32 || str.charCodeAt(i) === 9)) {
-      i++;
+  var SetMap = class {
+    constructor() {
+      this.map = /* @__PURE__ */ new Map();
     }
-    return i;
-  }
+    add(key, value) {
+      let values = this.map.get(key);
+      if (!values) {
+        values = /* @__PURE__ */ new Set();
+        this.map.set(key, values);
+      }
+      values.add(value);
+    }
+    delete(key, value) {
+      const values = this.map.get(key);
+      if (!values) {
+        return;
+      }
+      values.delete(value);
+      if (values.size === 0) {
+        this.map.delete(key);
+      }
+    }
+    forEach(key, fn) {
+      const values = this.map.get(key);
+      if (!values) {
+        return;
+      }
+      values.forEach(fn);
+    }
+    get(key) {
+      const values = this.map.get(key);
+      if (!values) {
+        return /* @__PURE__ */ new Set();
+      }
+      return values;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/linesSliceCharSequence.js
   var LinesSliceCharSequence = class {
     constructor(lines, lineRange, considerWhitespaceChanges) {
       this.lines = lines;
       this.considerWhitespaceChanges = considerWhitespaceChanges;
       this.elements = [];
-      this.firstCharOffsetByLineMinusOne = [];
+      this.firstCharOffsetByLine = [];
       this.additionalOffsetByLine = [];
       let trimFirstLineFully = false;
       if (lineRange.start > 0 && lineRange.endExclusive >= lines.length) {
@@ -10536,6 +10493,7 @@
         trimFirstLineFully = true;
       }
       this.lineRange = lineRange;
+      this.firstCharOffsetByLine[0] = 0;
       for (let i = this.lineRange.start; i < this.lineRange.endExclusive; i++) {
         let line = lines[i];
         let offset = 0;
@@ -10554,7 +10512,7 @@
         }
         if (i < lines.length - 1) {
           this.elements.push("\n".charCodeAt(0));
-          this.firstCharOffsetByLineMinusOne[i - this.lineRange.start] = this.elements.length;
+          this.firstCharOffsetByLine[i - this.lineRange.start + 1] = this.elements.length;
         }
       }
       this.additionalOffsetByLine.push(0);
@@ -10583,7 +10541,7 @@
       let score2 = 0;
       if (prevCategory !== nextCategory) {
         score2 += 10;
-        if (nextCategory === 1) {
+        if (prevCategory === 0 && nextCategory === 1) {
           score2 += 1;
         }
       }
@@ -10595,18 +10553,8 @@
       if (this.lineRange.isEmpty) {
         return new Position(this.lineRange.start + 1, 1);
       }
-      let i = 0;
-      let j = this.firstCharOffsetByLineMinusOne.length;
-      while (i < j) {
-        const k = Math.floor((i + j) / 2);
-        if (this.firstCharOffsetByLineMinusOne[k] > offset) {
-          j = k;
-        } else {
-          i = k + 1;
-        }
-      }
-      const offsetOfFirstCharInLine = i === 0 ? 0 : this.firstCharOffsetByLineMinusOne[i - 1];
-      return new Position(this.lineRange.start + i + 1, offset - offsetOfFirstCharInLine + 1 + this.additionalOffsetByLine[i]);
+      const i = findLastIdxMonotonous(this.firstCharOffsetByLine, (value) => value <= offset);
+      return new Position(this.lineRange.start + i + 1, offset - this.firstCharOffsetByLine[i] + this.additionalOffsetByLine[i] + 1);
     }
     translateRange(range) {
       return Range.fromPositions(this.translateOffset(range.start), this.translateOffset(range.endExclusive));
@@ -10638,46 +10586,12 @@
       return this.elements[offset1] === this.elements[offset2];
     }
     extendToFullLines(range) {
-      var _a3, _b;
-      const start = (_a3 = findLastMonotonous(this.firstCharOffsetByLineMinusOne, (x) => x <= range.start)) !== null && _a3 !== void 0 ? _a3 : 0;
-      const end = (_b = findFirstMonotonous(this.firstCharOffsetByLineMinusOne, (x) => range.endExclusive <= x)) !== null && _b !== void 0 ? _b : this.elements.length;
+      var _a4, _b2;
+      const start = (_a4 = findLastMonotonous(this.firstCharOffsetByLine, (x) => x <= range.start)) !== null && _a4 !== void 0 ? _a4 : 0;
+      const end = (_b2 = findFirstMonotonous(this.firstCharOffsetByLine, (x) => range.endExclusive <= x)) !== null && _b2 !== void 0 ? _b2 : this.elements.length;
       return new OffsetRange(start, end);
     }
   };
-  function findLastIdxMonotonous(arr, predicate) {
-    let i = 0;
-    let j = arr.length;
-    while (i < j) {
-      const k = Math.floor((i + j) / 2);
-      if (predicate(arr[k])) {
-        i = k + 1;
-      } else {
-        j = k;
-      }
-    }
-    return i - 1;
-  }
-  function findLastMonotonous(arr, predicate) {
-    const idx = findLastIdxMonotonous(arr, predicate);
-    return idx === -1 ? void 0 : arr[idx];
-  }
-  function findFirstIdxMonotonous(arr, predicate) {
-    let i = 0;
-    let j = arr.length;
-    while (i < j) {
-      const k = Math.floor((i + j) / 2);
-      if (predicate(arr[k])) {
-        j = k;
-      } else {
-        i = k + 1;
-      }
-    }
-    return i;
-  }
-  function findFirstMonotonous(arr, predicate) {
-    const idx = findFirstIdxMonotonous(arr, predicate);
-    return idx === arr.length ? void 0 : arr[idx];
-  }
   function isWordChar(charCode) {
     return charCode >= 97 && charCode <= 122 || charCode >= 65 && charCode <= 90 || charCode >= 48 && charCode <= 57;
   }
@@ -10737,57 +10651,748 @@
       return 4;
     }
   }
-  function isSpace(charCode) {
-    return charCode === 32 || charCode === 9;
-  }
-  var chrKeys = /* @__PURE__ */ new Map();
-  function getKey(chr) {
-    let key = chrKeys.get(chr);
-    if (key === void 0) {
-      key = chrKeys.size;
-      chrKeys.set(chr, key);
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/computeMovedLines.js
+  function computeMovedLines(changes, originalLines, modifiedLines, hashedOriginalLines, hashedModifiedLines, timeout) {
+    let { moves, excludedChanges } = computeMovesFromSimpleDeletionsToSimpleInsertions(changes, originalLines, modifiedLines, timeout);
+    if (!timeout.isValid()) {
+      return [];
     }
-    return key;
+    const filteredChanges = changes.filter((c) => !excludedChanges.has(c));
+    const unchangedMoves = computeUnchangedMoves(filteredChanges, hashedOriginalLines, hashedModifiedLines, originalLines, modifiedLines, timeout);
+    pushMany(moves, unchangedMoves);
+    moves = joinCloseConsecutiveMoves(moves);
+    moves = moves.filter((current) => {
+      const originalText = current.original.toOffsetRange().slice(originalLines).map((l) => l.trim()).join("\n");
+      return originalText.length >= 10;
+    });
+    moves = removeMovesInSameDiff(changes, moves);
+    return moves;
   }
-  var LineRangeFragment = class {
-    constructor(range, lines, source) {
-      this.range = range;
-      this.lines = lines;
-      this.source = source;
-      this.histogram = [];
-      let counter = 0;
-      for (let i = range.startLineNumber - 1; i < range.endLineNumberExclusive - 1; i++) {
-        const line = lines[i];
-        for (let j = 0; j < line.length; j++) {
-          counter++;
-          const chr = line[j];
-          const key2 = getKey(chr);
-          this.histogram[key2] = (this.histogram[key2] || 0) + 1;
+  function computeMovesFromSimpleDeletionsToSimpleInsertions(changes, originalLines, modifiedLines, timeout) {
+    const moves = [];
+    const deletions = changes.filter((c) => c.modified.isEmpty && c.original.length >= 3).map((d) => new LineRangeFragment(d.original, originalLines, d));
+    const insertions = new Set(changes.filter((c) => c.original.isEmpty && c.modified.length >= 3).map((d) => new LineRangeFragment(d.modified, modifiedLines, d)));
+    const excludedChanges = /* @__PURE__ */ new Set();
+    for (const deletion of deletions) {
+      let highestSimilarity = -1;
+      let best;
+      for (const insertion of insertions) {
+        const similarity = deletion.computeSimilarity(insertion);
+        if (similarity > highestSimilarity) {
+          highestSimilarity = similarity;
+          best = insertion;
         }
-        counter++;
-        const key = getKey("\n");
-        this.histogram[key] = (this.histogram[key] || 0) + 1;
       }
-      this.totalCount = counter;
+      if (highestSimilarity > 0.9 && best) {
+        insertions.delete(best);
+        moves.push(new LineRangeMapping(deletion.range, best.range));
+        excludedChanges.add(deletion.source);
+        excludedChanges.add(best.source);
+      }
+      if (!timeout.isValid()) {
+        return { moves, excludedChanges };
+      }
     }
-    computeSimilarity(other) {
-      var _a3, _b;
-      let sumDifferences = 0;
-      const maxLength = Math.max(this.histogram.length, other.histogram.length);
-      for (let i = 0; i < maxLength; i++) {
-        sumDifferences += Math.abs(((_a3 = this.histogram[i]) !== null && _a3 !== void 0 ? _a3 : 0) - ((_b = other.histogram[i]) !== null && _b !== void 0 ? _b : 0));
+    return { moves, excludedChanges };
+  }
+  function computeUnchangedMoves(changes, hashedOriginalLines, hashedModifiedLines, originalLines, modifiedLines, timeout) {
+    const moves = [];
+    const original3LineHashes = new SetMap();
+    for (const change of changes) {
+      for (let i = change.original.startLineNumber; i < change.original.endLineNumberExclusive - 2; i++) {
+        const key = `${hashedOriginalLines[i - 1]}:${hashedOriginalLines[i + 1 - 1]}:${hashedOriginalLines[i + 2 - 1]}`;
+        original3LineHashes.add(key, { range: new LineRange(i, i + 3) });
       }
-      return 1 - sumDifferences / (this.totalCount + other.totalCount);
+    }
+    const possibleMappings = [];
+    changes.sort(compareBy((c) => c.modified.startLineNumber, numberComparator));
+    for (const change of changes) {
+      let lastMappings = [];
+      for (let i = change.modified.startLineNumber; i < change.modified.endLineNumberExclusive - 2; i++) {
+        const key = `${hashedModifiedLines[i - 1]}:${hashedModifiedLines[i + 1 - 1]}:${hashedModifiedLines[i + 2 - 1]}`;
+        const currentModifiedRange = new LineRange(i, i + 3);
+        const nextMappings = [];
+        original3LineHashes.forEach(key, ({ range }) => {
+          for (const lastMapping of lastMappings) {
+            if (lastMapping.originalLineRange.endLineNumberExclusive + 1 === range.endLineNumberExclusive && lastMapping.modifiedLineRange.endLineNumberExclusive + 1 === currentModifiedRange.endLineNumberExclusive) {
+              lastMapping.originalLineRange = new LineRange(lastMapping.originalLineRange.startLineNumber, range.endLineNumberExclusive);
+              lastMapping.modifiedLineRange = new LineRange(lastMapping.modifiedLineRange.startLineNumber, currentModifiedRange.endLineNumberExclusive);
+              nextMappings.push(lastMapping);
+              return;
+            }
+          }
+          const mapping = {
+            modifiedLineRange: currentModifiedRange,
+            originalLineRange: range
+          };
+          possibleMappings.push(mapping);
+          nextMappings.push(mapping);
+        });
+        lastMappings = nextMappings;
+      }
+      if (!timeout.isValid()) {
+        return [];
+      }
+    }
+    possibleMappings.sort(reverseOrder(compareBy((m) => m.modifiedLineRange.length, numberComparator)));
+    const modifiedSet = new LineRangeSet();
+    const originalSet = new LineRangeSet();
+    for (const mapping of possibleMappings) {
+      const diffOrigToMod = mapping.modifiedLineRange.startLineNumber - mapping.originalLineRange.startLineNumber;
+      const modifiedSections = modifiedSet.subtractFrom(mapping.modifiedLineRange);
+      const originalTranslatedSections = originalSet.subtractFrom(mapping.originalLineRange).getWithDelta(diffOrigToMod);
+      const modifiedIntersectedSections = modifiedSections.getIntersection(originalTranslatedSections);
+      for (const s of modifiedIntersectedSections.ranges) {
+        if (s.length < 3) {
+          continue;
+        }
+        const modifiedLineRange = s;
+        const originalLineRange = s.delta(-diffOrigToMod);
+        moves.push(new LineRangeMapping(originalLineRange, modifiedLineRange));
+        modifiedSet.addRange(modifiedLineRange);
+        originalSet.addRange(originalLineRange);
+      }
+    }
+    moves.sort(compareBy((m) => m.original.startLineNumber, numberComparator));
+    const monotonousChanges = new MonotonousArray(changes);
+    for (let i = 0; i < moves.length; i++) {
+      const move = moves[i];
+      const firstTouchingChangeOrig = monotonousChanges.findLastMonotonous((c) => c.original.startLineNumber <= move.original.startLineNumber);
+      const firstTouchingChangeMod = findLastMonotonous(changes, (c) => c.modified.startLineNumber <= move.modified.startLineNumber);
+      const linesAbove = Math.max(move.original.startLineNumber - firstTouchingChangeOrig.original.startLineNumber, move.modified.startLineNumber - firstTouchingChangeMod.modified.startLineNumber);
+      const lastTouchingChangeOrig = monotonousChanges.findLastMonotonous((c) => c.original.startLineNumber < move.original.endLineNumberExclusive);
+      const lastTouchingChangeMod = findLastMonotonous(changes, (c) => c.modified.startLineNumber < move.modified.endLineNumberExclusive);
+      const linesBelow = Math.max(lastTouchingChangeOrig.original.endLineNumberExclusive - move.original.endLineNumberExclusive, lastTouchingChangeMod.modified.endLineNumberExclusive - move.modified.endLineNumberExclusive);
+      let extendToTop;
+      for (extendToTop = 0; extendToTop < linesAbove; extendToTop++) {
+        const origLine = move.original.startLineNumber - extendToTop - 1;
+        const modLine = move.modified.startLineNumber - extendToTop - 1;
+        if (origLine > originalLines.length || modLine > modifiedLines.length) {
+          break;
+        }
+        if (modifiedSet.contains(modLine) || originalSet.contains(origLine)) {
+          break;
+        }
+        if (!areLinesSimilar(originalLines[origLine - 1], modifiedLines[modLine - 1], timeout)) {
+          break;
+        }
+      }
+      if (extendToTop > 0) {
+        originalSet.addRange(new LineRange(move.original.startLineNumber - extendToTop, move.original.startLineNumber));
+        modifiedSet.addRange(new LineRange(move.modified.startLineNumber - extendToTop, move.modified.startLineNumber));
+      }
+      let extendToBottom;
+      for (extendToBottom = 0; extendToBottom < linesBelow; extendToBottom++) {
+        const origLine = move.original.endLineNumberExclusive + extendToBottom;
+        const modLine = move.modified.endLineNumberExclusive + extendToBottom;
+        if (origLine > originalLines.length || modLine > modifiedLines.length) {
+          break;
+        }
+        if (modifiedSet.contains(modLine) || originalSet.contains(origLine)) {
+          break;
+        }
+        if (!areLinesSimilar(originalLines[origLine - 1], modifiedLines[modLine - 1], timeout)) {
+          break;
+        }
+      }
+      if (extendToBottom > 0) {
+        originalSet.addRange(new LineRange(move.original.endLineNumberExclusive, move.original.endLineNumberExclusive + extendToBottom));
+        modifiedSet.addRange(new LineRange(move.modified.endLineNumberExclusive, move.modified.endLineNumberExclusive + extendToBottom));
+      }
+      if (extendToTop > 0 || extendToBottom > 0) {
+        moves[i] = new LineRangeMapping(new LineRange(move.original.startLineNumber - extendToTop, move.original.endLineNumberExclusive + extendToBottom), new LineRange(move.modified.startLineNumber - extendToTop, move.modified.endLineNumberExclusive + extendToBottom));
+      }
+    }
+    return moves;
+  }
+  function areLinesSimilar(line1, line2, timeout) {
+    if (line1.trim() === line2.trim()) {
+      return true;
+    }
+    if (line1.length > 300 && line2.length > 300) {
+      return false;
+    }
+    const myersDiffingAlgorithm = new MyersDiffAlgorithm();
+    const result = myersDiffingAlgorithm.compute(new LinesSliceCharSequence([line1], new OffsetRange(0, 1), false), new LinesSliceCharSequence([line2], new OffsetRange(0, 1), false), timeout);
+    let commonNonSpaceCharCount = 0;
+    const inverted = SequenceDiff.invert(result.diffs, line1.length);
+    for (const seq of inverted) {
+      seq.seq1Range.forEach((idx) => {
+        if (!isSpace(line1.charCodeAt(idx))) {
+          commonNonSpaceCharCount++;
+        }
+      });
+    }
+    function countNonWsChars(str) {
+      let count = 0;
+      for (let i = 0; i < line1.length; i++) {
+        if (!isSpace(str.charCodeAt(i))) {
+          count++;
+        }
+      }
+      return count;
+    }
+    const longerLineLength = countNonWsChars(line1.length > line2.length ? line1 : line2);
+    const r = commonNonSpaceCharCount / longerLineLength > 0.6 && longerLineLength > 10;
+    return r;
+  }
+  function joinCloseConsecutiveMoves(moves) {
+    if (moves.length === 0) {
+      return moves;
+    }
+    moves.sort(compareBy((m) => m.original.startLineNumber, numberComparator));
+    const result = [moves[0]];
+    for (let i = 1; i < moves.length; i++) {
+      const last = result[result.length - 1];
+      const current = moves[i];
+      const originalDist = current.original.startLineNumber - last.original.endLineNumberExclusive;
+      const modifiedDist = current.modified.startLineNumber - last.modified.endLineNumberExclusive;
+      const currentMoveAfterLast = originalDist >= 0 && modifiedDist >= 0;
+      if (currentMoveAfterLast && originalDist + modifiedDist <= 2) {
+        result[result.length - 1] = last.join(current);
+        continue;
+      }
+      result.push(current);
+    }
+    return result;
+  }
+  function removeMovesInSameDiff(changes, moves) {
+    const changesMonotonous = new MonotonousArray(changes);
+    moves = moves.filter((m) => {
+      const diffBeforeEndOfMoveOriginal = changesMonotonous.findLastMonotonous((c) => c.original.endLineNumberExclusive < m.original.endLineNumberExclusive) || new LineRangeMapping(new LineRange(1, 1), new LineRange(1, 1));
+      const diffBeforeEndOfMoveModified = findLastMonotonous(changes, (c) => c.modified.endLineNumberExclusive < m.modified.endLineNumberExclusive);
+      const differentDiffs = diffBeforeEndOfMoveOriginal !== diffBeforeEndOfMoveModified;
+      return differentDiffs;
+    });
+    return moves;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/heuristicSequenceOptimizations.js
+  function optimizeSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
+    let result = sequenceDiffs;
+    result = joinSequenceDiffsByShifting(sequence1, sequence2, result);
+    result = shiftSequenceDiffs(sequence1, sequence2, result);
+    return result;
+  }
+  function joinSequenceDiffsByShifting(sequence1, sequence2, sequenceDiffs) {
+    if (sequenceDiffs.length === 0) {
+      return sequenceDiffs;
+    }
+    const result = [];
+    result.push(sequenceDiffs[0]);
+    for (let i = 1; i < sequenceDiffs.length; i++) {
+      const prevResult = result[result.length - 1];
+      let cur = sequenceDiffs[i];
+      if (cur.seq1Range.isEmpty || cur.seq2Range.isEmpty) {
+        const length = cur.seq1Range.start - prevResult.seq1Range.endExclusive;
+        let d;
+        for (d = 1; d <= length; d++) {
+          if (sequence1.getElement(cur.seq1Range.start - d) !== sequence1.getElement(cur.seq1Range.endExclusive - d) || sequence2.getElement(cur.seq2Range.start - d) !== sequence2.getElement(cur.seq2Range.endExclusive - d)) {
+            break;
+          }
+        }
+        d--;
+        if (d === length) {
+          result[result.length - 1] = new SequenceDiff(new OffsetRange(prevResult.seq1Range.start, cur.seq1Range.endExclusive - length), new OffsetRange(prevResult.seq2Range.start, cur.seq2Range.endExclusive - length));
+          continue;
+        }
+        cur = cur.delta(-d);
+      }
+      result.push(cur);
+    }
+    const result2 = [];
+    for (let i = 0; i < result.length - 1; i++) {
+      const nextResult = result[i + 1];
+      let cur = result[i];
+      if (cur.seq1Range.isEmpty || cur.seq2Range.isEmpty) {
+        const length = nextResult.seq1Range.start - cur.seq1Range.endExclusive;
+        let d;
+        for (d = 0; d < length; d++) {
+          if (!sequence1.isStronglyEqual(cur.seq1Range.start + d, cur.seq1Range.endExclusive + d) || !sequence2.isStronglyEqual(cur.seq2Range.start + d, cur.seq2Range.endExclusive + d)) {
+            break;
+          }
+        }
+        if (d === length) {
+          result[i + 1] = new SequenceDiff(new OffsetRange(cur.seq1Range.start + length, nextResult.seq1Range.endExclusive), new OffsetRange(cur.seq2Range.start + length, nextResult.seq2Range.endExclusive));
+          continue;
+        }
+        if (d > 0) {
+          cur = cur.delta(d);
+        }
+      }
+      result2.push(cur);
+    }
+    if (result.length > 0) {
+      result2.push(result[result.length - 1]);
+    }
+    return result2;
+  }
+  function shiftSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
+    if (!sequence1.getBoundaryScore || !sequence2.getBoundaryScore) {
+      return sequenceDiffs;
+    }
+    for (let i = 0; i < sequenceDiffs.length; i++) {
+      const prevDiff = i > 0 ? sequenceDiffs[i - 1] : void 0;
+      const diff = sequenceDiffs[i];
+      const nextDiff = i + 1 < sequenceDiffs.length ? sequenceDiffs[i + 1] : void 0;
+      const seq1ValidRange = new OffsetRange(prevDiff ? prevDiff.seq1Range.start + 1 : 0, nextDiff ? nextDiff.seq1Range.endExclusive - 1 : sequence1.length);
+      const seq2ValidRange = new OffsetRange(prevDiff ? prevDiff.seq2Range.start + 1 : 0, nextDiff ? nextDiff.seq2Range.endExclusive - 1 : sequence2.length);
+      if (diff.seq1Range.isEmpty) {
+        sequenceDiffs[i] = shiftDiffToBetterPosition(diff, sequence1, sequence2, seq1ValidRange, seq2ValidRange);
+      } else if (diff.seq2Range.isEmpty) {
+        sequenceDiffs[i] = shiftDiffToBetterPosition(diff.swap(), sequence2, sequence1, seq2ValidRange, seq1ValidRange).swap();
+      }
+    }
+    return sequenceDiffs;
+  }
+  function shiftDiffToBetterPosition(diff, sequence1, sequence2, seq1ValidRange, seq2ValidRange) {
+    const maxShiftLimit = 100;
+    let deltaBefore = 1;
+    while (diff.seq1Range.start - deltaBefore >= seq1ValidRange.start && diff.seq2Range.start - deltaBefore >= seq2ValidRange.start && sequence2.isStronglyEqual(diff.seq2Range.start - deltaBefore, diff.seq2Range.endExclusive - deltaBefore) && deltaBefore < maxShiftLimit) {
+      deltaBefore++;
+    }
+    deltaBefore--;
+    let deltaAfter = 0;
+    while (diff.seq1Range.start + deltaAfter < seq1ValidRange.endExclusive && diff.seq2Range.endExclusive + deltaAfter < seq2ValidRange.endExclusive && sequence2.isStronglyEqual(diff.seq2Range.start + deltaAfter, diff.seq2Range.endExclusive + deltaAfter) && deltaAfter < maxShiftLimit) {
+      deltaAfter++;
+    }
+    if (deltaBefore === 0 && deltaAfter === 0) {
+      return diff;
+    }
+    let bestDelta = 0;
+    let bestScore = -1;
+    for (let delta = -deltaBefore; delta <= deltaAfter; delta++) {
+      const seq2OffsetStart = diff.seq2Range.start + delta;
+      const seq2OffsetEndExclusive = diff.seq2Range.endExclusive + delta;
+      const seq1Offset = diff.seq1Range.start + delta;
+      const score2 = sequence1.getBoundaryScore(seq1Offset) + sequence2.getBoundaryScore(seq2OffsetStart) + sequence2.getBoundaryScore(seq2OffsetEndExclusive);
+      if (score2 > bestScore) {
+        bestScore = score2;
+        bestDelta = delta;
+      }
+    }
+    return diff.delta(bestDelta);
+  }
+  function removeShortMatches(sequence1, sequence2, sequenceDiffs) {
+    const result = [];
+    for (const s of sequenceDiffs) {
+      const last = result[result.length - 1];
+      if (!last) {
+        result.push(s);
+        continue;
+      }
+      if (s.seq1Range.start - last.seq1Range.endExclusive <= 2 || s.seq2Range.start - last.seq2Range.endExclusive <= 2) {
+        result[result.length - 1] = new SequenceDiff(last.seq1Range.join(s.seq1Range), last.seq2Range.join(s.seq2Range));
+      } else {
+        result.push(s);
+      }
+    }
+    return result;
+  }
+  function extendDiffsToEntireWordIfAppropriate(sequence1, sequence2, sequenceDiffs) {
+    const additional = [];
+    let lastModifiedWord = void 0;
+    function maybePushWordToAdditional() {
+      if (!lastModifiedWord) {
+        return;
+      }
+      const originalLength1 = lastModifiedWord.s1Range.length - lastModifiedWord.deleted;
+      const originalLength2 = lastModifiedWord.s2Range.length - lastModifiedWord.added;
+      if (originalLength1 !== originalLength2) {
+      }
+      if (Math.max(lastModifiedWord.deleted, lastModifiedWord.added) + (lastModifiedWord.count - 1) > originalLength1) {
+        additional.push(new SequenceDiff(lastModifiedWord.s1Range, lastModifiedWord.s2Range));
+      }
+      lastModifiedWord = void 0;
+    }
+    for (const s of sequenceDiffs) {
+      let processWord = function(s1Range, s2Range) {
+        var _a4, _b2, _c, _d;
+        if (!lastModifiedWord || !lastModifiedWord.s1Range.containsRange(s1Range) || !lastModifiedWord.s2Range.containsRange(s2Range)) {
+          if (lastModifiedWord && !(lastModifiedWord.s1Range.endExclusive < s1Range.start && lastModifiedWord.s2Range.endExclusive < s2Range.start)) {
+            const s1Added = OffsetRange.tryCreate(lastModifiedWord.s1Range.endExclusive, s1Range.start);
+            const s2Added = OffsetRange.tryCreate(lastModifiedWord.s2Range.endExclusive, s2Range.start);
+            lastModifiedWord.deleted += (_a4 = s1Added === null || s1Added === void 0 ? void 0 : s1Added.length) !== null && _a4 !== void 0 ? _a4 : 0;
+            lastModifiedWord.added += (_b2 = s2Added === null || s2Added === void 0 ? void 0 : s2Added.length) !== null && _b2 !== void 0 ? _b2 : 0;
+            lastModifiedWord.s1Range = lastModifiedWord.s1Range.join(s1Range);
+            lastModifiedWord.s2Range = lastModifiedWord.s2Range.join(s2Range);
+          } else {
+            maybePushWordToAdditional();
+            lastModifiedWord = { added: 0, deleted: 0, count: 0, s1Range, s2Range };
+          }
+        }
+        const changedS1 = s1Range.intersect(s.seq1Range);
+        const changedS2 = s2Range.intersect(s.seq2Range);
+        lastModifiedWord.count++;
+        lastModifiedWord.deleted += (_c = changedS1 === null || changedS1 === void 0 ? void 0 : changedS1.length) !== null && _c !== void 0 ? _c : 0;
+        lastModifiedWord.added += (_d = changedS2 === null || changedS2 === void 0 ? void 0 : changedS2.length) !== null && _d !== void 0 ? _d : 0;
+      };
+      const w1Before = sequence1.findWordContaining(s.seq1Range.start - 1);
+      const w2Before = sequence2.findWordContaining(s.seq2Range.start - 1);
+      const w1After = sequence1.findWordContaining(s.seq1Range.endExclusive);
+      const w2After = sequence2.findWordContaining(s.seq2Range.endExclusive);
+      if (w1Before && w1After && w2Before && w2After && w1Before.equals(w1After) && w2Before.equals(w2After)) {
+        processWord(w1Before, w2Before);
+      } else {
+        if (w1Before && w2Before) {
+          processWord(w1Before, w2Before);
+        }
+        if (w1After && w2After) {
+          processWord(w1After, w2After);
+        }
+      }
+    }
+    maybePushWordToAdditional();
+    const merged = mergeSequenceDiffs(sequenceDiffs, additional);
+    return merged;
+  }
+  function mergeSequenceDiffs(sequenceDiffs1, sequenceDiffs2) {
+    const result = [];
+    while (sequenceDiffs1.length > 0 || sequenceDiffs2.length > 0) {
+      const sd1 = sequenceDiffs1[0];
+      const sd2 = sequenceDiffs2[0];
+      let next;
+      if (sd1 && (!sd2 || sd1.seq1Range.start < sd2.seq1Range.start)) {
+        next = sequenceDiffs1.shift();
+      } else {
+        next = sequenceDiffs2.shift();
+      }
+      if (result.length > 0 && result[result.length - 1].seq1Range.endExclusive >= next.seq1Range.start) {
+        result[result.length - 1] = result[result.length - 1].join(next);
+      } else {
+        result.push(next);
+      }
+    }
+    return result;
+  }
+  function removeVeryShortMatchingLinesBetweenDiffs(sequence1, _sequence2, sequenceDiffs) {
+    let diffs = sequenceDiffs;
+    if (diffs.length === 0) {
+      return diffs;
+    }
+    let counter = 0;
+    let shouldRepeat;
+    do {
+      shouldRepeat = false;
+      const result = [
+        diffs[0]
+      ];
+      for (let i = 1; i < diffs.length; i++) {
+        let shouldJoinDiffs = function(before, after) {
+          const unchangedRange = new OffsetRange(lastResult.seq1Range.endExclusive, cur.seq1Range.start);
+          const unchangedText = sequence1.getText(unchangedRange);
+          const unchangedTextWithoutWs = unchangedText.replace(/\s/g, "");
+          if (unchangedTextWithoutWs.length <= 4 && (before.seq1Range.length + before.seq2Range.length > 5 || after.seq1Range.length + after.seq2Range.length > 5)) {
+            return true;
+          }
+          return false;
+        };
+        const cur = diffs[i];
+        const lastResult = result[result.length - 1];
+        const shouldJoin = shouldJoinDiffs(lastResult, cur);
+        if (shouldJoin) {
+          shouldRepeat = true;
+          result[result.length - 1] = result[result.length - 1].join(cur);
+        } else {
+          result.push(cur);
+        }
+      }
+      diffs = result;
+    } while (counter++ < 10 && shouldRepeat);
+    return diffs;
+  }
+  function removeVeryShortMatchingTextBetweenLongDiffs(sequence1, sequence2, sequenceDiffs) {
+    let diffs = sequenceDiffs;
+    if (diffs.length === 0) {
+      return diffs;
+    }
+    let counter = 0;
+    let shouldRepeat;
+    do {
+      shouldRepeat = false;
+      const result = [
+        diffs[0]
+      ];
+      for (let i = 1; i < diffs.length; i++) {
+        let shouldJoinDiffs = function(before, after) {
+          const unchangedRange = new OffsetRange(lastResult.seq1Range.endExclusive, cur.seq1Range.start);
+          const unchangedLineCount = sequence1.countLinesIn(unchangedRange);
+          if (unchangedLineCount > 5 || unchangedRange.length > 500) {
+            return false;
+          }
+          const unchangedText = sequence1.getText(unchangedRange).trim();
+          if (unchangedText.length > 20 || unchangedText.split(/\r\n|\r|\n/).length > 1) {
+            return false;
+          }
+          const beforeLineCount1 = sequence1.countLinesIn(before.seq1Range);
+          const beforeSeq1Length = before.seq1Range.length;
+          const beforeLineCount2 = sequence2.countLinesIn(before.seq2Range);
+          const beforeSeq2Length = before.seq2Range.length;
+          const afterLineCount1 = sequence1.countLinesIn(after.seq1Range);
+          const afterSeq1Length = after.seq1Range.length;
+          const afterLineCount2 = sequence2.countLinesIn(after.seq2Range);
+          const afterSeq2Length = after.seq2Range.length;
+          const max = 2 * 40 + 50;
+          function cap(v) {
+            return Math.min(v, max);
+          }
+          if (Math.pow(Math.pow(cap(beforeLineCount1 * 40 + beforeSeq1Length), 1.5) + Math.pow(cap(beforeLineCount2 * 40 + beforeSeq2Length), 1.5), 1.5) + Math.pow(Math.pow(cap(afterLineCount1 * 40 + afterSeq1Length), 1.5) + Math.pow(cap(afterLineCount2 * 40 + afterSeq2Length), 1.5), 1.5) > Math.pow(Math.pow(max, 1.5), 1.5) * 1.3) {
+            return true;
+          }
+          return false;
+        };
+        const cur = diffs[i];
+        const lastResult = result[result.length - 1];
+        const shouldJoin = shouldJoinDiffs(lastResult, cur);
+        if (shouldJoin) {
+          shouldRepeat = true;
+          result[result.length - 1] = result[result.length - 1].join(cur);
+        } else {
+          result.push(cur);
+        }
+      }
+      diffs = result;
+    } while (counter++ < 10 && shouldRepeat);
+    const newDiffs = [];
+    forEachWithNeighbors(diffs, (prev, cur, next) => {
+      let newDiff = cur;
+      function shouldMarkAsChanged(text) {
+        return text.length > 0 && text.trim().length <= 3 && cur.seq1Range.length + cur.seq2Range.length > 100;
+      }
+      const fullRange1 = sequence1.extendToFullLines(cur.seq1Range);
+      const prefix = sequence1.getText(new OffsetRange(fullRange1.start, cur.seq1Range.start));
+      if (shouldMarkAsChanged(prefix)) {
+        newDiff = newDiff.deltaStart(-prefix.length);
+      }
+      const suffix = sequence1.getText(new OffsetRange(cur.seq1Range.endExclusive, fullRange1.endExclusive));
+      if (shouldMarkAsChanged(suffix)) {
+        newDiff = newDiff.deltaEnd(suffix.length);
+      }
+      const availableSpace = SequenceDiff.fromOffsetPairs(prev ? prev.getEndExclusives() : OffsetPair.zero, next ? next.getStarts() : OffsetPair.max);
+      const result = newDiff.intersect(availableSpace);
+      newDiffs.push(result);
+    });
+    return newDiffs;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/lineSequence.js
+  var LineSequence2 = class {
+    constructor(trimmedHash, lines) {
+      this.trimmedHash = trimmedHash;
+      this.lines = lines;
+    }
+    getElement(offset) {
+      return this.trimmedHash[offset];
+    }
+    get length() {
+      return this.trimmedHash.length;
+    }
+    getBoundaryScore(length) {
+      const indentationBefore = length === 0 ? 0 : getIndentation(this.lines[length - 1]);
+      const indentationAfter = length === this.lines.length ? 0 : getIndentation(this.lines[length]);
+      return 1e3 - (indentationBefore + indentationAfter);
+    }
+    getText(range) {
+      return this.lines.slice(range.start, range.endExclusive).join("\n");
+    }
+    isStronglyEqual(offset1, offset2) {
+      return this.lines[offset1] === this.lines[offset2];
     }
   };
+  function getIndentation(str) {
+    let i = 0;
+    while (i < str.length && (str.charCodeAt(i) === 32 || str.charCodeAt(i) === 9)) {
+      i++;
+    }
+    return i;
+  }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputers.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/defaultLinesDiffComputer.js
+  var DefaultLinesDiffComputer = class {
+    constructor() {
+      this.dynamicProgrammingDiffing = new DynamicProgrammingDiffing();
+      this.myersDiffingAlgorithm = new MyersDiffAlgorithm();
+    }
+    computeDiff(originalLines, modifiedLines, options) {
+      if (originalLines.length <= 1 && equals(originalLines, modifiedLines, (a2, b) => a2 === b)) {
+        return new LinesDiff([], [], false);
+      }
+      if (originalLines.length === 1 && originalLines[0].length === 0 || modifiedLines.length === 1 && modifiedLines[0].length === 0) {
+        return new LinesDiff([
+          new DetailedLineRangeMapping(new LineRange(1, originalLines.length + 1), new LineRange(1, modifiedLines.length + 1), [
+            new RangeMapping(new Range(1, 1, originalLines.length, originalLines[0].length + 1), new Range(1, 1, modifiedLines.length, modifiedLines[0].length + 1))
+          ])
+        ], [], false);
+      }
+      const timeout = options.maxComputationTimeMs === 0 ? InfiniteTimeout.instance : new DateTimeout(options.maxComputationTimeMs);
+      const considerWhitespaceChanges = !options.ignoreTrimWhitespace;
+      const perfectHashes = /* @__PURE__ */ new Map();
+      function getOrCreateHash(text) {
+        let hash = perfectHashes.get(text);
+        if (hash === void 0) {
+          hash = perfectHashes.size;
+          perfectHashes.set(text, hash);
+        }
+        return hash;
+      }
+      const originalLinesHashes = originalLines.map((l) => getOrCreateHash(l.trim()));
+      const modifiedLinesHashes = modifiedLines.map((l) => getOrCreateHash(l.trim()));
+      const sequence1 = new LineSequence2(originalLinesHashes, originalLines);
+      const sequence2 = new LineSequence2(modifiedLinesHashes, modifiedLines);
+      const lineAlignmentResult = (() => {
+        if (sequence1.length + sequence2.length < 1700) {
+          return this.dynamicProgrammingDiffing.compute(sequence1, sequence2, timeout, (offset1, offset2) => originalLines[offset1] === modifiedLines[offset2] ? modifiedLines[offset2].length === 0 ? 0.1 : 1 + Math.log(1 + modifiedLines[offset2].length) : 0.99);
+        }
+        return this.myersDiffingAlgorithm.compute(sequence1, sequence2);
+      })();
+      let lineAlignments = lineAlignmentResult.diffs;
+      let hitTimeout = lineAlignmentResult.hitTimeout;
+      lineAlignments = optimizeSequenceDiffs(sequence1, sequence2, lineAlignments);
+      lineAlignments = removeVeryShortMatchingLinesBetweenDiffs(sequence1, sequence2, lineAlignments);
+      const alignments = [];
+      const scanForWhitespaceChanges = (equalLinesCount) => {
+        if (!considerWhitespaceChanges) {
+          return;
+        }
+        for (let i = 0; i < equalLinesCount; i++) {
+          const seq1Offset = seq1LastStart + i;
+          const seq2Offset = seq2LastStart + i;
+          if (originalLines[seq1Offset] !== modifiedLines[seq2Offset]) {
+            const characterDiffs = this.refineDiff(originalLines, modifiedLines, new SequenceDiff(new OffsetRange(seq1Offset, seq1Offset + 1), new OffsetRange(seq2Offset, seq2Offset + 1)), timeout, considerWhitespaceChanges);
+            for (const a2 of characterDiffs.mappings) {
+              alignments.push(a2);
+            }
+            if (characterDiffs.hitTimeout) {
+              hitTimeout = true;
+            }
+          }
+        }
+      };
+      let seq1LastStart = 0;
+      let seq2LastStart = 0;
+      for (const diff of lineAlignments) {
+        assertFn(() => diff.seq1Range.start - seq1LastStart === diff.seq2Range.start - seq2LastStart);
+        const equalLinesCount = diff.seq1Range.start - seq1LastStart;
+        scanForWhitespaceChanges(equalLinesCount);
+        seq1LastStart = diff.seq1Range.endExclusive;
+        seq2LastStart = diff.seq2Range.endExclusive;
+        const characterDiffs = this.refineDiff(originalLines, modifiedLines, diff, timeout, considerWhitespaceChanges);
+        if (characterDiffs.hitTimeout) {
+          hitTimeout = true;
+        }
+        for (const a2 of characterDiffs.mappings) {
+          alignments.push(a2);
+        }
+      }
+      scanForWhitespaceChanges(originalLines.length - seq1LastStart);
+      const changes = lineRangeMappingFromRangeMappings(alignments, originalLines, modifiedLines);
+      let moves = [];
+      if (options.computeMoves) {
+        moves = this.computeMoves(changes, originalLines, modifiedLines, originalLinesHashes, modifiedLinesHashes, timeout, considerWhitespaceChanges);
+      }
+      assertFn(() => {
+        function validatePosition(pos, lines) {
+          if (pos.lineNumber < 1 || pos.lineNumber > lines.length) {
+            return false;
+          }
+          const line = lines[pos.lineNumber - 1];
+          if (pos.column < 1 || pos.column > line.length + 1) {
+            return false;
+          }
+          return true;
+        }
+        function validateRange(range, lines) {
+          if (range.startLineNumber < 1 || range.startLineNumber > lines.length + 1) {
+            return false;
+          }
+          if (range.endLineNumberExclusive < 1 || range.endLineNumberExclusive > lines.length + 1) {
+            return false;
+          }
+          return true;
+        }
+        for (const c of changes) {
+          if (!c.innerChanges) {
+            return false;
+          }
+          for (const ic of c.innerChanges) {
+            const valid = validatePosition(ic.modifiedRange.getStartPosition(), modifiedLines) && validatePosition(ic.modifiedRange.getEndPosition(), modifiedLines) && validatePosition(ic.originalRange.getStartPosition(), originalLines) && validatePosition(ic.originalRange.getEndPosition(), originalLines);
+            if (!valid) {
+              return false;
+            }
+          }
+          if (!validateRange(c.modified, modifiedLines) || !validateRange(c.original, originalLines)) {
+            return false;
+          }
+        }
+        return true;
+      });
+      return new LinesDiff(changes, moves, hitTimeout);
+    }
+    computeMoves(changes, originalLines, modifiedLines, hashedOriginalLines, hashedModifiedLines, timeout, considerWhitespaceChanges) {
+      const moves = computeMovedLines(changes, originalLines, modifiedLines, hashedOriginalLines, hashedModifiedLines, timeout);
+      const movesWithDiffs = moves.map((m) => {
+        const moveChanges = this.refineDiff(originalLines, modifiedLines, new SequenceDiff(m.original.toOffsetRange(), m.modified.toOffsetRange()), timeout, considerWhitespaceChanges);
+        const mappings = lineRangeMappingFromRangeMappings(moveChanges.mappings, originalLines, modifiedLines, true);
+        return new MovedText(m, mappings);
+      });
+      return movesWithDiffs;
+    }
+    refineDiff(originalLines, modifiedLines, diff, timeout, considerWhitespaceChanges) {
+      const slice1 = new LinesSliceCharSequence(originalLines, diff.seq1Range, considerWhitespaceChanges);
+      const slice2 = new LinesSliceCharSequence(modifiedLines, diff.seq2Range, considerWhitespaceChanges);
+      const diffResult = slice1.length + slice2.length < 500 ? this.dynamicProgrammingDiffing.compute(slice1, slice2, timeout) : this.myersDiffingAlgorithm.compute(slice1, slice2, timeout);
+      let diffs = diffResult.diffs;
+      diffs = optimizeSequenceDiffs(slice1, slice2, diffs);
+      diffs = extendDiffsToEntireWordIfAppropriate(slice1, slice2, diffs);
+      diffs = removeShortMatches(slice1, slice2, diffs);
+      diffs = removeVeryShortMatchingTextBetweenLongDiffs(slice1, slice2, diffs);
+      const result = diffs.map((d) => new RangeMapping(slice1.translateRange(d.seq1Range), slice2.translateRange(d.seq2Range)));
+      return {
+        mappings: result,
+        hitTimeout: diffResult.hitTimeout
+      };
+    }
+  };
+  function lineRangeMappingFromRangeMappings(alignments, originalLines, modifiedLines, dontAssertStartLine = false) {
+    const changes = [];
+    for (const g of groupAdjacentBy(alignments.map((a2) => getLineRangeMapping(a2, originalLines, modifiedLines)), (a1, a2) => a1.original.overlapOrTouch(a2.original) || a1.modified.overlapOrTouch(a2.modified))) {
+      const first = g[0];
+      const last = g[g.length - 1];
+      changes.push(new DetailedLineRangeMapping(first.original.join(last.original), first.modified.join(last.modified), g.map((a2) => a2.innerChanges[0])));
+    }
+    assertFn(() => {
+      if (!dontAssertStartLine) {
+        if (changes.length > 0 && changes[0].original.startLineNumber !== changes[0].modified.startLineNumber) {
+          return false;
+        }
+      }
+      return checkAdjacentItems(changes, (m1, m2) => m2.original.startLineNumber - m1.original.endLineNumberExclusive === m2.modified.startLineNumber - m1.modified.endLineNumberExclusive && // There has to be an unchanged line in between (otherwise both diffs should have been joined)
+      m1.original.endLineNumberExclusive < m2.original.startLineNumber && m1.modified.endLineNumberExclusive < m2.modified.startLineNumber);
+    });
+    return changes;
+  }
+  function getLineRangeMapping(rangeMapping, originalLines, modifiedLines) {
+    let lineStartDelta = 0;
+    let lineEndDelta = 0;
+    if (rangeMapping.modifiedRange.endColumn === 1 && rangeMapping.originalRange.endColumn === 1 && rangeMapping.originalRange.startLineNumber + lineStartDelta <= rangeMapping.originalRange.endLineNumber && rangeMapping.modifiedRange.startLineNumber + lineStartDelta <= rangeMapping.modifiedRange.endLineNumber) {
+      lineEndDelta = -1;
+    }
+    if (rangeMapping.modifiedRange.startColumn - 1 >= modifiedLines[rangeMapping.modifiedRange.startLineNumber - 1].length && rangeMapping.originalRange.startColumn - 1 >= originalLines[rangeMapping.originalRange.startLineNumber - 1].length && rangeMapping.originalRange.startLineNumber <= rangeMapping.originalRange.endLineNumber + lineEndDelta && rangeMapping.modifiedRange.startLineNumber <= rangeMapping.modifiedRange.endLineNumber + lineEndDelta) {
+      lineStartDelta = 1;
+    }
+    const originalLineRange = new LineRange(rangeMapping.originalRange.startLineNumber + lineStartDelta, rangeMapping.originalRange.endLineNumber + 1 + lineEndDelta);
+    const modifiedLineRange = new LineRange(rangeMapping.modifiedRange.startLineNumber + lineStartDelta, rangeMapping.modifiedRange.endLineNumber + 1 + lineEndDelta);
+    return new DetailedLineRangeMapping(originalLineRange, modifiedLineRange, [rangeMapping]);
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputers.js
   var linesDiffComputers = {
     getLegacy: () => new LegacyLinesDiffComputer(),
-    getAdvanced: () => new AdvancedLinesDiffComputer()
+    getDefault: () => new DefaultLinesDiffComputer()
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/base/common/color.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/base/common/color.js
   function roundFloat(number, decimalPoints) {
     const decimal = Math.pow(10, decimalPoints);
     return Math.round(number * decimal) / decimal;
@@ -11231,7 +11836,7 @@
     })(Format = Color3.Format || (Color3.Format = {}));
   })(Color || (Color = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/languages/defaultDocumentColorsComputer.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/languages/defaultDocumentColorsComputer.js
   function _parseCaptureGroups(captureGroups) {
     const values = [];
     for (const captureGroup of captureGroups) {
@@ -11352,7 +11957,7 @@
     return computeColors(model);
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js
   var __awaiter2 = function(thisArg, _arguments, P, generator) {
     function adopt(value) {
       return value instanceof P ? value : new P(function(resolve2) {
@@ -11605,15 +12210,15 @@
       });
     }
     static computeDiff(originalTextModel, modifiedTextModel, options, algorithm) {
-      const diffAlgorithm = algorithm === "advanced" ? linesDiffComputers.getAdvanced() : linesDiffComputers.getLegacy();
+      const diffAlgorithm = algorithm === "advanced" ? linesDiffComputers.getDefault() : linesDiffComputers.getLegacy();
       const originalLines = originalTextModel.getLinesContent();
       const modifiedLines = modifiedTextModel.getLinesContent();
       const result = diffAlgorithm.computeDiff(originalLines, modifiedLines, options);
       const identical = result.changes.length > 0 ? false : this._modelsAreIdentical(originalTextModel, modifiedTextModel);
       function getLineChanges(changes) {
         return changes.map((m) => {
-          var _a3;
-          return [m.originalRange.startLineNumber, m.originalRange.endLineNumberExclusive, m.modifiedRange.startLineNumber, m.modifiedRange.endLineNumberExclusive, (_a3 = m.innerChanges) === null || _a3 === void 0 ? void 0 : _a3.map((m2) => [
+          var _a4;
+          return [m.original.startLineNumber, m.original.endLineNumberExclusive, m.modified.startLineNumber, m.modified.endLineNumberExclusive, (_a4 = m.innerChanges) === null || _a4 === void 0 ? void 0 : _a4.map((m2) => [
             m2.originalRange.startLineNumber,
             m2.originalRange.startColumn,
             m2.originalRange.endLineNumber,
@@ -11669,6 +12274,17 @@
           const bRng = b.range ? 0 : 1;
           return aRng - bRng;
         });
+        let writeIndex = 0;
+        for (let readIndex = 1; readIndex < edits.length; readIndex++) {
+          if (Range.getEndPosition(edits[writeIndex].range).equals(Range.getStartPosition(edits[readIndex].range))) {
+            edits[writeIndex].range = Range.fromPositions(Range.getStartPosition(edits[writeIndex].range), Range.getEndPosition(edits[readIndex].range));
+            edits[writeIndex].text += edits[readIndex].text;
+          } else {
+            writeIndex++;
+            edits[writeIndex] = edits[readIndex];
+          }
+        }
+        edits.length = writeIndex + 1;
         for (let { range, text, eol } of edits) {
           if (typeof eol === "number") {
             lastEol = eol;
@@ -11843,7 +12459,7 @@
     globalThis.monaco = createMonacoBaseAPI();
   }
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/editor/editor.worker.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/editor/editor.worker.js
   var initialized = false;
   function initialize(foreignModule) {
     if (initialized) {
@@ -11863,7 +12479,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.43.0/node_modules/monaco-editor/esm/vs/language/json/json.worker.js
+  // node_modules/.pnpm/monaco-editor@0.44.0/node_modules/monaco-editor/esm/vs/language/json/json.worker.js
   function createScanner(text, ignoreTrivia) {
     if (ignoreTrivia === void 0) {
       ignoreTrivia = false;
@@ -12475,8 +13091,8 @@
         return node.children.map(getNodeValue);
       case "object":
         var obj = /* @__PURE__ */ Object.create(null);
-        for (var _i = 0, _a3 = node.children; _i < _a3.length; _i++) {
-          var prop = _a3[_i];
+        for (var _i = 0, _a4 = node.children; _i < _a4.length; _i++) {
+          var prop = _a4[_i];
           var valueNode = prop.children[1];
           if (valueNode) {
             obj[prop.children[0].value] = getNodeValue(valueNode);
@@ -13055,9 +13671,9 @@
     }
     Diagnostic2.create = create;
     function is(value) {
-      var _a3;
+      var _a4;
       var candidate = value;
-      return Is.defined(candidate) && Range2.is(candidate.range) && Is.string(candidate.message) && (Is.number(candidate.severity) || Is.undefined(candidate.severity)) && (Is.integer(candidate.code) || Is.string(candidate.code) || Is.undefined(candidate.code)) && (Is.undefined(candidate.codeDescription) || Is.string((_a3 = candidate.codeDescription) === null || _a3 === void 0 ? void 0 : _a3.href)) && (Is.string(candidate.source) || Is.undefined(candidate.source)) && (Is.undefined(candidate.relatedInformation) || Is.typedArray(candidate.relatedInformation, DiagnosticRelatedInformation.is));
+      return Is.defined(candidate) && Range2.is(candidate.range) && Is.string(candidate.message) && (Is.number(candidate.severity) || Is.undefined(candidate.severity)) && (Is.integer(candidate.code) || Is.string(candidate.code) || Is.undefined(candidate.code)) && (Is.undefined(candidate.codeDescription) || Is.string((_a4 = candidate.codeDescription) === null || _a4 === void 0 ? void 0 : _a4.href)) && (Is.string(candidate.source) || Is.undefined(candidate.source)) && (Is.undefined(candidate.relatedInformation) || Is.typedArray(candidate.relatedInformation, DiagnosticRelatedInformation.is));
     }
     Diagnostic2.is = is;
   })(Diagnostic || (Diagnostic = {}));
@@ -14594,8 +15210,8 @@
     ValidationResult2.prototype.mergeEnumValues = function(validationResult) {
       if (!this.enumValueMatch && !validationResult.enumValueMatch && this.enumValues && validationResult.enumValues) {
         this.enumValues = this.enumValues.concat(validationResult.enumValues);
-        for (var _i = 0, _a3 = this.problems; _i < _a3.length; _i++) {
-          var error = _a3[_i];
+        for (var _i = 0, _a4 = this.problems; _i < _a4.length; _i++) {
+          var error = _a4[_i];
           if (error.code === ErrorCode.EnumValueMismatch) {
             error.message = localize22("enumWarning", "Value is not accepted. Valid values: {0}.", this.enumValues.map(function(v) {
               return JSON.stringify(v);
@@ -14694,9 +15310,9 @@
         var validationResult = new ValidationResult();
         validate(this.root, schema2, validationResult, NoOpSchemaCollector.instance);
         return validationResult.problems.map(function(p) {
-          var _a3;
+          var _a4;
           var range = Range2.create(textDocument.positionAt(p.location.offset), textDocument.positionAt(p.location.offset + p.location.length));
-          return Diagnostic.create(range, p.message, (_a3 = p.severity) !== null && _a3 !== void 0 ? _a3 : severity, p.code);
+          return Diagnostic.create(range, p.message, (_a4 = p.severity) !== null && _a4 !== void 0 ? _a4 : severity, p.code);
         });
       }
       return void 0;
@@ -14756,8 +15372,8 @@
         }
       }
       if (Array.isArray(schema2.allOf)) {
-        for (var _i = 0, _a3 = schema2.allOf; _i < _a3.length; _i++) {
-          var subSchemaRef = _a3[_i];
+        for (var _i = 0, _a4 = schema2.allOf; _i < _a4.length; _i++) {
+          var subSchemaRef = _a4[_i];
           validate(node, asSchema(subSchemaRef), validationResult, matchingSchemas);
         }
       }
@@ -14772,8 +15388,8 @@
             message: localize22("notSchemaWarning", "Matches a schema that is not allowed.")
           });
         }
-        for (var _b = 0, _c = subMatchingSchemas.schemas; _b < _c.length; _b++) {
-          var ms = _c[_b];
+        for (var _b2 = 0, _c = subMatchingSchemas.schemas; _b2 < _c.length; _b2++) {
+          var ms = _c[_b2];
           ms.inverted = !ms.inverted;
           matchingSchemas.add(ms);
         }
@@ -14903,11 +15519,11 @@
     function _validateNumberNode(node2, schema22, validationResult2, matchingSchemas2) {
       var val = node2.value;
       function normalizeFloats(float) {
-        var _a3;
+        var _a4;
         var parts = /^(-?\d+)(?:\.(\d+))?(?:e([-+]\d+))?$/.exec(float.toString());
         return parts && {
           value: Number(parts[1] + (parts[2] || "")),
-          multiplier: (((_a3 = parts[2]) === null || _a3 === void 0 ? void 0 : _a3.length) || 0) - (parseInt(parts[3]) || 0)
+          multiplier: (((_a4 = parts[2]) === null || _a4 === void 0 ? void 0 : _a4.length) || 0) - (parseInt(parts[3]) || 0)
         };
       }
       ;
@@ -15076,8 +15692,8 @@
       } else {
         var itemSchema = asSchema(schema22.items);
         if (itemSchema) {
-          for (var _i = 0, _a3 = node2.items; _i < _a3.length; _i++) {
-            var item = _a3[_i];
+          for (var _i = 0, _a4 = node2.items; _i < _a4.length; _i++) {
+            var item = _a4[_i];
             var itemValidationResult = new ValidationResult();
             validate(item, itemSchema, itemValidationResult, matchingSchemas2);
             validationResult2.mergePropertyMatch(itemValidationResult);
@@ -15126,15 +15742,15 @@
     function _validateObjectNode(node2, schema22, validationResult2, matchingSchemas2) {
       var seenKeys = /* @__PURE__ */ Object.create(null);
       var unprocessedProperties = [];
-      for (var _i = 0, _a3 = node2.properties; _i < _a3.length; _i++) {
-        var propertyNode = _a3[_i];
+      for (var _i = 0, _a4 = node2.properties; _i < _a4.length; _i++) {
+        var propertyNode = _a4[_i];
         var key = propertyNode.keyNode.value;
         seenKeys[key] = propertyNode.valueNode;
         unprocessedProperties.push(key);
       }
       if (Array.isArray(schema22.required)) {
-        for (var _b = 0, _c = schema22.required; _b < _c.length; _b++) {
-          var propertyName = _c[_b];
+        for (var _b2 = 0, _c = schema22.required; _b2 < _c.length; _b2++) {
+          var propertyName = _c[_b2];
           if (!seenKeys[propertyName]) {
             var keyNode = node2.parent && node2.parent.type === "property" && node2.parent.keyNode;
             var location = keyNode ? { offset: keyNode.offset, length: keyNode.length } : { offset: node2.offset, length: 1 };
@@ -16028,8 +16644,8 @@
                 }
               }
               if (s.schema.patternProperties && !propertyMatched) {
-                for (var _a3 = 0, _b = Object.keys(s.schema.patternProperties); _a3 < _b.length; _a3++) {
-                  var pattern = _b[_a3];
+                for (var _a4 = 0, _b2 = Object.keys(s.schema.patternProperties); _a4 < _b2.length; _a4++) {
+                  var pattern = _b2[_a4];
                   var regex = extendedRegExp(pattern);
                   if (regex === null || regex === void 0 ? void 0 : regex.test(parentKey)) {
                     propertyMatched = true;
@@ -16695,8 +17311,8 @@
             trailingCommaSeverity = void 0;
           }
         }
-        for (var _i = 0, _a3 = jsonDocument.syntaxErrors; _i < _a3.length; _i++) {
-          var p = _a3[_i];
+        for (var _i = 0, _a4 = jsonDocument.syntaxErrors; _i < _a4.length; _i++) {
+          var p = _a4[_i];
           if (p.code === ErrorCode.TrailingComma) {
             if (typeof trailingCommaSeverity !== "number") {
               continue;
@@ -16736,8 +17352,8 @@
         return schemaRef.allowComments;
       }
       if (schemaRef.allOf) {
-        for (var _i = 0, _a3 = schemaRef.allOf; _i < _a3.length; _i++) {
-          var schema2 = _a3[_i];
+        for (var _i = 0, _a4 = schemaRef.allOf; _i < _a4.length; _i++) {
+          var schema2 = _a4[_i];
           var allow = schemaAllowsComments(schema2);
           if (isBoolean(allow)) {
             return allow;
@@ -16757,8 +17373,8 @@
         return deprSchemaRef["allowsTrailingCommas"];
       }
       if (schemaRef.allOf) {
-        for (var _i = 0, _a3 = schemaRef.allOf; _i < _a3.length; _i++) {
-          var schema2 = _a3[_i];
+        for (var _i = 0, _a4 = schemaRef.allOf; _i < _a4.length; _i++) {
+          var schema2 = _a4[_i];
           var allow = schemaAllowsTrailingCommas(schema2);
           if (isBoolean(allow)) {
             return allow;
@@ -16853,11 +17469,11 @@
       if (resourceString === "vscode://defaultsettings/keybindings.json" || endsWith(resourceString.toLowerCase(), "/user/keybindings.json")) {
         if (root.type === "array") {
           var result_1 = [];
-          for (var _i = 0, _a3 = root.items; _i < _a3.length; _i++) {
-            var item = _a3[_i];
+          for (var _i = 0, _a4 = root.items; _i < _a4.length; _i++) {
+            var item = _a4[_i];
             if (item.type === "object") {
-              for (var _b = 0, _c = item.properties; _b < _c.length; _b++) {
-                var property2 = _c[_b];
+              for (var _b2 = 0, _c = item.properties; _b2 < _c.length; _b2++) {
+                var property2 = _c[_b2];
                 if (property2.keyNode.value === "key" && property2.valueNode) {
                   var location = Location.create(document2.uri, getRange(document2, item));
                   result_1.push({ name: getNodeValue3(property2.valueNode), kind: SymbolKind2.Function, location });
@@ -16928,11 +17544,11 @@
       if (resourceString === "vscode://defaultsettings/keybindings.json" || endsWith(resourceString.toLowerCase(), "/user/keybindings.json")) {
         if (root.type === "array") {
           var result_2 = [];
-          for (var _i = 0, _a3 = root.items; _i < _a3.length; _i++) {
-            var item = _a3[_i];
+          for (var _i = 0, _a4 = root.items; _i < _a4.length; _i++) {
+            var item = _a4[_i];
             if (item.type === "object") {
-              for (var _b = 0, _c = item.properties; _b < _c.length; _b++) {
-                var property2 = _c[_b];
+              for (var _b2 = 0, _c = item.properties; _b2 < _c.length; _b2++) {
+                var property2 = _c[_b2];
                 if (property2.keyNode.value === "key" && property2.valueNode) {
                   var range = getRange(document2, item);
                   var selectionRange = getRange(document2, property2.keyNode);
@@ -18112,8 +18728,8 @@
     }
     FilePatternAssociation2.prototype.matchesPattern = function(fileName) {
       var match = false;
-      for (var _i = 0, _a3 = this.globWrappers; _i < _a3.length; _i++) {
-        var _b = _a3[_i], regexp = _b.regexp, include = _b.include;
+      for (var _i = 0, _a4 = this.globWrappers; _i < _a4.length; _i++) {
+        var _b2 = _a4[_i], regexp = _b2.regexp, include = _b2.include;
         if (regexp.test(fileName)) {
           match = include;
         }
@@ -18193,8 +18809,8 @@
       if (schema2.properties && typeof schema2.properties[next]) {
         return this.getSectionRecursive(path, schema2.properties[next]);
       } else if (schema2.patternProperties) {
-        for (var _i = 0, _a3 = Object.keys(schema2.patternProperties); _i < _a3.length; _i++) {
-          var pattern = _a3[_i];
+        for (var _i = 0, _a4 = Object.keys(schema2.patternProperties); _i < _a4.length; _i++) {
+          var pattern = _a4[_i];
           var regex = extendedRegExp(pattern);
           if (regex === null || regex === void 0 ? void 0 : regex.test(next)) {
             return this.getSectionRecursive(path, schema2.patternProperties[pattern]);
@@ -18321,8 +18937,8 @@
         this.schemasById[id] = this.contributionSchemas[id];
         this.registeredSchemasIds[id] = true;
       }
-      for (var _i = 0, _a3 = this.contributionAssociations; _i < _a3.length; _i++) {
-        var contributionAssociation = _a3[_i];
+      for (var _i = 0, _a4 = this.contributionAssociations; _i < _a4.length; _i++) {
+        var contributionAssociation = _a4[_i];
         this.filePatternAssociations.push(contributionAssociation);
       }
     };
@@ -18484,8 +19100,8 @@
         for (var _i = 0; _i < arguments.length; _i++) {
           entries[_i] = arguments[_i];
         }
-        for (var _a3 = 0, entries_1 = entries; _a3 < entries_1.length; _a3++) {
-          var entry = entries_1[_a3];
+        for (var _a4 = 0, entries_1 = entries; _a4 < entries_1.length; _a4++) {
+          var entry = entries_1[_a4];
           if (typeof entry === "object") {
             toWalk.push(entry);
           }
@@ -18496,8 +19112,8 @@
         for (var _i = 0; _i < arguments.length; _i++) {
           maps[_i] = arguments[_i];
         }
-        for (var _a3 = 0, maps_1 = maps; _a3 < maps_1.length; _a3++) {
-          var map = maps_1[_a3];
+        for (var _a4 = 0, maps_1 = maps; _a4 < maps_1.length; _a4++) {
+          var map = maps_1[_a4];
           if (typeof map === "object") {
             for (var k in map) {
               var key = k;
@@ -18514,11 +19130,11 @@
         for (var _i = 0; _i < arguments.length; _i++) {
           arrays[_i] = arguments[_i];
         }
-        for (var _a3 = 0, arrays_1 = arrays; _a3 < arrays_1.length; _a3++) {
-          var array = arrays_1[_a3];
+        for (var _a4 = 0, arrays_1 = arrays; _a4 < arrays_1.length; _a4++) {
+          var array = arrays_1[_a4];
           if (Array.isArray(array)) {
-            for (var _b = 0, array_1 = array; _b < array_1.length; _b++) {
-              var entry = array_1[_b];
+            for (var _b2 = 0, array_1 = array; _b2 < array_1.length; _b2++) {
+              var entry = array_1[_b2];
               if (typeof entry === "object") {
                 toWalk.push(entry);
               }
@@ -18541,11 +19157,11 @@
     };
     ;
     JSONSchemaService2.prototype.getSchemaFromProperty = function(resource, document2) {
-      var _a3, _b;
-      if (((_a3 = document2.root) === null || _a3 === void 0 ? void 0 : _a3.type) === "object") {
+      var _a4, _b2;
+      if (((_a4 = document2.root) === null || _a4 === void 0 ? void 0 : _a4.type) === "object") {
         for (var _i = 0, _c = document2.root.properties; _i < _c.length; _i++) {
           var p = _c[_i];
-          if (p.keyNode.value === "$schema" && ((_b = p.valueNode) === null || _b === void 0 ? void 0 : _b.type) === "string") {
+          if (p.keyNode.value === "$schema" && ((_b2 = p.valueNode) === null || _b2 === void 0 ? void 0 : _b2.type) === "string") {
             var schemaId = p.valueNode.value;
             if (this.contextService && !/^\w[\w\d+.-]*:/.test(schemaId)) {
               schemaId = this.contextService.resolveRelativePath(schemaId, resource);
@@ -18560,11 +19176,11 @@
       var seen = /* @__PURE__ */ Object.create(null);
       var schemas = [];
       var normalizedResource = normalizeResourceForMatching(resource);
-      for (var _i = 0, _a3 = this.filePatternAssociations; _i < _a3.length; _i++) {
-        var entry = _a3[_i];
+      for (var _i = 0, _a4 = this.filePatternAssociations; _i < _a4.length; _i++) {
+        var entry = _a4[_i];
         if (entry.matchesPattern(normalizedResource)) {
-          for (var _b = 0, _c = entry.getURIs(); _b < _c.length; _b++) {
-            var schemaId = _c[_b];
+          for (var _b2 = 0, _c = entry.getURIs(); _b2 < _c.length; _b2++) {
+            var schemaId = _c[_b2];
             if (!seen[schemaId]) {
               schemas.push(schemaId);
               seen[schemaId] = true;
@@ -18826,8 +19442,8 @@
   function findLinks(document2, doc) {
     var links = [];
     doc.visit(function(node) {
-      var _a3;
-      if (node.type === "property" && node.keyNode.value === "$ref" && ((_a3 = node.valueNode) === null || _a3 === void 0 ? void 0 : _a3.type) === "string") {
+      var _a4;
+      if (node.type === "property" && node.keyNode.value === "$ref" && ((_a4 = node.valueNode) === null || _a4 === void 0 ? void 0 : _a4.type) === "string") {
         var path = node.valueNode.value;
         var targetNode = findTargetNode(doc, path);
         if (targetNode) {
@@ -19118,7 +19734,7 @@
 monaco-editor/esm/vs/language/json/json.worker.js:
   (*!-----------------------------------------------------------------------------
    * Copyright (c) Microsoft Corporation. All rights reserved.
-   * Version: 0.43.0(94c055bcbdd49f04a0fa15515e848542a79fb948)
+   * Version: 0.44.0(3e047efd345ff102c8c61b5398fb30845aaac166)
    * Released under the MIT license
    * https://github.com/microsoft/monaco-editor/blob/main/LICENSE.txt
    *-----------------------------------------------------------------------------*)
