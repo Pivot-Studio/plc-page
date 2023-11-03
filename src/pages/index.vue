@@ -18,15 +18,9 @@ import { memberList } from "@/constant";
 import createMonaco, { PlMonaco } from "@pivot-lang/create-monaco";
 import CodeBlock from "@/components/codeBlock.vue";
 import { cp } from "fs";
-import { AnsiUp } from "ansi_up";
-import Convert from "ansi-to-html";
 import "xterm/css/xterm.css";
 import { Terminal } from "xterm";
-import { Unicode11Addon } from "@xterm/addon-unicode11";
-import { CanvasAddon } from "@xterm/addon-canvas";
-import { WebglAddon } from "@xterm/addon-webgl";
 
-import { FitAddon } from "@xterm/addon-fit";
 const tabVal = ref("hello world");
 const tabList = basicCode.map((item) => item.title);
 let monaco: PlMonaco;
@@ -36,8 +30,6 @@ function gotoEmail() {
   window.location.href = "mailto:lang@pivotstudio.cn";
 }
 
-const ansiUp = new AnsiUp();
-const convert = new Convert();
 const terminal = new Terminal({
   convertEol: true,
   disableStdin: true, //是否应禁用输入
@@ -63,8 +55,6 @@ onMounted(async () => {
   monaco.editor.onDidChangeModelContent(() => {
     code.value = monaco.editor.getModel()!.getValue();
   });
-  const canvasAddon = new CanvasAddon();
-  terminal.loadAddon(canvasAddon);
   terminal.open(document.querySelector(".code-block") as HTMLElement);
   terminal.resize(44, 17);
 });
