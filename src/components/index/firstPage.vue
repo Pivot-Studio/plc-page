@@ -14,10 +14,10 @@ function scrollToCode() {
 <template>
   <div class="first-page">
     <div class="describe">
-      <div class="gradient-font">Pivot Lang</div>
-      <div class="gradient-font">High-performance</div>
-      <div class="gradient-font">New General Purpose Language</div>
-      <div class="detail-describe">Rust-like grammar with GC. First class syntax support for VSCode.</div>
+      <div class="gradient-font">Pivot Lang --</div>
+      <div class="gradient-font">A</div>
+      <div class="gradient-font">General Purpose Language</div>
+      <div class="detail-describe">Rust-like grammar with GC.</div>
     </div>
     <div v-show="sizeCnt <= 1" class="background-container">
       <img src="@/assets/background.jpg" />
