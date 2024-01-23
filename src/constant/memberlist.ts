@@ -65,4 +65,10 @@ export const memberList = [
     avatar: 'https://avatars.githubusercontent.com/u/113411296?v=4',
     identity: 'developer',
   },
+  {
+    name: 'Griffin',
+    github: 'https://github.com/xieyuschen',
+    avatar: 'https://avatars.githubusercontent.com/u/52945328?v=4',
+    identity: 'developer',
+  },
 ];
