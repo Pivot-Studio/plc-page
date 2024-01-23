@@ -34,7 +34,7 @@ fn getFibonacci(n: i64) i64 {
     title: 'fixed point',
     code: `use core::panic;
 pub fn main() i64 {
-    let g = |f: |i64| => i64, x: i64| => i64 {
+    let g = |f, x| => {
         if x == 0 {
             return 1;
         }
@@ -59,19 +59,16 @@ impl<A|F> Func<A|F> {
 }
 
 fn Y<A|R>(g: ||A| => R, A| => R) |A| => R {
-    return |x: A| => R {
-        let in = |f: Func<A|R>, x: A| => R {
+    return |x| => {
+        return |f, x| => {
             return f.call(f, x);
-        };
-        let field = |f: Func<A|R>, x: A| => R {
-            return g(|x: A| => R {
-                return f.call(f, x);
-            }, x);
-        };
-        let f = Func{
-            f: field
-        };
-        return in(f, x);
+        }(Func{
+            f: |f, x| => {
+                return g(|x| => {
+                    return f.call(f, x);
+                }, x);
+            }
+        }, x);
     };
 }
 
@@ -81,6 +78,7 @@ fn fact_recursion(x: i64) i64 {
     }
     return x * fact_recursion(x - 1);
 }
+
 
 `,
   },
@@ -139,7 +137,7 @@ use core::panic::assert;
 use core::eq::*;
 
 fn main() i64 {
-    let table = hashtable::new_hash_table<string|string>(10 as u64, 1 as u64);
+    let table = hashtable::new_hash_table(10 as u64, 1 as u64);
     table.insert("hello","world");
     table.insert("bye","bye");
     assert(table.get("hello") is string);

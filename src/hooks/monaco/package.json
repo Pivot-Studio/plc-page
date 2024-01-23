@@ -31,7 +31,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@pivot-lang/pivot-lang": "0.1.2-be67dea.0",
+    "@pivot-lang/pivot-lang": "0.1.2-ed16221.0",
     "monaco-editor": "^0.37.1",
     "monaco-themes": "^0.4.4",
     "vscode-languageserver-types": "^3.17.3"
