@@ -3,7 +3,7 @@
  * Version: 0.37.1(20a8d5a651d057aaed7875ad1c1f2ecf13c4e773)
  * Released under the MIT license
  * https://github.com/microsoft/monaco-editor/blob/main/LICENSE.txt
- *-----------------------------------------------------------------------------*/var g={comments:{lineComment:"//",blockComment:["/*","*/"]},brackets:[["{","}"],["[","]"],["(",")"]],autoClosingPairs:[{open:"[",close:"]"},{open:"{",close:"}"},{open:"(",close:")"}],surroundingPairs:[{open:"{",close:"}"},{open:"[",close:"]"},{open:"(",close:")"}]};function e(i){let o=[];const a=i.split(/\t+|\r+|\n+| +/);for(let r=0;r<a.length;++r)a[r].length>0&&o.push(a[r]);return o}var s=e("true false"),c=e(`
+ *-----------------------------------------------------------------------------*/var s={comments:{lineComment:"//",blockComment:["/*","*/"]},brackets:[["{","}"],["[","]"],["(",")"]],autoClosingPairs:[{open:"[",close:"]"},{open:"{",close:"}"},{open:"(",close:")"}],surroundingPairs:[{open:"{",close:"}"},{open:"[",close:"]"},{open:"(",close:")"}]};function e(i){let o=[];const a=i.split(/\t+|\r+|\n+| +/);for(let r=0;r<a.length;++r)a[r].length>0&&o.push(a[r]);return o}var c=e("true false"),m=e(`
 			  alias
 			  break
 			  case
@@ -28,7 +28,7 @@
 			  switch
 			  var
 			  while
-			  `),m=e(`
+			  `),l=e(`
 			  NULL
 			  Self
 			  abstract
@@ -174,7 +174,7 @@
 			  with
 			  writeonly
 			  yield
-			  `),l=e(`
+			  `),u=e(`
 		read write read_write
 		function private workgroup uniform storage
 		perspective linear flat
@@ -200,7 +200,7 @@
 		rgba32sint
 		rgba32float
 		bgra8unorm
-`),u=e(`
+`),p=e(`
 		bool
 		f16
 		f32
@@ -214,7 +214,7 @@
 		texture_external
 		texture_external
 		u32
-		`),p=e(`
+		`),d=e(`
 		array
 		atomic
 		mat2x2
@@ -241,7 +241,7 @@
 		vec2
 		vec3
 		vec4
-		`),d=e(`
+		`),x=e(`
 		vec2i vec3i vec4i
 		vec2u vec3u vec4u
 		vec2f vec3f vec4f
@@ -252,7 +252,7 @@
 		mat2x2h mat2x3h mat2x4h
 		mat3x2h mat3x3h mat3x4h
 		mat4x2h mat4x3h mat4x4h
-		`),x=e(`
+		`),f=e(`
   bitcast all any select arrayLength abs acos acosh asin asinh atan atanh atan2
   ceil clamp cos cosh countLeadingZeros countOneBits countTrailingZeros cross
   degrees determinant distance dot exp exp2 extractBits faceForward firstLeadingBit
@@ -268,7 +268,7 @@
   pack4x8unorm pack2x16snorm pack2x16unorm pack2x16float unpack4x8snorm unpack4x8unorm
   unpack2x16snorm unpack2x16unorm unpack2x16float storageBarrier workgroupBarrier
   workgroupUniformLoad
-`),f=e(`
+`),_=e(`
 					 &
 					 &&
 					 ->
@@ -300,4 +300,4 @@
 					 ^=
 					 >>=
 					 <<=
-					 `),_=/enable|requires|diagnostic/,n=/[_\p{XID_Start}]\p{XID_Continue}*/u,t="variable.predefined",h={tokenPostfix:".wgsl",defaultToken:"invalid",unicode:!0,atoms:s,keywords:c,reserved:m,predeclared_enums:l,predeclared_types:u,predeclared_type_generators:p,predeclared_type_aliases:d,predeclared_intrinsics:x,operators:f,symbols:/[!%&*+\-\.\/:;<=>^|_~]+/,tokenizer:{root:[[_,"keyword","@directive"],[n,{cases:{"@atoms":t,"@keywords":"keyword","@reserved":"invalid","@predeclared_enums":t,"@predeclared_types":t,"@predeclared_type_generators":t,"@predeclared_type_aliases":t,"@predeclared_intrinsics":t,"@default":"identifier"}}],{include:"@commentOrSpace"},{include:"@numbers"},[/;:\./,"delimiter"],[/,/,"delimiter"],[/[{}()\[\]]/,"@brackets"],["@","annotation","@attribute"],[/@symbols/,{cases:{"@operators":"operator","@default":"delimiter"}}],[/./,"invalid"]],commentOrSpace:[[/\s+/,"white"],[/\/\*/,"comment","@blockComment"],[/\/\/.*$/,"comment"]],blockComment:[[/[^\/*]+/,"comment"],[/\/\*/,"comment","@push"],[/\*\//,"comment","@pop"],[/[\/*]/,"comment"]],attribute:[{include:"@commentOrSpace"},[/\w+/,"annotation","@pop"]],directive:[{include:"@commentOrSpace"},[/[()]/,"@brackets"],[/,/,"delimiter"],[n,"meta.content"],[/;/,"delimiter","@pop"]],numbers:[[/0[fh]/,"number.float"],[/[1-9][0-9]*[fh]/,"number.float"],[/[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?[fh]?/,"number.float"],[/[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fh]?/,"number.float"],[/[0-9]+[eE][+-]?[0-9]+[fh]?/,"number.float"],[/0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+(?:[pP][+-]?[0-9]+[fh]?)?/,"number.hex"],[/0[xX][0-9a-fA-F]+\.[0-9a-fA-F]*(?:[pP][+-]?[0-9]+[fh]?)?/,"number.hex"],[/0[xX][0-9a-fA-F]+[pP][+-]?[0-9]+[fh]?/,"number.hex"],[/0[xX][0-9a-fA-F]+[iu]?/,"number.hex"],[/[1-9][0-9]*[iu]?/,"number"],[/0[iu]?/,"number"]]}};export{g as conf,h as language};
+					 `),g=/enable|requires|diagnostic/,n=/[_\p{XID_Start}]\p{XID_Continue}*/u,t="variable.predefined",h={tokenPostfix:".wgsl",defaultToken:"invalid",unicode:!0,atoms:c,keywords:m,reserved:l,predeclared_enums:u,predeclared_types:p,predeclared_type_generators:d,predeclared_type_aliases:x,predeclared_intrinsics:f,operators:_,symbols:/[!%&*+\-\.\/:;<=>^|_~]+/,tokenizer:{root:[[g,"keyword","@directive"],[n,{cases:{"@atoms":t,"@keywords":"keyword","@reserved":"invalid","@predeclared_enums":t,"@predeclared_types":t,"@predeclared_type_generators":t,"@predeclared_type_aliases":t,"@predeclared_intrinsics":t,"@default":"identifier"}}],{include:"@commentOrSpace"},{include:"@numbers"},[/;:\./,"delimiter"],[/,/,"delimiter"],[/[{}()\[\]]/,"@brackets"],["@","annotation","@attribute"],[/@symbols/,{cases:{"@operators":"operator","@default":"delimiter"}}],[/./,"invalid"]],commentOrSpace:[[/\s+/,"white"],[/\/\*/,"comment","@blockComment"],[/\/\/.*$/,"comment"]],blockComment:[[/[^\/*]+/,"comment"],[/\/\*/,"comment","@push"],[/\*\//,"comment","@pop"],[/[\/*]/,"comment"]],attribute:[{include:"@commentOrSpace"},[/\w+/,"annotation","@pop"]],directive:[{include:"@commentOrSpace"},[/[()]/,"@brackets"],[/,/,"delimiter"],[n,"meta.content"],[/;/,"delimiter","@pop"]],numbers:[[/0[fh]/,"number.float"],[/[1-9][0-9]*[fh]/,"number.float"],[/[0-9]*\.[0-9]+([eE][+-]?[0-9]+)?[fh]?/,"number.float"],[/[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fh]?/,"number.float"],[/[0-9]+[eE][+-]?[0-9]+[fh]?/,"number.float"],[/0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+(?:[pP][+-]?[0-9]+[fh]?)?/,"number.hex"],[/0[xX][0-9a-fA-F]+\.[0-9a-fA-F]*(?:[pP][+-]?[0-9]+[fh]?)?/,"number.hex"],[/0[xX][0-9a-fA-F]+[pP][+-]?[0-9]+[fh]?/,"number.hex"],[/0[xX][0-9a-fA-F]+[iu]?/,"number.hex"],[/[1-9][0-9]*[iu]?/,"number"],[/0[iu]?/,"number"]]}};export{s as conf,h as language};
