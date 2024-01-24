@@ -150,8 +150,7 @@ export const getTotalCov = async (): Promise<Coverages> => {
       "https://cov.lang.pivotstudio.cn/api/v2/github/Pivot-Studio/repos/pivot-lang/totals/?branch=master",
       {
         headers: {
-          accept: "application/json",
-          authorization: "CA17PWK0EG",
+          accept: "application/json"
         },
       }
     )
