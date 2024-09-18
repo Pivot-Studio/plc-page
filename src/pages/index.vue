@@ -301,7 +301,6 @@ watch(
     padding: 10px 0 0 20px;
     border-radius: 10px;
     color: aliceblue;
-    width: fit-content;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     border: 5px #666 solid;
   }
