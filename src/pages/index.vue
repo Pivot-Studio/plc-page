@@ -153,6 +153,9 @@ watch(
 </template>
 
 <style lang="scss">
+.terminal {
+  overflow: scroll;
+}
 .container {
   position: relative;
 
@@ -318,6 +321,7 @@ watch(
       height: 5px;
       width: 5px;
     }
+    overflow-y: auto;
     &::-webkit-scrollbar-thumb {
       background-color: #666;
       box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
