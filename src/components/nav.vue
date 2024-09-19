@@ -23,13 +23,13 @@ function scrollToCode() {
           </a>
         </div>
       </Link>
-      <Link :newWindow="true" href="https://lang.pivotstudio.cn/docs/index.html">
+      <Link :newWindow="true" href="https://pivotlang.tech/docs/index.html">
         <div class="txt">Get Started</div>
       </Link>
       <Link :newWindow="true" href="https://github.com/Pivot-Studio/pivot-lang/blob/master/test/test/generic.pi">
         <div class="txt">Use Cases</div>
       </Link>
-      <Link v-show="!isMobile" :newWindow="true" href="https://lang.pivotstudio.cn/index.html">
+      <Link v-show="!isMobile" :newWindow="true" href="https://pivotlang.tech/index.html">
         <div class="txt">Community</div>
       </Link>
     </div>

@@ -35,11 +35,11 @@ scoop install plc`,
     icon: "fa-brands fa-linux",
     iconColor: "rgb(200, 150, 50)",
     code: `apt install wget gnupg
-wget -O -  https://lang.pivotstudio.cn/apt/public.key | apt-key add -
-echo "deb [arch=amd64] https://lang.pivotstudio.cn/apt/repo focal main
-# deb-src [arch=amd64] https://lang.pivotstudio.cn/apt/repo focal main
-deb [arch=amd64] https://lang.pivotstudio.cn/apt/repo jammy main
-# deb-src [arch=amd64] https://lang.pivotstudio.cn/apt/repo jammy main">/etc/apt/sources.list.d/pl.list
+wget -O -  https://pivotlang.tech/apt/public.key | apt-key add -
+echo "deb [arch=amd64] https://pivotlang.tech/apt/repo focal main
+# deb-src [arch=amd64] https://pivotlang.tech/apt/repo focal main
+deb [arch=amd64] https://pivotlang.tech/apt/repo jammy main
+# deb-src [arch=amd64] https://pivotlang.tech/apt/repo jammy main">/etc/apt/sources.list.d/pl.list
 apt update
 apt install pivot-lang`,
   },

@@ -7,30 +7,30 @@ import { Link } from '@/components';
       <div class="line">
         <div class="title">Why PL</div>
         <div class="content">
-          <Link href="https://lang.pivotstudio.cn/docs/systemlib/immix.html"><div>immix GC</div></Link>
-          <Link href="https://lang.pivotstudio.cn/docs/tutorial/vscsupport.html"><div>VSC Support</div></Link>
-          <Link href="https://lang.pivotstudio.cn/docs/references/module.html"><div>Module</div></Link>
+          <Link href="https://pivotlang.tech/docs/systemlib/immix.html"><div>immix GC</div></Link>
+          <Link href="https://pivotlang.tech/docs/tutorial/vscsupport.html"><div>VSC Support</div></Link>
+          <Link href="https://pivotlang.tech/docs/references/module.html"><div>Module</div></Link>
         </div>
       </div>
       <div class="line">
         <div class="title">Get Started</div>
         <div class="content">
-          <Link href="https://lang.pivotstudio.cn/docs/index.html"><div>Documentation</div></Link>
-          <Link href="https://lang.pivotstudio.cn/docs/tutorial/index.html"><div>Tutorial</div></Link>
-          <Link href="https://lang.pivotstudio.cn/docs/references/index.html"><div>API Reference</div></Link>
+          <Link href="https://pivotlang.tech/docs/index.html"><div>Documentation</div></Link>
+          <Link href="https://pivotlang.tech/docs/tutorial/index.html"><div>Tutorial</div></Link>
+          <Link href="https://pivotlang.tech/docs/references/index.html"><div>API Reference</div></Link>
         </div>
       </div>
       <div class="line">
         <div class="title">Resources</div>
         <div class="content">
-          <Link href="https://lang.pivotstudio.cn/docs/blogs/aboutpl.html"><div>Blog</div></Link>
-          <Link href="https://lang.pivotstudio.cn/docs/blogs/lsp_and_salsa.html"><div>lsp and salsa</div></Link>
+          <Link href="https://pivotlang.tech/docs/blogs/aboutpl.html"><div>Blog</div></Link>
+          <Link href="https://pivotlang.tech/docs/blogs/lsp_and_salsa.html"><div>lsp and salsa</div></Link>
         </div>
       </div>
       <div class="line">
         <div class="title">Community</div>
         <div class="content">
-          <Link href="https://lang.pivotstudio.cn/docs/CONTRIBUTING-CN.html"><div>Contributor's Guide</div></Link>
+          <Link href="https://pivotlang.tech/docs/CONTRIBUTING-CN.html"><div>Contributor's Guide</div></Link>
           <Link href="https://github.com/Pivot-Studio/pivot-lang/issues"><div>Good First Issue</div></Link>
         </div>
       </div>
@@ -38,7 +38,7 @@ import { Link } from '@/components';
         <div class="title">Contact</div>
         <div class="content">
           <Link href="https://github.com/Pivot-Studio/pivot-lang"><div>Github</div></Link>
-          <Link href="https://jq.qq.com/?_wv=1027&k=wcaoBAmg"><div>QQ group</div></Link>
+          <Link href="https://qm.qq.com/q/xjPHKHBl0A"><div>QQ group</div></Link>
         </div>
       </div>
     </div>

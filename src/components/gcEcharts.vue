@@ -51,7 +51,7 @@ onMounted(() => {
   window.addEventListener('scroll', loadEcharts);
 });
 function gotoBenchmark() {
-  window.open('https://lang.pivotstudio.cn/docs/systemlib/immix.html#%E6%80%A7%E8%83%BD');
+  window.open('https://pivotlang.tech/docs/systemlib/immix.html#%E6%80%A7%E8%83%BD');
 }
 </script>
 <template>
