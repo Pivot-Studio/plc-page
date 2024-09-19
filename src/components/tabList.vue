@@ -30,7 +30,7 @@ async function run(params: string) {
       runOutput: string;
       status: number;
       compileOutput: string;
-    }>("https://code.pivotlang.tech/coderunner", {
+    }>("https://code.lang.pivotstudio.cn/coderunner", {
       code: params,
     });
     isRunning.value = false;

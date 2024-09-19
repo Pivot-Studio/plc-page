@@ -154,7 +154,7 @@ watch(
 
 <style lang="scss">
 .terminal {
-  overflow: scroll;
+  overflow: auto;
 }
 .container {
   position: relative;
