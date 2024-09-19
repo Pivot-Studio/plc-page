@@ -1,5 +1,13 @@
 (() => {
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/errors.js
+  var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function(x) {
+    if (typeof require !== "undefined")
+      return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/errors.js
   var ErrorHandler = class {
     constructor() {
       this.listeners = [];
@@ -88,7 +96,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/functional.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/functional.js
   function createSingleCallFunction(fn, fnDidRunCallback) {
     const _this = this;
     let didCall = false;
@@ -111,7 +119,7 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/iterator.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/iterator.js
   var Iterable;
   (function(Iterable2) {
     function is(thing) {
@@ -250,7 +258,7 @@
     Iterable2.asyncToArray = asyncToArray;
   })(Iterable || (Iterable = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/lifecycle.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/lifecycle.js
   var TRACK_DISPOSABLES = false;
   var disposableTracker = null;
   function setDisposableTracker(tracker) {
@@ -493,7 +501,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/linkedList.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/linkedList.js
   var Node = class _Node {
     static {
       this.Undefined = new _Node(void 0);
@@ -603,7 +611,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/stopwatch.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/stopwatch.js
   var hasPerformanceNow = globalThis.performance && typeof globalThis.performance.now === "function";
   var StopWatch = class _StopWatch {
     static create(highResolution) {
@@ -629,7 +637,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/event.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/event.js
   var _enableListenerGCedWarning = false;
   var _enableDisposeWithListenerWarning = false;
   var _enableSnapshotPotentialLeakWarning = false;
@@ -675,6 +683,10 @@
       };
     }
     Event2.once = once;
+    function onceIf(event, condition) {
+      return Event2.once(Event2.filter(event, condition));
+    }
+    Event2.onceIf = onceIf;
     function map(event, map2, disposable) {
       return snapshot((listener, thisArgs = null, disposables) => event((i) => listener.call(thisArgs, map2(i)), null, disposables), disposable);
     }
@@ -974,6 +986,7 @@
         const options = {
           onWillAddFirstListener: () => {
             _observable.addObserver(this);
+            this._observable.reportChanges();
           },
           onDidRemoveLastListener: () => {
             _observable.removeObserver(this);
@@ -1387,44 +1400,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/types.js
-  function isString(str) {
-    return typeof str === "string";
-  }
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/objects.js
-  function getAllPropertyNames(obj) {
-    let res = [];
-    while (Object.prototype !== obj) {
-      res = res.concat(Object.getOwnPropertyNames(obj));
-      obj = Object.getPrototypeOf(obj);
-    }
-    return res;
-  }
-  function getAllMethodNames(obj) {
-    const methods = [];
-    for (const prop of getAllPropertyNames(obj)) {
-      if (typeof obj[prop] === "function") {
-        methods.push(prop);
-      }
-    }
-    return methods;
-  }
-  function createProxyObject(methodNames, invoke) {
-    const createProxyMethod = (method) => {
-      return function() {
-        const args = Array.prototype.slice.call(arguments, 0);
-        return invoke(method, args);
-      };
-    };
-    const result = {};
-    for (const methodName of methodNames) {
-      result[methodName] = createProxyMethod(methodName);
-    }
-    return result;
-  }
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/nls.messages.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/nls.messages.js
   function getNLSMessages() {
     return globalThis._VSCODE_NLS_MESSAGES;
   }
@@ -1432,7 +1408,7 @@
     return globalThis._VSCODE_NLS_LANGUAGE;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/nls.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/nls.js
   var isPseudo = getNLSLanguage() === "pseudo" || typeof document !== "undefined" && document.location && document.location.hash.indexOf("pseudo=true") >= 0;
   function _format(message, args) {
     let result;
@@ -1473,7 +1449,7 @@
     return message;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/platform.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/platform.js
   var LANGUAGE_DEFAULT = "en";
   var _isWindows = false;
   var _isMacintosh = false;
@@ -1544,6 +1520,8 @@
   }
   var isWindows = _isWindows;
   var isMacintosh = _isMacintosh;
+  var isNative = _isNative;
+  var isWeb = _isWeb;
   var isWebWorker = _isWeb && typeof $globalThis.importScripts === "function";
   var webWorkerOrigin = isWebWorker ? $globalThis.origin : void 0;
   var userAgent = _userAgent;
@@ -1581,7 +1559,7 @@
   var isEdge = !!(userAgent && userAgent.indexOf("Edg/") >= 0);
   var isAndroid = !!(userAgent && userAgent.indexOf("Android") >= 0);
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/cache.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/cache.js
   function identity(t) {
     return t;
   }
@@ -1607,7 +1585,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/lazy.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/lazy.js
   var Lazy = class {
     constructor(executor) {
       this.executor = executor;
@@ -1642,7 +1620,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/strings.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/strings.js
   function escapeRegExpCharacters(value) {
     return value.replace(/[\\\{\}\*\+\?\|\^\$\.\[\]\(\)]/g, "\\$&");
   }
@@ -1837,1268 +1815,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/worker/simpleWorker.js
-  var INITIALIZE = "$initialize";
-  var RequestMessage = class {
-    constructor(vsWorker, req, method, args) {
-      this.vsWorker = vsWorker;
-      this.req = req;
-      this.method = method;
-      this.args = args;
-      this.type = 0;
-    }
-  };
-  var ReplyMessage = class {
-    constructor(vsWorker, seq, res, err) {
-      this.vsWorker = vsWorker;
-      this.seq = seq;
-      this.res = res;
-      this.err = err;
-      this.type = 1;
-    }
-  };
-  var SubscribeEventMessage = class {
-    constructor(vsWorker, req, eventName, arg) {
-      this.vsWorker = vsWorker;
-      this.req = req;
-      this.eventName = eventName;
-      this.arg = arg;
-      this.type = 2;
-    }
-  };
-  var EventMessage = class {
-    constructor(vsWorker, req, event) {
-      this.vsWorker = vsWorker;
-      this.req = req;
-      this.event = event;
-      this.type = 3;
-    }
-  };
-  var UnsubscribeEventMessage = class {
-    constructor(vsWorker, req) {
-      this.vsWorker = vsWorker;
-      this.req = req;
-      this.type = 4;
-    }
-  };
-  var SimpleWorkerProtocol = class {
-    constructor(handler) {
-      this._workerId = -1;
-      this._handler = handler;
-      this._lastSentReq = 0;
-      this._pendingReplies = /* @__PURE__ */ Object.create(null);
-      this._pendingEmitters = /* @__PURE__ */ new Map();
-      this._pendingEvents = /* @__PURE__ */ new Map();
-    }
-    setWorkerId(workerId) {
-      this._workerId = workerId;
-    }
-    sendMessage(method, args) {
-      const req = String(++this._lastSentReq);
-      return new Promise((resolve2, reject) => {
-        this._pendingReplies[req] = {
-          resolve: resolve2,
-          reject
-        };
-        this._send(new RequestMessage(this._workerId, req, method, args));
-      });
-    }
-    listen(eventName, arg) {
-      let req = null;
-      const emitter = new Emitter({
-        onWillAddFirstListener: () => {
-          req = String(++this._lastSentReq);
-          this._pendingEmitters.set(req, emitter);
-          this._send(new SubscribeEventMessage(this._workerId, req, eventName, arg));
-        },
-        onDidRemoveLastListener: () => {
-          this._pendingEmitters.delete(req);
-          this._send(new UnsubscribeEventMessage(this._workerId, req));
-          req = null;
-        }
-      });
-      return emitter.event;
-    }
-    handleMessage(message) {
-      if (!message || !message.vsWorker) {
-        return;
-      }
-      if (this._workerId !== -1 && message.vsWorker !== this._workerId) {
-        return;
-      }
-      this._handleMessage(message);
-    }
-    _handleMessage(msg) {
-      switch (msg.type) {
-        case 1:
-          return this._handleReplyMessage(msg);
-        case 0:
-          return this._handleRequestMessage(msg);
-        case 2:
-          return this._handleSubscribeEventMessage(msg);
-        case 3:
-          return this._handleEventMessage(msg);
-        case 4:
-          return this._handleUnsubscribeEventMessage(msg);
-      }
-    }
-    _handleReplyMessage(replyMessage) {
-      if (!this._pendingReplies[replyMessage.seq]) {
-        console.warn("Got reply to unknown seq");
-        return;
-      }
-      const reply = this._pendingReplies[replyMessage.seq];
-      delete this._pendingReplies[replyMessage.seq];
-      if (replyMessage.err) {
-        let err = replyMessage.err;
-        if (replyMessage.err.$isError) {
-          err = new Error();
-          err.name = replyMessage.err.name;
-          err.message = replyMessage.err.message;
-          err.stack = replyMessage.err.stack;
-        }
-        reply.reject(err);
-        return;
-      }
-      reply.resolve(replyMessage.res);
-    }
-    _handleRequestMessage(requestMessage) {
-      const req = requestMessage.req;
-      const result = this._handler.handleMessage(requestMessage.method, requestMessage.args);
-      result.then((r) => {
-        this._send(new ReplyMessage(this._workerId, req, r, void 0));
-      }, (e) => {
-        if (e.detail instanceof Error) {
-          e.detail = transformErrorForSerialization(e.detail);
-        }
-        this._send(new ReplyMessage(this._workerId, req, void 0, transformErrorForSerialization(e)));
-      });
-    }
-    _handleSubscribeEventMessage(msg) {
-      const req = msg.req;
-      const disposable = this._handler.handleEvent(msg.eventName, msg.arg)((event) => {
-        this._send(new EventMessage(this._workerId, req, event));
-      });
-      this._pendingEvents.set(req, disposable);
-    }
-    _handleEventMessage(msg) {
-      if (!this._pendingEmitters.has(msg.req)) {
-        console.warn("Got event for unknown req");
-        return;
-      }
-      this._pendingEmitters.get(msg.req).fire(msg.event);
-    }
-    _handleUnsubscribeEventMessage(msg) {
-      if (!this._pendingEvents.has(msg.req)) {
-        console.warn("Got unsubscribe for unknown req");
-        return;
-      }
-      this._pendingEvents.get(msg.req).dispose();
-      this._pendingEvents.delete(msg.req);
-    }
-    _send(msg) {
-      const transfer = [];
-      if (msg.type === 0) {
-        for (let i = 0; i < msg.args.length; i++) {
-          if (msg.args[i] instanceof ArrayBuffer) {
-            transfer.push(msg.args[i]);
-          }
-        }
-      } else if (msg.type === 1) {
-        if (msg.res instanceof ArrayBuffer) {
-          transfer.push(msg.res);
-        }
-      }
-      this._handler.sendMessage(msg, transfer);
-    }
-  };
-  function propertyIsEvent(name) {
-    return name[0] === "o" && name[1] === "n" && isUpperAsciiLetter(name.charCodeAt(2));
-  }
-  function propertyIsDynamicEvent(name) {
-    return /^onDynamic/.test(name) && isUpperAsciiLetter(name.charCodeAt(9));
-  }
-  function createProxyObject2(methodNames, invoke, proxyListen) {
-    const createProxyMethod = (method) => {
-      return function() {
-        const args = Array.prototype.slice.call(arguments, 0);
-        return invoke(method, args);
-      };
-    };
-    const createProxyDynamicEvent = (eventName) => {
-      return function(arg) {
-        return proxyListen(eventName, arg);
-      };
-    };
-    const result = {};
-    for (const methodName of methodNames) {
-      if (propertyIsDynamicEvent(methodName)) {
-        result[methodName] = createProxyDynamicEvent(methodName);
-        continue;
-      }
-      if (propertyIsEvent(methodName)) {
-        result[methodName] = proxyListen(methodName, void 0);
-        continue;
-      }
-      result[methodName] = createProxyMethod(methodName);
-    }
-    return result;
-  }
-  var SimpleWorkerServer = class {
-    constructor(postMessage, requestHandlerFactory) {
-      this._requestHandlerFactory = requestHandlerFactory;
-      this._requestHandler = null;
-      this._protocol = new SimpleWorkerProtocol({
-        sendMessage: (msg, transfer) => {
-          postMessage(msg, transfer);
-        },
-        handleMessage: (method, args) => this._handleMessage(method, args),
-        handleEvent: (eventName, arg) => this._handleEvent(eventName, arg)
-      });
-    }
-    onmessage(msg) {
-      this._protocol.handleMessage(msg);
-    }
-    _handleMessage(method, args) {
-      if (method === INITIALIZE) {
-        return this.initialize(args[0], args[1], args[2], args[3]);
-      }
-      if (!this._requestHandler || typeof this._requestHandler[method] !== "function") {
-        return Promise.reject(new Error("Missing requestHandler or method: " + method));
-      }
-      try {
-        return Promise.resolve(this._requestHandler[method].apply(this._requestHandler, args));
-      } catch (e) {
-        return Promise.reject(e);
-      }
-    }
-    _handleEvent(eventName, arg) {
-      if (!this._requestHandler) {
-        throw new Error(`Missing requestHandler`);
-      }
-      if (propertyIsDynamicEvent(eventName)) {
-        const event = this._requestHandler[eventName].call(this._requestHandler, arg);
-        if (typeof event !== "function") {
-          throw new Error(`Missing dynamic event ${eventName} on request handler.`);
-        }
-        return event;
-      }
-      if (propertyIsEvent(eventName)) {
-        const event = this._requestHandler[eventName];
-        if (typeof event !== "function") {
-          throw new Error(`Missing event ${eventName} on request handler.`);
-        }
-        return event;
-      }
-      throw new Error(`Malformed event name ${eventName}`);
-    }
-    initialize(workerId, loaderConfig, moduleId, hostMethods) {
-      this._protocol.setWorkerId(workerId);
-      const proxyMethodRequest = (method, args) => {
-        return this._protocol.sendMessage(method, args);
-      };
-      const proxyListen = (eventName, arg) => {
-        return this._protocol.listen(eventName, arg);
-      };
-      const hostProxy = createProxyObject2(hostMethods, proxyMethodRequest, proxyListen);
-      if (this._requestHandlerFactory) {
-        this._requestHandler = this._requestHandlerFactory(hostProxy);
-        return Promise.resolve(getAllMethodNames(this._requestHandler));
-      }
-      if (loaderConfig) {
-        if (typeof loaderConfig.baseUrl !== "undefined") {
-          delete loaderConfig["baseUrl"];
-        }
-        if (typeof loaderConfig.paths !== "undefined") {
-          if (typeof loaderConfig.paths.vs !== "undefined") {
-            delete loaderConfig.paths["vs"];
-          }
-        }
-        if (typeof loaderConfig.trustedTypesPolicy !== "undefined") {
-          delete loaderConfig["trustedTypesPolicy"];
-        }
-        loaderConfig.catchError = true;
-        globalThis.require.config(loaderConfig);
-      }
-      return new Promise((resolve2, reject) => {
-        const req = globalThis.require;
-        req([moduleId], (module) => {
-          this._requestHandler = module.create(hostProxy);
-          if (!this._requestHandler) {
-            reject(new Error(`No RequestHandler!`));
-            return;
-          }
-          resolve2(getAllMethodNames(this._requestHandler));
-        }, reject);
-      });
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/diff/diffChange.js
-  var DiffChange = class {
-    /**
-     * Constructs a new DiffChange with the given sequence information
-     * and content.
-     */
-    constructor(originalStart, originalLength, modifiedStart, modifiedLength) {
-      this.originalStart = originalStart;
-      this.originalLength = originalLength;
-      this.modifiedStart = modifiedStart;
-      this.modifiedLength = modifiedLength;
-    }
-    /**
-     * The end point (exclusive) of the change in the original sequence.
-     */
-    getOriginalEnd() {
-      return this.originalStart + this.originalLength;
-    }
-    /**
-     * The end point (exclusive) of the change in the modified sequence.
-     */
-    getModifiedEnd() {
-      return this.modifiedStart + this.modifiedLength;
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/hash.js
-  function numberHash(val, initialHashVal) {
-    return (initialHashVal << 5) - initialHashVal + val | 0;
-  }
-  function stringHash(s, hashVal) {
-    hashVal = numberHash(149417, hashVal);
-    for (let i = 0, length = s.length; i < length; i++) {
-      hashVal = numberHash(s.charCodeAt(i), hashVal);
-    }
-    return hashVal;
-  }
-  function leftRotate(value, bits, totalBits = 32) {
-    const delta = totalBits - bits;
-    const mask = ~((1 << delta) - 1);
-    return (value << bits | (mask & value) >>> delta) >>> 0;
-  }
-  function fill(dest, index = 0, count = dest.byteLength, value = 0) {
-    for (let i = 0; i < count; i++) {
-      dest[index + i] = value;
-    }
-  }
-  function leftPad(value, length, char = "0") {
-    while (value.length < length) {
-      value = char + value;
-    }
-    return value;
-  }
-  function toHexString(bufferOrValue, bitsize = 32) {
-    if (bufferOrValue instanceof ArrayBuffer) {
-      return Array.from(new Uint8Array(bufferOrValue)).map((b) => b.toString(16).padStart(2, "0")).join("");
-    }
-    return leftPad((bufferOrValue >>> 0).toString(16), bitsize / 4);
-  }
-  var StringSHA1 = class _StringSHA1 {
-    static {
-      this._bigBlock32 = new DataView(new ArrayBuffer(320));
-    }
-    // 80 * 4 = 320
-    constructor() {
-      this._h0 = 1732584193;
-      this._h1 = 4023233417;
-      this._h2 = 2562383102;
-      this._h3 = 271733878;
-      this._h4 = 3285377520;
-      this._buff = new Uint8Array(
-        64 + 3
-        /* to fit any utf-8 */
-      );
-      this._buffDV = new DataView(this._buff.buffer);
-      this._buffLen = 0;
-      this._totalLen = 0;
-      this._leftoverHighSurrogate = 0;
-      this._finished = false;
-    }
-    update(str) {
-      const strLen = str.length;
-      if (strLen === 0) {
-        return;
-      }
-      const buff = this._buff;
-      let buffLen = this._buffLen;
-      let leftoverHighSurrogate = this._leftoverHighSurrogate;
-      let charCode;
-      let offset;
-      if (leftoverHighSurrogate !== 0) {
-        charCode = leftoverHighSurrogate;
-        offset = -1;
-        leftoverHighSurrogate = 0;
-      } else {
-        charCode = str.charCodeAt(0);
-        offset = 0;
-      }
-      while (true) {
-        let codePoint = charCode;
-        if (isHighSurrogate(charCode)) {
-          if (offset + 1 < strLen) {
-            const nextCharCode = str.charCodeAt(offset + 1);
-            if (isLowSurrogate(nextCharCode)) {
-              offset++;
-              codePoint = computeCodePoint(charCode, nextCharCode);
-            } else {
-              codePoint = 65533;
-            }
-          } else {
-            leftoverHighSurrogate = charCode;
-            break;
-          }
-        } else if (isLowSurrogate(charCode)) {
-          codePoint = 65533;
-        }
-        buffLen = this._push(buff, buffLen, codePoint);
-        offset++;
-        if (offset < strLen) {
-          charCode = str.charCodeAt(offset);
-        } else {
-          break;
-        }
-      }
-      this._buffLen = buffLen;
-      this._leftoverHighSurrogate = leftoverHighSurrogate;
-    }
-    _push(buff, buffLen, codePoint) {
-      if (codePoint < 128) {
-        buff[buffLen++] = codePoint;
-      } else if (codePoint < 2048) {
-        buff[buffLen++] = 192 | (codePoint & 1984) >>> 6;
-        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
-      } else if (codePoint < 65536) {
-        buff[buffLen++] = 224 | (codePoint & 61440) >>> 12;
-        buff[buffLen++] = 128 | (codePoint & 4032) >>> 6;
-        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
-      } else {
-        buff[buffLen++] = 240 | (codePoint & 1835008) >>> 18;
-        buff[buffLen++] = 128 | (codePoint & 258048) >>> 12;
-        buff[buffLen++] = 128 | (codePoint & 4032) >>> 6;
-        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
-      }
-      if (buffLen >= 64) {
-        this._step();
-        buffLen -= 64;
-        this._totalLen += 64;
-        buff[0] = buff[64 + 0];
-        buff[1] = buff[64 + 1];
-        buff[2] = buff[64 + 2];
-      }
-      return buffLen;
-    }
-    digest() {
-      if (!this._finished) {
-        this._finished = true;
-        if (this._leftoverHighSurrogate) {
-          this._leftoverHighSurrogate = 0;
-          this._buffLen = this._push(
-            this._buff,
-            this._buffLen,
-            65533
-            /* SHA1Constant.UNICODE_REPLACEMENT */
-          );
-        }
-        this._totalLen += this._buffLen;
-        this._wrapUp();
-      }
-      return toHexString(this._h0) + toHexString(this._h1) + toHexString(this._h2) + toHexString(this._h3) + toHexString(this._h4);
-    }
-    _wrapUp() {
-      this._buff[this._buffLen++] = 128;
-      fill(this._buff, this._buffLen);
-      if (this._buffLen > 56) {
-        this._step();
-        fill(this._buff);
-      }
-      const ml = 8 * this._totalLen;
-      this._buffDV.setUint32(56, Math.floor(ml / 4294967296), false);
-      this._buffDV.setUint32(60, ml % 4294967296, false);
-      this._step();
-    }
-    _step() {
-      const bigBlock32 = _StringSHA1._bigBlock32;
-      const data = this._buffDV;
-      for (let j = 0; j < 64; j += 4) {
-        bigBlock32.setUint32(j, data.getUint32(j, false), false);
-      }
-      for (let j = 64; j < 320; j += 4) {
-        bigBlock32.setUint32(j, leftRotate(bigBlock32.getUint32(j - 12, false) ^ bigBlock32.getUint32(j - 32, false) ^ bigBlock32.getUint32(j - 56, false) ^ bigBlock32.getUint32(j - 64, false), 1), false);
-      }
-      let a = this._h0;
-      let b = this._h1;
-      let c = this._h2;
-      let d = this._h3;
-      let e = this._h4;
-      let f, k;
-      let temp;
-      for (let j = 0; j < 80; j++) {
-        if (j < 20) {
-          f = b & c | ~b & d;
-          k = 1518500249;
-        } else if (j < 40) {
-          f = b ^ c ^ d;
-          k = 1859775393;
-        } else if (j < 60) {
-          f = b & c | b & d | c & d;
-          k = 2400959708;
-        } else {
-          f = b ^ c ^ d;
-          k = 3395469782;
-        }
-        temp = leftRotate(a, 5) + f + e + k + bigBlock32.getUint32(j * 4, false) & 4294967295;
-        e = d;
-        d = c;
-        c = leftRotate(b, 30);
-        b = a;
-        a = temp;
-      }
-      this._h0 = this._h0 + a & 4294967295;
-      this._h1 = this._h1 + b & 4294967295;
-      this._h2 = this._h2 + c & 4294967295;
-      this._h3 = this._h3 + d & 4294967295;
-      this._h4 = this._h4 + e & 4294967295;
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/diff/diff.js
-  var StringDiffSequence = class {
-    constructor(source) {
-      this.source = source;
-    }
-    getElements() {
-      const source = this.source;
-      const characters = new Int32Array(source.length);
-      for (let i = 0, len = source.length; i < len; i++) {
-        characters[i] = source.charCodeAt(i);
-      }
-      return characters;
-    }
-  };
-  function stringDiff(original, modified, pretty) {
-    return new LcsDiff(new StringDiffSequence(original), new StringDiffSequence(modified)).ComputeDiff(pretty).changes;
-  }
-  var Debug = class {
-    static Assert(condition, message) {
-      if (!condition) {
-        throw new Error(message);
-      }
-    }
-  };
-  var MyArray = class {
-    /**
-     * Copies a range of elements from an Array starting at the specified source index and pastes
-     * them to another Array starting at the specified destination index. The length and the indexes
-     * are specified as 64-bit integers.
-     * sourceArray:
-     *		The Array that contains the data to copy.
-     * sourceIndex:
-     *		A 64-bit integer that represents the index in the sourceArray at which copying begins.
-     * destinationArray:
-     *		The Array that receives the data.
-     * destinationIndex:
-     *		A 64-bit integer that represents the index in the destinationArray at which storing begins.
-     * length:
-     *		A 64-bit integer that represents the number of elements to copy.
-     */
-    static Copy(sourceArray, sourceIndex, destinationArray, destinationIndex, length) {
-      for (let i = 0; i < length; i++) {
-        destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
-      }
-    }
-    static Copy2(sourceArray, sourceIndex, destinationArray, destinationIndex, length) {
-      for (let i = 0; i < length; i++) {
-        destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
-      }
-    }
-  };
-  var DiffChangeHelper = class {
-    /**
-     * Constructs a new DiffChangeHelper for the given DiffSequences.
-     */
-    constructor() {
-      this.m_changes = [];
-      this.m_originalStart = 1073741824;
-      this.m_modifiedStart = 1073741824;
-      this.m_originalCount = 0;
-      this.m_modifiedCount = 0;
-    }
-    /**
-     * Marks the beginning of the next change in the set of differences.
-     */
-    MarkNextChange() {
-      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
-        this.m_changes.push(new DiffChange(this.m_originalStart, this.m_originalCount, this.m_modifiedStart, this.m_modifiedCount));
-      }
-      this.m_originalCount = 0;
-      this.m_modifiedCount = 0;
-      this.m_originalStart = 1073741824;
-      this.m_modifiedStart = 1073741824;
-    }
-    /**
-     * Adds the original element at the given position to the elements
-     * affected by the current change. The modified index gives context
-     * to the change position with respect to the original sequence.
-     * @param originalIndex The index of the original element to add.
-     * @param modifiedIndex The index of the modified element that provides corresponding position in the modified sequence.
-     */
-    AddOriginalElement(originalIndex, modifiedIndex) {
-      this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
-      this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
-      this.m_originalCount++;
-    }
-    /**
-     * Adds the modified element at the given position to the elements
-     * affected by the current change. The original index gives context
-     * to the change position with respect to the modified sequence.
-     * @param originalIndex The index of the original element that provides corresponding position in the original sequence.
-     * @param modifiedIndex The index of the modified element to add.
-     */
-    AddModifiedElement(originalIndex, modifiedIndex) {
-      this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
-      this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
-      this.m_modifiedCount++;
-    }
-    /**
-     * Retrieves all of the changes marked by the class.
-     */
-    getChanges() {
-      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
-        this.MarkNextChange();
-      }
-      return this.m_changes;
-    }
-    /**
-     * Retrieves all of the changes marked by the class in the reverse order
-     */
-    getReverseChanges() {
-      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
-        this.MarkNextChange();
-      }
-      this.m_changes.reverse();
-      return this.m_changes;
-    }
-  };
-  var LcsDiff = class _LcsDiff {
-    /**
-     * Constructs the DiffFinder
-     */
-    constructor(originalSequence, modifiedSequence, continueProcessingPredicate = null) {
-      this.ContinueProcessingPredicate = continueProcessingPredicate;
-      this._originalSequence = originalSequence;
-      this._modifiedSequence = modifiedSequence;
-      const [originalStringElements, originalElementsOrHash, originalHasStrings] = _LcsDiff._getElements(originalSequence);
-      const [modifiedStringElements, modifiedElementsOrHash, modifiedHasStrings] = _LcsDiff._getElements(modifiedSequence);
-      this._hasStrings = originalHasStrings && modifiedHasStrings;
-      this._originalStringElements = originalStringElements;
-      this._originalElementsOrHash = originalElementsOrHash;
-      this._modifiedStringElements = modifiedStringElements;
-      this._modifiedElementsOrHash = modifiedElementsOrHash;
-      this.m_forwardHistory = [];
-      this.m_reverseHistory = [];
-    }
-    static _isStringArray(arr) {
-      return arr.length > 0 && typeof arr[0] === "string";
-    }
-    static _getElements(sequence) {
-      const elements = sequence.getElements();
-      if (_LcsDiff._isStringArray(elements)) {
-        const hashes = new Int32Array(elements.length);
-        for (let i = 0, len = elements.length; i < len; i++) {
-          hashes[i] = stringHash(elements[i], 0);
-        }
-        return [elements, hashes, true];
-      }
-      if (elements instanceof Int32Array) {
-        return [[], elements, false];
-      }
-      return [[], new Int32Array(elements), false];
-    }
-    ElementsAreEqual(originalIndex, newIndex) {
-      if (this._originalElementsOrHash[originalIndex] !== this._modifiedElementsOrHash[newIndex]) {
-        return false;
-      }
-      return this._hasStrings ? this._originalStringElements[originalIndex] === this._modifiedStringElements[newIndex] : true;
-    }
-    ElementsAreStrictEqual(originalIndex, newIndex) {
-      if (!this.ElementsAreEqual(originalIndex, newIndex)) {
-        return false;
-      }
-      const originalElement = _LcsDiff._getStrictElement(this._originalSequence, originalIndex);
-      const modifiedElement = _LcsDiff._getStrictElement(this._modifiedSequence, newIndex);
-      return originalElement === modifiedElement;
-    }
-    static _getStrictElement(sequence, index) {
-      if (typeof sequence.getStrictElement === "function") {
-        return sequence.getStrictElement(index);
-      }
-      return null;
-    }
-    OriginalElementsAreEqual(index1, index2) {
-      if (this._originalElementsOrHash[index1] !== this._originalElementsOrHash[index2]) {
-        return false;
-      }
-      return this._hasStrings ? this._originalStringElements[index1] === this._originalStringElements[index2] : true;
-    }
-    ModifiedElementsAreEqual(index1, index2) {
-      if (this._modifiedElementsOrHash[index1] !== this._modifiedElementsOrHash[index2]) {
-        return false;
-      }
-      return this._hasStrings ? this._modifiedStringElements[index1] === this._modifiedStringElements[index2] : true;
-    }
-    ComputeDiff(pretty) {
-      return this._ComputeDiff(0, this._originalElementsOrHash.length - 1, 0, this._modifiedElementsOrHash.length - 1, pretty);
-    }
-    /**
-     * Computes the differences between the original and modified input
-     * sequences on the bounded range.
-     * @returns An array of the differences between the two input sequences.
-     */
-    _ComputeDiff(originalStart, originalEnd, modifiedStart, modifiedEnd, pretty) {
-      const quitEarlyArr = [false];
-      let changes = this.ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr);
-      if (pretty) {
-        changes = this.PrettifyChanges(changes);
-      }
-      return {
-        quitEarly: quitEarlyArr[0],
-        changes
-      };
-    }
-    /**
-     * Private helper method which computes the differences on the bounded range
-     * recursively.
-     * @returns An array of the differences between the two input sequences.
-     */
-    ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr) {
-      quitEarlyArr[0] = false;
-      while (originalStart <= originalEnd && modifiedStart <= modifiedEnd && this.ElementsAreEqual(originalStart, modifiedStart)) {
-        originalStart++;
-        modifiedStart++;
-      }
-      while (originalEnd >= originalStart && modifiedEnd >= modifiedStart && this.ElementsAreEqual(originalEnd, modifiedEnd)) {
-        originalEnd--;
-        modifiedEnd--;
-      }
-      if (originalStart > originalEnd || modifiedStart > modifiedEnd) {
-        let changes;
-        if (modifiedStart <= modifiedEnd) {
-          Debug.Assert(originalStart === originalEnd + 1, "originalStart should only be one more than originalEnd");
-          changes = [
-            new DiffChange(originalStart, 0, modifiedStart, modifiedEnd - modifiedStart + 1)
-          ];
-        } else if (originalStart <= originalEnd) {
-          Debug.Assert(modifiedStart === modifiedEnd + 1, "modifiedStart should only be one more than modifiedEnd");
-          changes = [
-            new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, 0)
-          ];
-        } else {
-          Debug.Assert(originalStart === originalEnd + 1, "originalStart should only be one more than originalEnd");
-          Debug.Assert(modifiedStart === modifiedEnd + 1, "modifiedStart should only be one more than modifiedEnd");
-          changes = [];
-        }
-        return changes;
-      }
-      const midOriginalArr = [0];
-      const midModifiedArr = [0];
-      const result = this.ComputeRecursionPoint(originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr);
-      const midOriginal = midOriginalArr[0];
-      const midModified = midModifiedArr[0];
-      if (result !== null) {
-        return result;
-      } else if (!quitEarlyArr[0]) {
-        const leftChanges = this.ComputeDiffRecursive(originalStart, midOriginal, modifiedStart, midModified, quitEarlyArr);
-        let rightChanges = [];
-        if (!quitEarlyArr[0]) {
-          rightChanges = this.ComputeDiffRecursive(midOriginal + 1, originalEnd, midModified + 1, modifiedEnd, quitEarlyArr);
-        } else {
-          rightChanges = [
-            new DiffChange(midOriginal + 1, originalEnd - (midOriginal + 1) + 1, midModified + 1, modifiedEnd - (midModified + 1) + 1)
-          ];
-        }
-        return this.ConcatenateChanges(leftChanges, rightChanges);
-      }
-      return [
-        new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
-      ];
-    }
-    WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr) {
-      let forwardChanges = null;
-      let reverseChanges = null;
-      let changeHelper = new DiffChangeHelper();
-      let diagonalMin = diagonalForwardStart;
-      let diagonalMax = diagonalForwardEnd;
-      let diagonalRelative = midOriginalArr[0] - midModifiedArr[0] - diagonalForwardOffset;
-      let lastOriginalIndex = -1073741824;
-      let historyIndex = this.m_forwardHistory.length - 1;
-      do {
-        const diagonal = diagonalRelative + diagonalForwardBase;
-        if (diagonal === diagonalMin || diagonal < diagonalMax && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1]) {
-          originalIndex = forwardPoints[diagonal + 1];
-          modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
-          if (originalIndex < lastOriginalIndex) {
-            changeHelper.MarkNextChange();
-          }
-          lastOriginalIndex = originalIndex;
-          changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex);
-          diagonalRelative = diagonal + 1 - diagonalForwardBase;
-        } else {
-          originalIndex = forwardPoints[diagonal - 1] + 1;
-          modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
-          if (originalIndex < lastOriginalIndex) {
-            changeHelper.MarkNextChange();
-          }
-          lastOriginalIndex = originalIndex - 1;
-          changeHelper.AddOriginalElement(originalIndex, modifiedIndex + 1);
-          diagonalRelative = diagonal - 1 - diagonalForwardBase;
-        }
-        if (historyIndex >= 0) {
-          forwardPoints = this.m_forwardHistory[historyIndex];
-          diagonalForwardBase = forwardPoints[0];
-          diagonalMin = 1;
-          diagonalMax = forwardPoints.length - 1;
-        }
-      } while (--historyIndex >= -1);
-      forwardChanges = changeHelper.getReverseChanges();
-      if (quitEarlyArr[0]) {
-        let originalStartPoint = midOriginalArr[0] + 1;
-        let modifiedStartPoint = midModifiedArr[0] + 1;
-        if (forwardChanges !== null && forwardChanges.length > 0) {
-          const lastForwardChange = forwardChanges[forwardChanges.length - 1];
-          originalStartPoint = Math.max(originalStartPoint, lastForwardChange.getOriginalEnd());
-          modifiedStartPoint = Math.max(modifiedStartPoint, lastForwardChange.getModifiedEnd());
-        }
-        reverseChanges = [
-          new DiffChange(originalStartPoint, originalEnd - originalStartPoint + 1, modifiedStartPoint, modifiedEnd - modifiedStartPoint + 1)
-        ];
-      } else {
-        changeHelper = new DiffChangeHelper();
-        diagonalMin = diagonalReverseStart;
-        diagonalMax = diagonalReverseEnd;
-        diagonalRelative = midOriginalArr[0] - midModifiedArr[0] - diagonalReverseOffset;
-        lastOriginalIndex = 1073741824;
-        historyIndex = deltaIsEven ? this.m_reverseHistory.length - 1 : this.m_reverseHistory.length - 2;
-        do {
-          const diagonal = diagonalRelative + diagonalReverseBase;
-          if (diagonal === diagonalMin || diagonal < diagonalMax && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1]) {
-            originalIndex = reversePoints[diagonal + 1] - 1;
-            modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
-            if (originalIndex > lastOriginalIndex) {
-              changeHelper.MarkNextChange();
-            }
-            lastOriginalIndex = originalIndex + 1;
-            changeHelper.AddOriginalElement(originalIndex + 1, modifiedIndex + 1);
-            diagonalRelative = diagonal + 1 - diagonalReverseBase;
-          } else {
-            originalIndex = reversePoints[diagonal - 1];
-            modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
-            if (originalIndex > lastOriginalIndex) {
-              changeHelper.MarkNextChange();
-            }
-            lastOriginalIndex = originalIndex;
-            changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex + 1);
-            diagonalRelative = diagonal - 1 - diagonalReverseBase;
-          }
-          if (historyIndex >= 0) {
-            reversePoints = this.m_reverseHistory[historyIndex];
-            diagonalReverseBase = reversePoints[0];
-            diagonalMin = 1;
-            diagonalMax = reversePoints.length - 1;
-          }
-        } while (--historyIndex >= -1);
-        reverseChanges = changeHelper.getChanges();
-      }
-      return this.ConcatenateChanges(forwardChanges, reverseChanges);
-    }
-    /**
-     * Given the range to compute the diff on, this method finds the point:
-     * (midOriginal, midModified)
-     * that exists in the middle of the LCS of the two sequences and
-     * is the point at which the LCS problem may be broken down recursively.
-     * This method will try to keep the LCS trace in memory. If the LCS recursion
-     * point is calculated and the full trace is available in memory, then this method
-     * will return the change list.
-     * @param originalStart The start bound of the original sequence range
-     * @param originalEnd The end bound of the original sequence range
-     * @param modifiedStart The start bound of the modified sequence range
-     * @param modifiedEnd The end bound of the modified sequence range
-     * @param midOriginal The middle point of the original sequence range
-     * @param midModified The middle point of the modified sequence range
-     * @returns The diff changes, if available, otherwise null
-     */
-    ComputeRecursionPoint(originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr) {
-      let originalIndex = 0, modifiedIndex = 0;
-      let diagonalForwardStart = 0, diagonalForwardEnd = 0;
-      let diagonalReverseStart = 0, diagonalReverseEnd = 0;
-      originalStart--;
-      modifiedStart--;
-      midOriginalArr[0] = 0;
-      midModifiedArr[0] = 0;
-      this.m_forwardHistory = [];
-      this.m_reverseHistory = [];
-      const maxDifferences = originalEnd - originalStart + (modifiedEnd - modifiedStart);
-      const numDiagonals = maxDifferences + 1;
-      const forwardPoints = new Int32Array(numDiagonals);
-      const reversePoints = new Int32Array(numDiagonals);
-      const diagonalForwardBase = modifiedEnd - modifiedStart;
-      const diagonalReverseBase = originalEnd - originalStart;
-      const diagonalForwardOffset = originalStart - modifiedStart;
-      const diagonalReverseOffset = originalEnd - modifiedEnd;
-      const delta = diagonalReverseBase - diagonalForwardBase;
-      const deltaIsEven = delta % 2 === 0;
-      forwardPoints[diagonalForwardBase] = originalStart;
-      reversePoints[diagonalReverseBase] = originalEnd;
-      quitEarlyArr[0] = false;
-      for (let numDifferences = 1; numDifferences <= maxDifferences / 2 + 1; numDifferences++) {
-        let furthestOriginalIndex = 0;
-        let furthestModifiedIndex = 0;
-        diagonalForwardStart = this.ClipDiagonalBound(diagonalForwardBase - numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
-        diagonalForwardEnd = this.ClipDiagonalBound(diagonalForwardBase + numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
-        for (let diagonal = diagonalForwardStart; diagonal <= diagonalForwardEnd; diagonal += 2) {
-          if (diagonal === diagonalForwardStart || diagonal < diagonalForwardEnd && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1]) {
-            originalIndex = forwardPoints[diagonal + 1];
-          } else {
-            originalIndex = forwardPoints[diagonal - 1] + 1;
-          }
-          modifiedIndex = originalIndex - (diagonal - diagonalForwardBase) - diagonalForwardOffset;
-          const tempOriginalIndex = originalIndex;
-          while (originalIndex < originalEnd && modifiedIndex < modifiedEnd && this.ElementsAreEqual(originalIndex + 1, modifiedIndex + 1)) {
-            originalIndex++;
-            modifiedIndex++;
-          }
-          forwardPoints[diagonal] = originalIndex;
-          if (originalIndex + modifiedIndex > furthestOriginalIndex + furthestModifiedIndex) {
-            furthestOriginalIndex = originalIndex;
-            furthestModifiedIndex = modifiedIndex;
-          }
-          if (!deltaIsEven && Math.abs(diagonal - diagonalReverseBase) <= numDifferences - 1) {
-            if (originalIndex >= reversePoints[diagonal]) {
-              midOriginalArr[0] = originalIndex;
-              midModifiedArr[0] = modifiedIndex;
-              if (tempOriginalIndex <= reversePoints[diagonal] && 1447 > 0 && numDifferences <= 1447 + 1) {
-                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-              } else {
-                return null;
-              }
-            }
-          }
-        }
-        const matchLengthOfLongest = (furthestOriginalIndex - originalStart + (furthestModifiedIndex - modifiedStart) - numDifferences) / 2;
-        if (this.ContinueProcessingPredicate !== null && !this.ContinueProcessingPredicate(furthestOriginalIndex, matchLengthOfLongest)) {
-          quitEarlyArr[0] = true;
-          midOriginalArr[0] = furthestOriginalIndex;
-          midModifiedArr[0] = furthestModifiedIndex;
-          if (matchLengthOfLongest > 0 && 1447 > 0 && numDifferences <= 1447 + 1) {
-            return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-          } else {
-            originalStart++;
-            modifiedStart++;
-            return [
-              new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
-            ];
-          }
-        }
-        diagonalReverseStart = this.ClipDiagonalBound(diagonalReverseBase - numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
-        diagonalReverseEnd = this.ClipDiagonalBound(diagonalReverseBase + numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
-        for (let diagonal = diagonalReverseStart; diagonal <= diagonalReverseEnd; diagonal += 2) {
-          if (diagonal === diagonalReverseStart || diagonal < diagonalReverseEnd && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1]) {
-            originalIndex = reversePoints[diagonal + 1] - 1;
-          } else {
-            originalIndex = reversePoints[diagonal - 1];
-          }
-          modifiedIndex = originalIndex - (diagonal - diagonalReverseBase) - diagonalReverseOffset;
-          const tempOriginalIndex = originalIndex;
-          while (originalIndex > originalStart && modifiedIndex > modifiedStart && this.ElementsAreEqual(originalIndex, modifiedIndex)) {
-            originalIndex--;
-            modifiedIndex--;
-          }
-          reversePoints[diagonal] = originalIndex;
-          if (deltaIsEven && Math.abs(diagonal - diagonalForwardBase) <= numDifferences) {
-            if (originalIndex <= forwardPoints[diagonal]) {
-              midOriginalArr[0] = originalIndex;
-              midModifiedArr[0] = modifiedIndex;
-              if (tempOriginalIndex >= forwardPoints[diagonal] && 1447 > 0 && numDifferences <= 1447 + 1) {
-                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-              } else {
-                return null;
-              }
-            }
-          }
-        }
-        if (numDifferences <= 1447) {
-          let temp = new Int32Array(diagonalForwardEnd - diagonalForwardStart + 2);
-          temp[0] = diagonalForwardBase - diagonalForwardStart + 1;
-          MyArray.Copy2(forwardPoints, diagonalForwardStart, temp, 1, diagonalForwardEnd - diagonalForwardStart + 1);
-          this.m_forwardHistory.push(temp);
-          temp = new Int32Array(diagonalReverseEnd - diagonalReverseStart + 2);
-          temp[0] = diagonalReverseBase - diagonalReverseStart + 1;
-          MyArray.Copy2(reversePoints, diagonalReverseStart, temp, 1, diagonalReverseEnd - diagonalReverseStart + 1);
-          this.m_reverseHistory.push(temp);
-        }
-      }
-      return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
-    }
-    /**
-     * Shifts the given changes to provide a more intuitive diff.
-     * While the first element in a diff matches the first element after the diff,
-     * we shift the diff down.
-     *
-     * @param changes The list of changes to shift
-     * @returns The shifted changes
-     */
-    PrettifyChanges(changes) {
-      for (let i = 0; i < changes.length; i++) {
-        const change = changes[i];
-        const originalStop = i < changes.length - 1 ? changes[i + 1].originalStart : this._originalElementsOrHash.length;
-        const modifiedStop = i < changes.length - 1 ? changes[i + 1].modifiedStart : this._modifiedElementsOrHash.length;
-        const checkOriginal = change.originalLength > 0;
-        const checkModified = change.modifiedLength > 0;
-        while (change.originalStart + change.originalLength < originalStop && change.modifiedStart + change.modifiedLength < modifiedStop && (!checkOriginal || this.OriginalElementsAreEqual(change.originalStart, change.originalStart + change.originalLength)) && (!checkModified || this.ModifiedElementsAreEqual(change.modifiedStart, change.modifiedStart + change.modifiedLength))) {
-          const startStrictEqual = this.ElementsAreStrictEqual(change.originalStart, change.modifiedStart);
-          const endStrictEqual = this.ElementsAreStrictEqual(change.originalStart + change.originalLength, change.modifiedStart + change.modifiedLength);
-          if (endStrictEqual && !startStrictEqual) {
-            break;
-          }
-          change.originalStart++;
-          change.modifiedStart++;
-        }
-        const mergedChangeArr = [null];
-        if (i < changes.length - 1 && this.ChangesOverlap(changes[i], changes[i + 1], mergedChangeArr)) {
-          changes[i] = mergedChangeArr[0];
-          changes.splice(i + 1, 1);
-          i--;
-          continue;
-        }
-      }
-      for (let i = changes.length - 1; i >= 0; i--) {
-        const change = changes[i];
-        let originalStop = 0;
-        let modifiedStop = 0;
-        if (i > 0) {
-          const prevChange = changes[i - 1];
-          originalStop = prevChange.originalStart + prevChange.originalLength;
-          modifiedStop = prevChange.modifiedStart + prevChange.modifiedLength;
-        }
-        const checkOriginal = change.originalLength > 0;
-        const checkModified = change.modifiedLength > 0;
-        let bestDelta = 0;
-        let bestScore = this._boundaryScore(change.originalStart, change.originalLength, change.modifiedStart, change.modifiedLength);
-        for (let delta = 1; ; delta++) {
-          const originalStart = change.originalStart - delta;
-          const modifiedStart = change.modifiedStart - delta;
-          if (originalStart < originalStop || modifiedStart < modifiedStop) {
-            break;
-          }
-          if (checkOriginal && !this.OriginalElementsAreEqual(originalStart, originalStart + change.originalLength)) {
-            break;
-          }
-          if (checkModified && !this.ModifiedElementsAreEqual(modifiedStart, modifiedStart + change.modifiedLength)) {
-            break;
-          }
-          const touchingPreviousChange = originalStart === originalStop && modifiedStart === modifiedStop;
-          const score2 = (touchingPreviousChange ? 5 : 0) + this._boundaryScore(originalStart, change.originalLength, modifiedStart, change.modifiedLength);
-          if (score2 > bestScore) {
-            bestScore = score2;
-            bestDelta = delta;
-          }
-        }
-        change.originalStart -= bestDelta;
-        change.modifiedStart -= bestDelta;
-        const mergedChangeArr = [null];
-        if (i > 0 && this.ChangesOverlap(changes[i - 1], changes[i], mergedChangeArr)) {
-          changes[i - 1] = mergedChangeArr[0];
-          changes.splice(i, 1);
-          i++;
-          continue;
-        }
-      }
-      if (this._hasStrings) {
-        for (let i = 1, len = changes.length; i < len; i++) {
-          const aChange = changes[i - 1];
-          const bChange = changes[i];
-          const matchedLength = bChange.originalStart - aChange.originalStart - aChange.originalLength;
-          const aOriginalStart = aChange.originalStart;
-          const bOriginalEnd = bChange.originalStart + bChange.originalLength;
-          const abOriginalLength = bOriginalEnd - aOriginalStart;
-          const aModifiedStart = aChange.modifiedStart;
-          const bModifiedEnd = bChange.modifiedStart + bChange.modifiedLength;
-          const abModifiedLength = bModifiedEnd - aModifiedStart;
-          if (matchedLength < 5 && abOriginalLength < 20 && abModifiedLength < 20) {
-            const t = this._findBetterContiguousSequence(aOriginalStart, abOriginalLength, aModifiedStart, abModifiedLength, matchedLength);
-            if (t) {
-              const [originalMatchStart, modifiedMatchStart] = t;
-              if (originalMatchStart !== aChange.originalStart + aChange.originalLength || modifiedMatchStart !== aChange.modifiedStart + aChange.modifiedLength) {
-                aChange.originalLength = originalMatchStart - aChange.originalStart;
-                aChange.modifiedLength = modifiedMatchStart - aChange.modifiedStart;
-                bChange.originalStart = originalMatchStart + matchedLength;
-                bChange.modifiedStart = modifiedMatchStart + matchedLength;
-                bChange.originalLength = bOriginalEnd - bChange.originalStart;
-                bChange.modifiedLength = bModifiedEnd - bChange.modifiedStart;
-              }
-            }
-          }
-        }
-      }
-      return changes;
-    }
-    _findBetterContiguousSequence(originalStart, originalLength, modifiedStart, modifiedLength, desiredLength) {
-      if (originalLength < desiredLength || modifiedLength < desiredLength) {
-        return null;
-      }
-      const originalMax = originalStart + originalLength - desiredLength + 1;
-      const modifiedMax = modifiedStart + modifiedLength - desiredLength + 1;
-      let bestScore = 0;
-      let bestOriginalStart = 0;
-      let bestModifiedStart = 0;
-      for (let i = originalStart; i < originalMax; i++) {
-        for (let j = modifiedStart; j < modifiedMax; j++) {
-          const score2 = this._contiguousSequenceScore(i, j, desiredLength);
-          if (score2 > 0 && score2 > bestScore) {
-            bestScore = score2;
-            bestOriginalStart = i;
-            bestModifiedStart = j;
-          }
-        }
-      }
-      if (bestScore > 0) {
-        return [bestOriginalStart, bestModifiedStart];
-      }
-      return null;
-    }
-    _contiguousSequenceScore(originalStart, modifiedStart, length) {
-      let score2 = 0;
-      for (let l = 0; l < length; l++) {
-        if (!this.ElementsAreEqual(originalStart + l, modifiedStart + l)) {
-          return 0;
-        }
-        score2 += this._originalStringElements[originalStart + l].length;
-      }
-      return score2;
-    }
-    _OriginalIsBoundary(index) {
-      if (index <= 0 || index >= this._originalElementsOrHash.length - 1) {
-        return true;
-      }
-      return this._hasStrings && /^\s*$/.test(this._originalStringElements[index]);
-    }
-    _OriginalRegionIsBoundary(originalStart, originalLength) {
-      if (this._OriginalIsBoundary(originalStart) || this._OriginalIsBoundary(originalStart - 1)) {
-        return true;
-      }
-      if (originalLength > 0) {
-        const originalEnd = originalStart + originalLength;
-        if (this._OriginalIsBoundary(originalEnd - 1) || this._OriginalIsBoundary(originalEnd)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    _ModifiedIsBoundary(index) {
-      if (index <= 0 || index >= this._modifiedElementsOrHash.length - 1) {
-        return true;
-      }
-      return this._hasStrings && /^\s*$/.test(this._modifiedStringElements[index]);
-    }
-    _ModifiedRegionIsBoundary(modifiedStart, modifiedLength) {
-      if (this._ModifiedIsBoundary(modifiedStart) || this._ModifiedIsBoundary(modifiedStart - 1)) {
-        return true;
-      }
-      if (modifiedLength > 0) {
-        const modifiedEnd = modifiedStart + modifiedLength;
-        if (this._ModifiedIsBoundary(modifiedEnd - 1) || this._ModifiedIsBoundary(modifiedEnd)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    _boundaryScore(originalStart, originalLength, modifiedStart, modifiedLength) {
-      const originalScore = this._OriginalRegionIsBoundary(originalStart, originalLength) ? 1 : 0;
-      const modifiedScore = this._ModifiedRegionIsBoundary(modifiedStart, modifiedLength) ? 1 : 0;
-      return originalScore + modifiedScore;
-    }
-    /**
-     * Concatenates the two input DiffChange lists and returns the resulting
-     * list.
-     * @param The left changes
-     * @param The right changes
-     * @returns The concatenated list
-     */
-    ConcatenateChanges(left, right) {
-      const mergedChangeArr = [];
-      if (left.length === 0 || right.length === 0) {
-        return right.length > 0 ? right : left;
-      } else if (this.ChangesOverlap(left[left.length - 1], right[0], mergedChangeArr)) {
-        const result = new Array(left.length + right.length - 1);
-        MyArray.Copy(left, 0, result, 0, left.length - 1);
-        result[left.length - 1] = mergedChangeArr[0];
-        MyArray.Copy(right, 1, result, left.length, right.length - 1);
-        return result;
-      } else {
-        const result = new Array(left.length + right.length);
-        MyArray.Copy(left, 0, result, 0, left.length);
-        MyArray.Copy(right, 0, result, left.length, right.length);
-        return result;
-      }
-    }
-    /**
-     * Returns true if the two changes overlap and can be merged into a single
-     * change
-     * @param left The left change
-     * @param right The right change
-     * @param mergedChange The merged change if the two overlap, null otherwise
-     * @returns True if the two changes overlap
-     */
-    ChangesOverlap(left, right, mergedChangeArr) {
-      Debug.Assert(left.originalStart <= right.originalStart, "Left change is not less than or equal to right change");
-      Debug.Assert(left.modifiedStart <= right.modifiedStart, "Left change is not less than or equal to right change");
-      if (left.originalStart + left.originalLength >= right.originalStart || left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
-        const originalStart = left.originalStart;
-        let originalLength = left.originalLength;
-        const modifiedStart = left.modifiedStart;
-        let modifiedLength = left.modifiedLength;
-        if (left.originalStart + left.originalLength >= right.originalStart) {
-          originalLength = right.originalStart + right.originalLength - left.originalStart;
-        }
-        if (left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
-          modifiedLength = right.modifiedStart + right.modifiedLength - left.modifiedStart;
-        }
-        mergedChangeArr[0] = new DiffChange(originalStart, originalLength, modifiedStart, modifiedLength);
-        return true;
-      } else {
-        mergedChangeArr[0] = null;
-        return false;
-      }
-    }
-    /**
-     * Helper method used to clip a diagonal index to the range of valid
-     * diagonals. This also decides whether or not the diagonal index,
-     * if it exceeds the boundary, should be clipped to the boundary or clipped
-     * one inside the boundary depending on the Even/Odd status of the boundary
-     * and numDifferences.
-     * @param diagonal The index of the diagonal to clip.
-     * @param numDifferences The current number of differences being iterated upon.
-     * @param diagonalBaseIndex The base reference diagonal.
-     * @param numDiagonals The total number of diagonals.
-     * @returns The clipped diagonal index.
-     */
-    ClipDiagonalBound(diagonal, numDifferences, diagonalBaseIndex, numDiagonals) {
-      if (diagonal >= 0 && diagonal < numDiagonals) {
-        return diagonal;
-      }
-      const diagonalsBelow = diagonalBaseIndex;
-      const diagonalsAbove = numDiagonals - diagonalBaseIndex - 1;
-      const diffEven = numDifferences % 2 === 0;
-      if (diagonal < 0) {
-        const lowerBoundEven = diagonalsBelow % 2 === 0;
-        return diffEven === lowerBoundEven ? 0 : 1;
-      } else {
-        const upperBoundEven = diagonalsAbove % 2 === 0;
-        return diffEven === upperBoundEven ? numDiagonals - 1 : numDiagonals - 2;
-      }
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/process.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/process.js
   var safeProcess;
   var vscodeGlobal = globalThis.vscode;
   if (typeof vscodeGlobal !== "undefined" && typeof vscodeGlobal.process !== "undefined") {
@@ -3117,7 +1834,7 @@
         return sandboxProcess.cwd();
       }
     };
-  } else if (typeof process !== "undefined") {
+  } else if (typeof process !== "undefined" && typeof process?.versions?.node === "string") {
     safeProcess = {
       get platform() {
         return process.platform;
@@ -3154,7 +1871,7 @@
   var env = safeProcess.env;
   var platform = safeProcess.platform;
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/path.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/path.js
   var CHAR_UPPERCASE_A = 65;
   var CHAR_LOWERCASE_A = 97;
   var CHAR_UPPERCASE_Z = 90;
@@ -4198,6 +2915,7 @@
   posix.win32 = win32.win32 = win32;
   posix.posix = win32.posix = posix;
   var normalize = platformIsWin32 ? win32.normalize : posix.normalize;
+  var join = platformIsWin32 ? win32.join : posix.join;
   var resolve = platformIsWin32 ? win32.resolve : posix.resolve;
   var relative = platformIsWin32 ? win32.relative : posix.relative;
   var dirname = platformIsWin32 ? win32.dirname : posix.dirname;
@@ -4205,7 +2923,7 @@
   var extname = platformIsWin32 ? win32.extname : posix.extname;
   var sep = platformIsWin32 ? win32.sep : posix.sep;
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/uri.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/uri.js
   var _schemePattern = /^\w[\w\d+.-]*$/;
   var _singleSlashStart = /^\//;
   var _doubleSlashStart = /^\/\//;
@@ -4738,7 +3456,1472 @@
     return str.replace(_rEncodedAsHex, (match) => decodeURIComponentGraceful(match));
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/position.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/network.js
+  var Schemas;
+  (function(Schemas2) {
+    Schemas2.inMemory = "inmemory";
+    Schemas2.vscode = "vscode";
+    Schemas2.internal = "private";
+    Schemas2.walkThrough = "walkThrough";
+    Schemas2.walkThroughSnippet = "walkThroughSnippet";
+    Schemas2.http = "http";
+    Schemas2.https = "https";
+    Schemas2.file = "file";
+    Schemas2.mailto = "mailto";
+    Schemas2.untitled = "untitled";
+    Schemas2.data = "data";
+    Schemas2.command = "command";
+    Schemas2.vscodeRemote = "vscode-remote";
+    Schemas2.vscodeRemoteResource = "vscode-remote-resource";
+    Schemas2.vscodeManagedRemoteResource = "vscode-managed-remote-resource";
+    Schemas2.vscodeUserData = "vscode-userdata";
+    Schemas2.vscodeCustomEditor = "vscode-custom-editor";
+    Schemas2.vscodeNotebookCell = "vscode-notebook-cell";
+    Schemas2.vscodeNotebookCellMetadata = "vscode-notebook-cell-metadata";
+    Schemas2.vscodeNotebookCellMetadataDiff = "vscode-notebook-cell-metadata-diff";
+    Schemas2.vscodeNotebookCellOutput = "vscode-notebook-cell-output";
+    Schemas2.vscodeNotebookCellOutputDiff = "vscode-notebook-cell-output-diff";
+    Schemas2.vscodeNotebookMetadata = "vscode-notebook-metadata";
+    Schemas2.vscodeInteractiveInput = "vscode-interactive-input";
+    Schemas2.vscodeSettings = "vscode-settings";
+    Schemas2.vscodeWorkspaceTrust = "vscode-workspace-trust";
+    Schemas2.vscodeTerminal = "vscode-terminal";
+    Schemas2.vscodeChatCodeBlock = "vscode-chat-code-block";
+    Schemas2.vscodeChatCodeCompareBlock = "vscode-chat-code-compare-block";
+    Schemas2.vscodeChatSesssion = "vscode-chat-editor";
+    Schemas2.webviewPanel = "webview-panel";
+    Schemas2.vscodeWebview = "vscode-webview";
+    Schemas2.extension = "extension";
+    Schemas2.vscodeFileResource = "vscode-file";
+    Schemas2.tmp = "tmp";
+    Schemas2.vsls = "vsls";
+    Schemas2.vscodeSourceControl = "vscode-scm";
+    Schemas2.commentsInput = "comment";
+    Schemas2.codeSetting = "code-setting";
+    Schemas2.outputChannel = "output";
+  })(Schemas || (Schemas = {}));
+  var connectionTokenQueryName = "tkn";
+  var RemoteAuthoritiesImpl = class {
+    constructor() {
+      this._hosts = /* @__PURE__ */ Object.create(null);
+      this._ports = /* @__PURE__ */ Object.create(null);
+      this._connectionTokens = /* @__PURE__ */ Object.create(null);
+      this._preferredWebSchema = "http";
+      this._delegate = null;
+      this._serverRootPath = "/";
+    }
+    setPreferredWebSchema(schema) {
+      this._preferredWebSchema = schema;
+    }
+    get _remoteResourcesPath() {
+      return posix.join(this._serverRootPath, Schemas.vscodeRemoteResource);
+    }
+    rewrite(uri) {
+      if (this._delegate) {
+        try {
+          return this._delegate(uri);
+        } catch (err) {
+          onUnexpectedError(err);
+          return uri;
+        }
+      }
+      const authority = uri.authority;
+      let host = this._hosts[authority];
+      if (host && host.indexOf(":") !== -1 && host.indexOf("[") === -1) {
+        host = `[${host}]`;
+      }
+      const port = this._ports[authority];
+      const connectionToken = this._connectionTokens[authority];
+      let query = `path=${encodeURIComponent(uri.path)}`;
+      if (typeof connectionToken === "string") {
+        query += `&${connectionTokenQueryName}=${encodeURIComponent(connectionToken)}`;
+      }
+      return URI.from({
+        scheme: isWeb ? this._preferredWebSchema : Schemas.vscodeRemoteResource,
+        authority: `${host}:${port}`,
+        path: this._remoteResourcesPath,
+        query
+      });
+    }
+  };
+  var RemoteAuthorities = new RemoteAuthoritiesImpl();
+  var VSCODE_AUTHORITY = "vscode-app";
+  var FileAccessImpl = class _FileAccessImpl {
+    static {
+      this.FALLBACK_AUTHORITY = VSCODE_AUTHORITY;
+    }
+    /**
+     * Returns a URI to use in contexts where the browser is responsible
+     * for loading (e.g. fetch()) or when used within the DOM.
+     *
+     * **Note:** use `dom.ts#asCSSUrl` whenever the URL is to be used in CSS context.
+     */
+    asBrowserUri(resourcePath) {
+      const uri = this.toUri(resourcePath);
+      return this.uriToBrowserUri(uri);
+    }
+    /**
+     * Returns a URI to use in contexts where the browser is responsible
+     * for loading (e.g. fetch()) or when used within the DOM.
+     *
+     * **Note:** use `dom.ts#asCSSUrl` whenever the URL is to be used in CSS context.
+     */
+    uriToBrowserUri(uri) {
+      if (uri.scheme === Schemas.vscodeRemote) {
+        return RemoteAuthorities.rewrite(uri);
+      }
+      if (
+        // ...only ever for `file` resources
+        uri.scheme === Schemas.file && // ...and we run in native environments
+        (isNative || // ...or web worker extensions on desktop
+        webWorkerOrigin === `${Schemas.vscodeFileResource}://${_FileAccessImpl.FALLBACK_AUTHORITY}`)
+      ) {
+        return uri.with({
+          scheme: Schemas.vscodeFileResource,
+          // We need to provide an authority here so that it can serve
+          // as origin for network and loading matters in chromium.
+          // If the URI is not coming with an authority already, we
+          // add our own
+          authority: uri.authority || _FileAccessImpl.FALLBACK_AUTHORITY,
+          query: null,
+          fragment: null
+        });
+      }
+      return uri;
+    }
+    toUri(uriOrModule, moduleIdToUrl) {
+      if (URI.isUri(uriOrModule)) {
+        return uriOrModule;
+      }
+      if (globalThis._VSCODE_FILE_ROOT) {
+        const rootUriOrPath = globalThis._VSCODE_FILE_ROOT;
+        if (/^\w[\w\d+.-]*:\/\//.test(rootUriOrPath)) {
+          return URI.joinPath(URI.parse(rootUriOrPath, true), uriOrModule);
+        }
+        const modulePath = join(rootUriOrPath, uriOrModule);
+        return URI.file(modulePath);
+      }
+      return URI.parse(moduleIdToUrl.toUrl(uriOrModule));
+    }
+  };
+  var FileAccess = new FileAccessImpl();
+  var COI;
+  (function(COI2) {
+    const coiHeaders = /* @__PURE__ */ new Map([
+      ["1", { "Cross-Origin-Opener-Policy": "same-origin" }],
+      ["2", { "Cross-Origin-Embedder-Policy": "require-corp" }],
+      ["3", { "Cross-Origin-Opener-Policy": "same-origin", "Cross-Origin-Embedder-Policy": "require-corp" }]
+    ]);
+    COI2.CoopAndCoep = Object.freeze(coiHeaders.get("3"));
+    const coiSearchParamName = "vscode-coi";
+    function getHeadersFromQuery(url) {
+      let params;
+      if (typeof url === "string") {
+        params = new URL(url).searchParams;
+      } else if (url instanceof URL) {
+        params = url.searchParams;
+      } else if (URI.isUri(url)) {
+        params = new URL(url.toString(true)).searchParams;
+      }
+      const value = params?.get(coiSearchParamName);
+      if (!value) {
+        return void 0;
+      }
+      return coiHeaders.get(value);
+    }
+    COI2.getHeadersFromQuery = getHeadersFromQuery;
+    function addSearchParam(urlOrSearch, coop, coep) {
+      if (!globalThis.crossOriginIsolated) {
+        return;
+      }
+      const value = coop && coep ? "3" : coep ? "2" : "1";
+      if (urlOrSearch instanceof URLSearchParams) {
+        urlOrSearch.set(coiSearchParamName, value);
+      } else {
+        urlOrSearch[coiSearchParamName] = value;
+      }
+    }
+    COI2.addSearchParam = addSearchParam;
+  })(COI || (COI = {}));
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/worker/simpleWorker.js
+  var isESM = true;
+  var DEFAULT_CHANNEL = "default";
+  var INITIALIZE = "$initialize";
+  var RequestMessage = class {
+    constructor(vsWorker, req, channel, method, args) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.channel = channel;
+      this.method = method;
+      this.args = args;
+      this.type = 0;
+    }
+  };
+  var ReplyMessage = class {
+    constructor(vsWorker, seq, res, err) {
+      this.vsWorker = vsWorker;
+      this.seq = seq;
+      this.res = res;
+      this.err = err;
+      this.type = 1;
+    }
+  };
+  var SubscribeEventMessage = class {
+    constructor(vsWorker, req, channel, eventName, arg) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.channel = channel;
+      this.eventName = eventName;
+      this.arg = arg;
+      this.type = 2;
+    }
+  };
+  var EventMessage = class {
+    constructor(vsWorker, req, event) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.event = event;
+      this.type = 3;
+    }
+  };
+  var UnsubscribeEventMessage = class {
+    constructor(vsWorker, req) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.type = 4;
+    }
+  };
+  var SimpleWorkerProtocol = class {
+    constructor(handler) {
+      this._workerId = -1;
+      this._handler = handler;
+      this._lastSentReq = 0;
+      this._pendingReplies = /* @__PURE__ */ Object.create(null);
+      this._pendingEmitters = /* @__PURE__ */ new Map();
+      this._pendingEvents = /* @__PURE__ */ new Map();
+    }
+    setWorkerId(workerId) {
+      this._workerId = workerId;
+    }
+    sendMessage(channel, method, args) {
+      const req = String(++this._lastSentReq);
+      return new Promise((resolve2, reject) => {
+        this._pendingReplies[req] = {
+          resolve: resolve2,
+          reject
+        };
+        this._send(new RequestMessage(this._workerId, req, channel, method, args));
+      });
+    }
+    listen(channel, eventName, arg) {
+      let req = null;
+      const emitter = new Emitter({
+        onWillAddFirstListener: () => {
+          req = String(++this._lastSentReq);
+          this._pendingEmitters.set(req, emitter);
+          this._send(new SubscribeEventMessage(this._workerId, req, channel, eventName, arg));
+        },
+        onDidRemoveLastListener: () => {
+          this._pendingEmitters.delete(req);
+          this._send(new UnsubscribeEventMessage(this._workerId, req));
+          req = null;
+        }
+      });
+      return emitter.event;
+    }
+    handleMessage(message) {
+      if (!message || !message.vsWorker) {
+        return;
+      }
+      if (this._workerId !== -1 && message.vsWorker !== this._workerId) {
+        return;
+      }
+      this._handleMessage(message);
+    }
+    createProxyToRemoteChannel(channel, sendMessageBarrier) {
+      const handler = {
+        get: (target, name) => {
+          if (typeof name === "string" && !target[name]) {
+            if (propertyIsDynamicEvent(name)) {
+              target[name] = (arg) => {
+                return this.listen(channel, name, arg);
+              };
+            } else if (propertyIsEvent(name)) {
+              target[name] = this.listen(channel, name, void 0);
+            } else if (name.charCodeAt(0) === 36) {
+              target[name] = async (...myArgs) => {
+                await sendMessageBarrier?.();
+                return this.sendMessage(channel, name, myArgs);
+              };
+            }
+          }
+          return target[name];
+        }
+      };
+      return new Proxy(/* @__PURE__ */ Object.create(null), handler);
+    }
+    _handleMessage(msg) {
+      switch (msg.type) {
+        case 1:
+          return this._handleReplyMessage(msg);
+        case 0:
+          return this._handleRequestMessage(msg);
+        case 2:
+          return this._handleSubscribeEventMessage(msg);
+        case 3:
+          return this._handleEventMessage(msg);
+        case 4:
+          return this._handleUnsubscribeEventMessage(msg);
+      }
+    }
+    _handleReplyMessage(replyMessage) {
+      if (!this._pendingReplies[replyMessage.seq]) {
+        console.warn("Got reply to unknown seq");
+        return;
+      }
+      const reply = this._pendingReplies[replyMessage.seq];
+      delete this._pendingReplies[replyMessage.seq];
+      if (replyMessage.err) {
+        let err = replyMessage.err;
+        if (replyMessage.err.$isError) {
+          err = new Error();
+          err.name = replyMessage.err.name;
+          err.message = replyMessage.err.message;
+          err.stack = replyMessage.err.stack;
+        }
+        reply.reject(err);
+        return;
+      }
+      reply.resolve(replyMessage.res);
+    }
+    _handleRequestMessage(requestMessage) {
+      const req = requestMessage.req;
+      const result = this._handler.handleMessage(requestMessage.channel, requestMessage.method, requestMessage.args);
+      result.then((r) => {
+        this._send(new ReplyMessage(this._workerId, req, r, void 0));
+      }, (e) => {
+        if (e.detail instanceof Error) {
+          e.detail = transformErrorForSerialization(e.detail);
+        }
+        this._send(new ReplyMessage(this._workerId, req, void 0, transformErrorForSerialization(e)));
+      });
+    }
+    _handleSubscribeEventMessage(msg) {
+      const req = msg.req;
+      const disposable = this._handler.handleEvent(msg.channel, msg.eventName, msg.arg)((event) => {
+        this._send(new EventMessage(this._workerId, req, event));
+      });
+      this._pendingEvents.set(req, disposable);
+    }
+    _handleEventMessage(msg) {
+      if (!this._pendingEmitters.has(msg.req)) {
+        console.warn("Got event for unknown req");
+        return;
+      }
+      this._pendingEmitters.get(msg.req).fire(msg.event);
+    }
+    _handleUnsubscribeEventMessage(msg) {
+      if (!this._pendingEvents.has(msg.req)) {
+        console.warn("Got unsubscribe for unknown req");
+        return;
+      }
+      this._pendingEvents.get(msg.req).dispose();
+      this._pendingEvents.delete(msg.req);
+    }
+    _send(msg) {
+      const transfer = [];
+      if (msg.type === 0) {
+        for (let i = 0; i < msg.args.length; i++) {
+          if (msg.args[i] instanceof ArrayBuffer) {
+            transfer.push(msg.args[i]);
+          }
+        }
+      } else if (msg.type === 1) {
+        if (msg.res instanceof ArrayBuffer) {
+          transfer.push(msg.res);
+        }
+      }
+      this._handler.sendMessage(msg, transfer);
+    }
+  };
+  function propertyIsEvent(name) {
+    return name[0] === "o" && name[1] === "n" && isUpperAsciiLetter(name.charCodeAt(2));
+  }
+  function propertyIsDynamicEvent(name) {
+    return /^onDynamic/.test(name) && isUpperAsciiLetter(name.charCodeAt(9));
+  }
+  var SimpleWorkerServer = class {
+    constructor(postMessage, requestHandlerFactory) {
+      this._localChannels = /* @__PURE__ */ new Map();
+      this._remoteChannels = /* @__PURE__ */ new Map();
+      this._requestHandlerFactory = requestHandlerFactory;
+      this._requestHandler = null;
+      this._protocol = new SimpleWorkerProtocol({
+        sendMessage: (msg, transfer) => {
+          postMessage(msg, transfer);
+        },
+        handleMessage: (channel, method, args) => this._handleMessage(channel, method, args),
+        handleEvent: (channel, eventName, arg) => this._handleEvent(channel, eventName, arg)
+      });
+    }
+    onmessage(msg) {
+      this._protocol.handleMessage(msg);
+    }
+    _handleMessage(channel, method, args) {
+      if (channel === DEFAULT_CHANNEL && method === INITIALIZE) {
+        return this.initialize(args[0], args[1], args[2]);
+      }
+      const requestHandler = channel === DEFAULT_CHANNEL ? this._requestHandler : this._localChannels.get(channel);
+      if (!requestHandler) {
+        return Promise.reject(new Error(`Missing channel ${channel} on worker thread`));
+      }
+      if (typeof requestHandler[method] !== "function") {
+        return Promise.reject(new Error(`Missing method ${method} on worker thread channel ${channel}`));
+      }
+      try {
+        return Promise.resolve(requestHandler[method].apply(requestHandler, args));
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+    _handleEvent(channel, eventName, arg) {
+      const requestHandler = channel === DEFAULT_CHANNEL ? this._requestHandler : this._localChannels.get(channel);
+      if (!requestHandler) {
+        throw new Error(`Missing channel ${channel} on worker thread`);
+      }
+      if (propertyIsDynamicEvent(eventName)) {
+        const event = requestHandler[eventName].call(requestHandler, arg);
+        if (typeof event !== "function") {
+          throw new Error(`Missing dynamic event ${eventName} on request handler.`);
+        }
+        return event;
+      }
+      if (propertyIsEvent(eventName)) {
+        const event = requestHandler[eventName];
+        if (typeof event !== "function") {
+          throw new Error(`Missing event ${eventName} on request handler.`);
+        }
+        return event;
+      }
+      throw new Error(`Malformed event name ${eventName}`);
+    }
+    getChannel(channel) {
+      if (!this._remoteChannels.has(channel)) {
+        const inst = this._protocol.createProxyToRemoteChannel(channel);
+        this._remoteChannels.set(channel, inst);
+      }
+      return this._remoteChannels.get(channel);
+    }
+    async initialize(workerId, loaderConfig, moduleId) {
+      this._protocol.setWorkerId(workerId);
+      if (this._requestHandlerFactory) {
+        this._requestHandler = this._requestHandlerFactory(this);
+        return;
+      }
+      if (loaderConfig) {
+        if (typeof loaderConfig.baseUrl !== "undefined") {
+          delete loaderConfig["baseUrl"];
+        }
+        if (typeof loaderConfig.paths !== "undefined") {
+          if (typeof loaderConfig.paths.vs !== "undefined") {
+            delete loaderConfig.paths["vs"];
+          }
+        }
+        if (typeof loaderConfig.trustedTypesPolicy !== "undefined") {
+          delete loaderConfig["trustedTypesPolicy"];
+        }
+        loaderConfig.catchError = true;
+        globalThis.require.config(loaderConfig);
+      }
+      if (isESM) {
+        const url = FileAccess.asBrowserUri(`${moduleId}.js`).toString(true);
+        return import(`${url}`).then((module) => {
+          this._requestHandler = module.create(this);
+          if (!this._requestHandler) {
+            throw new Error(`No RequestHandler!`);
+          }
+        });
+      }
+      return new Promise((resolve2, reject) => {
+        const req = globalThis.require;
+        req([moduleId], (module) => {
+          this._requestHandler = module.create(this);
+          if (!this._requestHandler) {
+            reject(new Error(`No RequestHandler!`));
+            return;
+          }
+          resolve2();
+        }, reject);
+      });
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/diff/diffChange.js
+  var DiffChange = class {
+    /**
+     * Constructs a new DiffChange with the given sequence information
+     * and content.
+     */
+    constructor(originalStart, originalLength, modifiedStart, modifiedLength) {
+      this.originalStart = originalStart;
+      this.originalLength = originalLength;
+      this.modifiedStart = modifiedStart;
+      this.modifiedLength = modifiedLength;
+    }
+    /**
+     * The end point (exclusive) of the change in the original sequence.
+     */
+    getOriginalEnd() {
+      return this.originalStart + this.originalLength;
+    }
+    /**
+     * The end point (exclusive) of the change in the modified sequence.
+     */
+    getModifiedEnd() {
+      return this.modifiedStart + this.modifiedLength;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/hash.js
+  function numberHash(val, initialHashVal) {
+    return (initialHashVal << 5) - initialHashVal + val | 0;
+  }
+  function stringHash(s, hashVal) {
+    hashVal = numberHash(149417, hashVal);
+    for (let i = 0, length = s.length; i < length; i++) {
+      hashVal = numberHash(s.charCodeAt(i), hashVal);
+    }
+    return hashVal;
+  }
+  function leftRotate(value, bits, totalBits = 32) {
+    const delta = totalBits - bits;
+    const mask = ~((1 << delta) - 1);
+    return (value << bits | (mask & value) >>> delta) >>> 0;
+  }
+  function fill(dest, index = 0, count = dest.byteLength, value = 0) {
+    for (let i = 0; i < count; i++) {
+      dest[index + i] = value;
+    }
+  }
+  function leftPad(value, length, char = "0") {
+    while (value.length < length) {
+      value = char + value;
+    }
+    return value;
+  }
+  function toHexString(bufferOrValue, bitsize = 32) {
+    if (bufferOrValue instanceof ArrayBuffer) {
+      return Array.from(new Uint8Array(bufferOrValue)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+    return leftPad((bufferOrValue >>> 0).toString(16), bitsize / 4);
+  }
+  var StringSHA1 = class _StringSHA1 {
+    static {
+      this._bigBlock32 = new DataView(new ArrayBuffer(320));
+    }
+    // 80 * 4 = 320
+    constructor() {
+      this._h0 = 1732584193;
+      this._h1 = 4023233417;
+      this._h2 = 2562383102;
+      this._h3 = 271733878;
+      this._h4 = 3285377520;
+      this._buff = new Uint8Array(
+        64 + 3
+        /* to fit any utf-8 */
+      );
+      this._buffDV = new DataView(this._buff.buffer);
+      this._buffLen = 0;
+      this._totalLen = 0;
+      this._leftoverHighSurrogate = 0;
+      this._finished = false;
+    }
+    update(str) {
+      const strLen = str.length;
+      if (strLen === 0) {
+        return;
+      }
+      const buff = this._buff;
+      let buffLen = this._buffLen;
+      let leftoverHighSurrogate = this._leftoverHighSurrogate;
+      let charCode;
+      let offset;
+      if (leftoverHighSurrogate !== 0) {
+        charCode = leftoverHighSurrogate;
+        offset = -1;
+        leftoverHighSurrogate = 0;
+      } else {
+        charCode = str.charCodeAt(0);
+        offset = 0;
+      }
+      while (true) {
+        let codePoint = charCode;
+        if (isHighSurrogate(charCode)) {
+          if (offset + 1 < strLen) {
+            const nextCharCode = str.charCodeAt(offset + 1);
+            if (isLowSurrogate(nextCharCode)) {
+              offset++;
+              codePoint = computeCodePoint(charCode, nextCharCode);
+            } else {
+              codePoint = 65533;
+            }
+          } else {
+            leftoverHighSurrogate = charCode;
+            break;
+          }
+        } else if (isLowSurrogate(charCode)) {
+          codePoint = 65533;
+        }
+        buffLen = this._push(buff, buffLen, codePoint);
+        offset++;
+        if (offset < strLen) {
+          charCode = str.charCodeAt(offset);
+        } else {
+          break;
+        }
+      }
+      this._buffLen = buffLen;
+      this._leftoverHighSurrogate = leftoverHighSurrogate;
+    }
+    _push(buff, buffLen, codePoint) {
+      if (codePoint < 128) {
+        buff[buffLen++] = codePoint;
+      } else if (codePoint < 2048) {
+        buff[buffLen++] = 192 | (codePoint & 1984) >>> 6;
+        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
+      } else if (codePoint < 65536) {
+        buff[buffLen++] = 224 | (codePoint & 61440) >>> 12;
+        buff[buffLen++] = 128 | (codePoint & 4032) >>> 6;
+        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
+      } else {
+        buff[buffLen++] = 240 | (codePoint & 1835008) >>> 18;
+        buff[buffLen++] = 128 | (codePoint & 258048) >>> 12;
+        buff[buffLen++] = 128 | (codePoint & 4032) >>> 6;
+        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
+      }
+      if (buffLen >= 64) {
+        this._step();
+        buffLen -= 64;
+        this._totalLen += 64;
+        buff[0] = buff[64 + 0];
+        buff[1] = buff[64 + 1];
+        buff[2] = buff[64 + 2];
+      }
+      return buffLen;
+    }
+    digest() {
+      if (!this._finished) {
+        this._finished = true;
+        if (this._leftoverHighSurrogate) {
+          this._leftoverHighSurrogate = 0;
+          this._buffLen = this._push(
+            this._buff,
+            this._buffLen,
+            65533
+            /* SHA1Constant.UNICODE_REPLACEMENT */
+          );
+        }
+        this._totalLen += this._buffLen;
+        this._wrapUp();
+      }
+      return toHexString(this._h0) + toHexString(this._h1) + toHexString(this._h2) + toHexString(this._h3) + toHexString(this._h4);
+    }
+    _wrapUp() {
+      this._buff[this._buffLen++] = 128;
+      fill(this._buff, this._buffLen);
+      if (this._buffLen > 56) {
+        this._step();
+        fill(this._buff);
+      }
+      const ml = 8 * this._totalLen;
+      this._buffDV.setUint32(56, Math.floor(ml / 4294967296), false);
+      this._buffDV.setUint32(60, ml % 4294967296, false);
+      this._step();
+    }
+    _step() {
+      const bigBlock32 = _StringSHA1._bigBlock32;
+      const data = this._buffDV;
+      for (let j = 0; j < 64; j += 4) {
+        bigBlock32.setUint32(j, data.getUint32(j, false), false);
+      }
+      for (let j = 64; j < 320; j += 4) {
+        bigBlock32.setUint32(j, leftRotate(bigBlock32.getUint32(j - 12, false) ^ bigBlock32.getUint32(j - 32, false) ^ bigBlock32.getUint32(j - 56, false) ^ bigBlock32.getUint32(j - 64, false), 1), false);
+      }
+      let a = this._h0;
+      let b = this._h1;
+      let c = this._h2;
+      let d = this._h3;
+      let e = this._h4;
+      let f, k;
+      let temp;
+      for (let j = 0; j < 80; j++) {
+        if (j < 20) {
+          f = b & c | ~b & d;
+          k = 1518500249;
+        } else if (j < 40) {
+          f = b ^ c ^ d;
+          k = 1859775393;
+        } else if (j < 60) {
+          f = b & c | b & d | c & d;
+          k = 2400959708;
+        } else {
+          f = b ^ c ^ d;
+          k = 3395469782;
+        }
+        temp = leftRotate(a, 5) + f + e + k + bigBlock32.getUint32(j * 4, false) & 4294967295;
+        e = d;
+        d = c;
+        c = leftRotate(b, 30);
+        b = a;
+        a = temp;
+      }
+      this._h0 = this._h0 + a & 4294967295;
+      this._h1 = this._h1 + b & 4294967295;
+      this._h2 = this._h2 + c & 4294967295;
+      this._h3 = this._h3 + d & 4294967295;
+      this._h4 = this._h4 + e & 4294967295;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/diff/diff.js
+  var StringDiffSequence = class {
+    constructor(source) {
+      this.source = source;
+    }
+    getElements() {
+      const source = this.source;
+      const characters = new Int32Array(source.length);
+      for (let i = 0, len = source.length; i < len; i++) {
+        characters[i] = source.charCodeAt(i);
+      }
+      return characters;
+    }
+  };
+  function stringDiff(original, modified, pretty) {
+    return new LcsDiff(new StringDiffSequence(original), new StringDiffSequence(modified)).ComputeDiff(pretty).changes;
+  }
+  var Debug = class {
+    static Assert(condition, message) {
+      if (!condition) {
+        throw new Error(message);
+      }
+    }
+  };
+  var MyArray = class {
+    /**
+     * Copies a range of elements from an Array starting at the specified source index and pastes
+     * them to another Array starting at the specified destination index. The length and the indexes
+     * are specified as 64-bit integers.
+     * sourceArray:
+     *		The Array that contains the data to copy.
+     * sourceIndex:
+     *		A 64-bit integer that represents the index in the sourceArray at which copying begins.
+     * destinationArray:
+     *		The Array that receives the data.
+     * destinationIndex:
+     *		A 64-bit integer that represents the index in the destinationArray at which storing begins.
+     * length:
+     *		A 64-bit integer that represents the number of elements to copy.
+     */
+    static Copy(sourceArray, sourceIndex, destinationArray, destinationIndex, length) {
+      for (let i = 0; i < length; i++) {
+        destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
+      }
+    }
+    static Copy2(sourceArray, sourceIndex, destinationArray, destinationIndex, length) {
+      for (let i = 0; i < length; i++) {
+        destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
+      }
+    }
+  };
+  var DiffChangeHelper = class {
+    /**
+     * Constructs a new DiffChangeHelper for the given DiffSequences.
+     */
+    constructor() {
+      this.m_changes = [];
+      this.m_originalStart = 1073741824;
+      this.m_modifiedStart = 1073741824;
+      this.m_originalCount = 0;
+      this.m_modifiedCount = 0;
+    }
+    /**
+     * Marks the beginning of the next change in the set of differences.
+     */
+    MarkNextChange() {
+      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
+        this.m_changes.push(new DiffChange(this.m_originalStart, this.m_originalCount, this.m_modifiedStart, this.m_modifiedCount));
+      }
+      this.m_originalCount = 0;
+      this.m_modifiedCount = 0;
+      this.m_originalStart = 1073741824;
+      this.m_modifiedStart = 1073741824;
+    }
+    /**
+     * Adds the original element at the given position to the elements
+     * affected by the current change. The modified index gives context
+     * to the change position with respect to the original sequence.
+     * @param originalIndex The index of the original element to add.
+     * @param modifiedIndex The index of the modified element that provides corresponding position in the modified sequence.
+     */
+    AddOriginalElement(originalIndex, modifiedIndex) {
+      this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
+      this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
+      this.m_originalCount++;
+    }
+    /**
+     * Adds the modified element at the given position to the elements
+     * affected by the current change. The original index gives context
+     * to the change position with respect to the modified sequence.
+     * @param originalIndex The index of the original element that provides corresponding position in the original sequence.
+     * @param modifiedIndex The index of the modified element to add.
+     */
+    AddModifiedElement(originalIndex, modifiedIndex) {
+      this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
+      this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
+      this.m_modifiedCount++;
+    }
+    /**
+     * Retrieves all of the changes marked by the class.
+     */
+    getChanges() {
+      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
+        this.MarkNextChange();
+      }
+      return this.m_changes;
+    }
+    /**
+     * Retrieves all of the changes marked by the class in the reverse order
+     */
+    getReverseChanges() {
+      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
+        this.MarkNextChange();
+      }
+      this.m_changes.reverse();
+      return this.m_changes;
+    }
+  };
+  var LcsDiff = class _LcsDiff {
+    /**
+     * Constructs the DiffFinder
+     */
+    constructor(originalSequence, modifiedSequence, continueProcessingPredicate = null) {
+      this.ContinueProcessingPredicate = continueProcessingPredicate;
+      this._originalSequence = originalSequence;
+      this._modifiedSequence = modifiedSequence;
+      const [originalStringElements, originalElementsOrHash, originalHasStrings] = _LcsDiff._getElements(originalSequence);
+      const [modifiedStringElements, modifiedElementsOrHash, modifiedHasStrings] = _LcsDiff._getElements(modifiedSequence);
+      this._hasStrings = originalHasStrings && modifiedHasStrings;
+      this._originalStringElements = originalStringElements;
+      this._originalElementsOrHash = originalElementsOrHash;
+      this._modifiedStringElements = modifiedStringElements;
+      this._modifiedElementsOrHash = modifiedElementsOrHash;
+      this.m_forwardHistory = [];
+      this.m_reverseHistory = [];
+    }
+    static _isStringArray(arr) {
+      return arr.length > 0 && typeof arr[0] === "string";
+    }
+    static _getElements(sequence) {
+      const elements = sequence.getElements();
+      if (_LcsDiff._isStringArray(elements)) {
+        const hashes = new Int32Array(elements.length);
+        for (let i = 0, len = elements.length; i < len; i++) {
+          hashes[i] = stringHash(elements[i], 0);
+        }
+        return [elements, hashes, true];
+      }
+      if (elements instanceof Int32Array) {
+        return [[], elements, false];
+      }
+      return [[], new Int32Array(elements), false];
+    }
+    ElementsAreEqual(originalIndex, newIndex) {
+      if (this._originalElementsOrHash[originalIndex] !== this._modifiedElementsOrHash[newIndex]) {
+        return false;
+      }
+      return this._hasStrings ? this._originalStringElements[originalIndex] === this._modifiedStringElements[newIndex] : true;
+    }
+    ElementsAreStrictEqual(originalIndex, newIndex) {
+      if (!this.ElementsAreEqual(originalIndex, newIndex)) {
+        return false;
+      }
+      const originalElement = _LcsDiff._getStrictElement(this._originalSequence, originalIndex);
+      const modifiedElement = _LcsDiff._getStrictElement(this._modifiedSequence, newIndex);
+      return originalElement === modifiedElement;
+    }
+    static _getStrictElement(sequence, index) {
+      if (typeof sequence.getStrictElement === "function") {
+        return sequence.getStrictElement(index);
+      }
+      return null;
+    }
+    OriginalElementsAreEqual(index1, index2) {
+      if (this._originalElementsOrHash[index1] !== this._originalElementsOrHash[index2]) {
+        return false;
+      }
+      return this._hasStrings ? this._originalStringElements[index1] === this._originalStringElements[index2] : true;
+    }
+    ModifiedElementsAreEqual(index1, index2) {
+      if (this._modifiedElementsOrHash[index1] !== this._modifiedElementsOrHash[index2]) {
+        return false;
+      }
+      return this._hasStrings ? this._modifiedStringElements[index1] === this._modifiedStringElements[index2] : true;
+    }
+    ComputeDiff(pretty) {
+      return this._ComputeDiff(0, this._originalElementsOrHash.length - 1, 0, this._modifiedElementsOrHash.length - 1, pretty);
+    }
+    /**
+     * Computes the differences between the original and modified input
+     * sequences on the bounded range.
+     * @returns An array of the differences between the two input sequences.
+     */
+    _ComputeDiff(originalStart, originalEnd, modifiedStart, modifiedEnd, pretty) {
+      const quitEarlyArr = [false];
+      let changes = this.ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr);
+      if (pretty) {
+        changes = this.PrettifyChanges(changes);
+      }
+      return {
+        quitEarly: quitEarlyArr[0],
+        changes
+      };
+    }
+    /**
+     * Private helper method which computes the differences on the bounded range
+     * recursively.
+     * @returns An array of the differences between the two input sequences.
+     */
+    ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr) {
+      quitEarlyArr[0] = false;
+      while (originalStart <= originalEnd && modifiedStart <= modifiedEnd && this.ElementsAreEqual(originalStart, modifiedStart)) {
+        originalStart++;
+        modifiedStart++;
+      }
+      while (originalEnd >= originalStart && modifiedEnd >= modifiedStart && this.ElementsAreEqual(originalEnd, modifiedEnd)) {
+        originalEnd--;
+        modifiedEnd--;
+      }
+      if (originalStart > originalEnd || modifiedStart > modifiedEnd) {
+        let changes;
+        if (modifiedStart <= modifiedEnd) {
+          Debug.Assert(originalStart === originalEnd + 1, "originalStart should only be one more than originalEnd");
+          changes = [
+            new DiffChange(originalStart, 0, modifiedStart, modifiedEnd - modifiedStart + 1)
+          ];
+        } else if (originalStart <= originalEnd) {
+          Debug.Assert(modifiedStart === modifiedEnd + 1, "modifiedStart should only be one more than modifiedEnd");
+          changes = [
+            new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, 0)
+          ];
+        } else {
+          Debug.Assert(originalStart === originalEnd + 1, "originalStart should only be one more than originalEnd");
+          Debug.Assert(modifiedStart === modifiedEnd + 1, "modifiedStart should only be one more than modifiedEnd");
+          changes = [];
+        }
+        return changes;
+      }
+      const midOriginalArr = [0];
+      const midModifiedArr = [0];
+      const result = this.ComputeRecursionPoint(originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr);
+      const midOriginal = midOriginalArr[0];
+      const midModified = midModifiedArr[0];
+      if (result !== null) {
+        return result;
+      } else if (!quitEarlyArr[0]) {
+        const leftChanges = this.ComputeDiffRecursive(originalStart, midOriginal, modifiedStart, midModified, quitEarlyArr);
+        let rightChanges = [];
+        if (!quitEarlyArr[0]) {
+          rightChanges = this.ComputeDiffRecursive(midOriginal + 1, originalEnd, midModified + 1, modifiedEnd, quitEarlyArr);
+        } else {
+          rightChanges = [
+            new DiffChange(midOriginal + 1, originalEnd - (midOriginal + 1) + 1, midModified + 1, modifiedEnd - (midModified + 1) + 1)
+          ];
+        }
+        return this.ConcatenateChanges(leftChanges, rightChanges);
+      }
+      return [
+        new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
+      ];
+    }
+    WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr) {
+      let forwardChanges = null;
+      let reverseChanges = null;
+      let changeHelper = new DiffChangeHelper();
+      let diagonalMin = diagonalForwardStart;
+      let diagonalMax = diagonalForwardEnd;
+      let diagonalRelative = midOriginalArr[0] - midModifiedArr[0] - diagonalForwardOffset;
+      let lastOriginalIndex = -1073741824;
+      let historyIndex = this.m_forwardHistory.length - 1;
+      do {
+        const diagonal = diagonalRelative + diagonalForwardBase;
+        if (diagonal === diagonalMin || diagonal < diagonalMax && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1]) {
+          originalIndex = forwardPoints[diagonal + 1];
+          modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
+          if (originalIndex < lastOriginalIndex) {
+            changeHelper.MarkNextChange();
+          }
+          lastOriginalIndex = originalIndex;
+          changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex);
+          diagonalRelative = diagonal + 1 - diagonalForwardBase;
+        } else {
+          originalIndex = forwardPoints[diagonal - 1] + 1;
+          modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
+          if (originalIndex < lastOriginalIndex) {
+            changeHelper.MarkNextChange();
+          }
+          lastOriginalIndex = originalIndex - 1;
+          changeHelper.AddOriginalElement(originalIndex, modifiedIndex + 1);
+          diagonalRelative = diagonal - 1 - diagonalForwardBase;
+        }
+        if (historyIndex >= 0) {
+          forwardPoints = this.m_forwardHistory[historyIndex];
+          diagonalForwardBase = forwardPoints[0];
+          diagonalMin = 1;
+          diagonalMax = forwardPoints.length - 1;
+        }
+      } while (--historyIndex >= -1);
+      forwardChanges = changeHelper.getReverseChanges();
+      if (quitEarlyArr[0]) {
+        let originalStartPoint = midOriginalArr[0] + 1;
+        let modifiedStartPoint = midModifiedArr[0] + 1;
+        if (forwardChanges !== null && forwardChanges.length > 0) {
+          const lastForwardChange = forwardChanges[forwardChanges.length - 1];
+          originalStartPoint = Math.max(originalStartPoint, lastForwardChange.getOriginalEnd());
+          modifiedStartPoint = Math.max(modifiedStartPoint, lastForwardChange.getModifiedEnd());
+        }
+        reverseChanges = [
+          new DiffChange(originalStartPoint, originalEnd - originalStartPoint + 1, modifiedStartPoint, modifiedEnd - modifiedStartPoint + 1)
+        ];
+      } else {
+        changeHelper = new DiffChangeHelper();
+        diagonalMin = diagonalReverseStart;
+        diagonalMax = diagonalReverseEnd;
+        diagonalRelative = midOriginalArr[0] - midModifiedArr[0] - diagonalReverseOffset;
+        lastOriginalIndex = 1073741824;
+        historyIndex = deltaIsEven ? this.m_reverseHistory.length - 1 : this.m_reverseHistory.length - 2;
+        do {
+          const diagonal = diagonalRelative + diagonalReverseBase;
+          if (diagonal === diagonalMin || diagonal < diagonalMax && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1]) {
+            originalIndex = reversePoints[diagonal + 1] - 1;
+            modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
+            if (originalIndex > lastOriginalIndex) {
+              changeHelper.MarkNextChange();
+            }
+            lastOriginalIndex = originalIndex + 1;
+            changeHelper.AddOriginalElement(originalIndex + 1, modifiedIndex + 1);
+            diagonalRelative = diagonal + 1 - diagonalReverseBase;
+          } else {
+            originalIndex = reversePoints[diagonal - 1];
+            modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
+            if (originalIndex > lastOriginalIndex) {
+              changeHelper.MarkNextChange();
+            }
+            lastOriginalIndex = originalIndex;
+            changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex + 1);
+            diagonalRelative = diagonal - 1 - diagonalReverseBase;
+          }
+          if (historyIndex >= 0) {
+            reversePoints = this.m_reverseHistory[historyIndex];
+            diagonalReverseBase = reversePoints[0];
+            diagonalMin = 1;
+            diagonalMax = reversePoints.length - 1;
+          }
+        } while (--historyIndex >= -1);
+        reverseChanges = changeHelper.getChanges();
+      }
+      return this.ConcatenateChanges(forwardChanges, reverseChanges);
+    }
+    /**
+     * Given the range to compute the diff on, this method finds the point:
+     * (midOriginal, midModified)
+     * that exists in the middle of the LCS of the two sequences and
+     * is the point at which the LCS problem may be broken down recursively.
+     * This method will try to keep the LCS trace in memory. If the LCS recursion
+     * point is calculated and the full trace is available in memory, then this method
+     * will return the change list.
+     * @param originalStart The start bound of the original sequence range
+     * @param originalEnd The end bound of the original sequence range
+     * @param modifiedStart The start bound of the modified sequence range
+     * @param modifiedEnd The end bound of the modified sequence range
+     * @param midOriginal The middle point of the original sequence range
+     * @param midModified The middle point of the modified sequence range
+     * @returns The diff changes, if available, otherwise null
+     */
+    ComputeRecursionPoint(originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr) {
+      let originalIndex = 0, modifiedIndex = 0;
+      let diagonalForwardStart = 0, diagonalForwardEnd = 0;
+      let diagonalReverseStart = 0, diagonalReverseEnd = 0;
+      originalStart--;
+      modifiedStart--;
+      midOriginalArr[0] = 0;
+      midModifiedArr[0] = 0;
+      this.m_forwardHistory = [];
+      this.m_reverseHistory = [];
+      const maxDifferences = originalEnd - originalStart + (modifiedEnd - modifiedStart);
+      const numDiagonals = maxDifferences + 1;
+      const forwardPoints = new Int32Array(numDiagonals);
+      const reversePoints = new Int32Array(numDiagonals);
+      const diagonalForwardBase = modifiedEnd - modifiedStart;
+      const diagonalReverseBase = originalEnd - originalStart;
+      const diagonalForwardOffset = originalStart - modifiedStart;
+      const diagonalReverseOffset = originalEnd - modifiedEnd;
+      const delta = diagonalReverseBase - diagonalForwardBase;
+      const deltaIsEven = delta % 2 === 0;
+      forwardPoints[diagonalForwardBase] = originalStart;
+      reversePoints[diagonalReverseBase] = originalEnd;
+      quitEarlyArr[0] = false;
+      for (let numDifferences = 1; numDifferences <= maxDifferences / 2 + 1; numDifferences++) {
+        let furthestOriginalIndex = 0;
+        let furthestModifiedIndex = 0;
+        diagonalForwardStart = this.ClipDiagonalBound(diagonalForwardBase - numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
+        diagonalForwardEnd = this.ClipDiagonalBound(diagonalForwardBase + numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
+        for (let diagonal = diagonalForwardStart; diagonal <= diagonalForwardEnd; diagonal += 2) {
+          if (diagonal === diagonalForwardStart || diagonal < diagonalForwardEnd && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1]) {
+            originalIndex = forwardPoints[diagonal + 1];
+          } else {
+            originalIndex = forwardPoints[diagonal - 1] + 1;
+          }
+          modifiedIndex = originalIndex - (diagonal - diagonalForwardBase) - diagonalForwardOffset;
+          const tempOriginalIndex = originalIndex;
+          while (originalIndex < originalEnd && modifiedIndex < modifiedEnd && this.ElementsAreEqual(originalIndex + 1, modifiedIndex + 1)) {
+            originalIndex++;
+            modifiedIndex++;
+          }
+          forwardPoints[diagonal] = originalIndex;
+          if (originalIndex + modifiedIndex > furthestOriginalIndex + furthestModifiedIndex) {
+            furthestOriginalIndex = originalIndex;
+            furthestModifiedIndex = modifiedIndex;
+          }
+          if (!deltaIsEven && Math.abs(diagonal - diagonalReverseBase) <= numDifferences - 1) {
+            if (originalIndex >= reversePoints[diagonal]) {
+              midOriginalArr[0] = originalIndex;
+              midModifiedArr[0] = modifiedIndex;
+              if (tempOriginalIndex <= reversePoints[diagonal] && 1447 > 0 && numDifferences <= 1447 + 1) {
+                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+              } else {
+                return null;
+              }
+            }
+          }
+        }
+        const matchLengthOfLongest = (furthestOriginalIndex - originalStart + (furthestModifiedIndex - modifiedStart) - numDifferences) / 2;
+        if (this.ContinueProcessingPredicate !== null && !this.ContinueProcessingPredicate(furthestOriginalIndex, matchLengthOfLongest)) {
+          quitEarlyArr[0] = true;
+          midOriginalArr[0] = furthestOriginalIndex;
+          midModifiedArr[0] = furthestModifiedIndex;
+          if (matchLengthOfLongest > 0 && 1447 > 0 && numDifferences <= 1447 + 1) {
+            return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+          } else {
+            originalStart++;
+            modifiedStart++;
+            return [
+              new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
+            ];
+          }
+        }
+        diagonalReverseStart = this.ClipDiagonalBound(diagonalReverseBase - numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
+        diagonalReverseEnd = this.ClipDiagonalBound(diagonalReverseBase + numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
+        for (let diagonal = diagonalReverseStart; diagonal <= diagonalReverseEnd; diagonal += 2) {
+          if (diagonal === diagonalReverseStart || diagonal < diagonalReverseEnd && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1]) {
+            originalIndex = reversePoints[diagonal + 1] - 1;
+          } else {
+            originalIndex = reversePoints[diagonal - 1];
+          }
+          modifiedIndex = originalIndex - (diagonal - diagonalReverseBase) - diagonalReverseOffset;
+          const tempOriginalIndex = originalIndex;
+          while (originalIndex > originalStart && modifiedIndex > modifiedStart && this.ElementsAreEqual(originalIndex, modifiedIndex)) {
+            originalIndex--;
+            modifiedIndex--;
+          }
+          reversePoints[diagonal] = originalIndex;
+          if (deltaIsEven && Math.abs(diagonal - diagonalForwardBase) <= numDifferences) {
+            if (originalIndex <= forwardPoints[diagonal]) {
+              midOriginalArr[0] = originalIndex;
+              midModifiedArr[0] = modifiedIndex;
+              if (tempOriginalIndex >= forwardPoints[diagonal] && 1447 > 0 && numDifferences <= 1447 + 1) {
+                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+              } else {
+                return null;
+              }
+            }
+          }
+        }
+        if (numDifferences <= 1447) {
+          let temp = new Int32Array(diagonalForwardEnd - diagonalForwardStart + 2);
+          temp[0] = diagonalForwardBase - diagonalForwardStart + 1;
+          MyArray.Copy2(forwardPoints, diagonalForwardStart, temp, 1, diagonalForwardEnd - diagonalForwardStart + 1);
+          this.m_forwardHistory.push(temp);
+          temp = new Int32Array(diagonalReverseEnd - diagonalReverseStart + 2);
+          temp[0] = diagonalReverseBase - diagonalReverseStart + 1;
+          MyArray.Copy2(reversePoints, diagonalReverseStart, temp, 1, diagonalReverseEnd - diagonalReverseStart + 1);
+          this.m_reverseHistory.push(temp);
+        }
+      }
+      return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+    }
+    /**
+     * Shifts the given changes to provide a more intuitive diff.
+     * While the first element in a diff matches the first element after the diff,
+     * we shift the diff down.
+     *
+     * @param changes The list of changes to shift
+     * @returns The shifted changes
+     */
+    PrettifyChanges(changes) {
+      for (let i = 0; i < changes.length; i++) {
+        const change = changes[i];
+        const originalStop = i < changes.length - 1 ? changes[i + 1].originalStart : this._originalElementsOrHash.length;
+        const modifiedStop = i < changes.length - 1 ? changes[i + 1].modifiedStart : this._modifiedElementsOrHash.length;
+        const checkOriginal = change.originalLength > 0;
+        const checkModified = change.modifiedLength > 0;
+        while (change.originalStart + change.originalLength < originalStop && change.modifiedStart + change.modifiedLength < modifiedStop && (!checkOriginal || this.OriginalElementsAreEqual(change.originalStart, change.originalStart + change.originalLength)) && (!checkModified || this.ModifiedElementsAreEqual(change.modifiedStart, change.modifiedStart + change.modifiedLength))) {
+          const startStrictEqual = this.ElementsAreStrictEqual(change.originalStart, change.modifiedStart);
+          const endStrictEqual = this.ElementsAreStrictEqual(change.originalStart + change.originalLength, change.modifiedStart + change.modifiedLength);
+          if (endStrictEqual && !startStrictEqual) {
+            break;
+          }
+          change.originalStart++;
+          change.modifiedStart++;
+        }
+        const mergedChangeArr = [null];
+        if (i < changes.length - 1 && this.ChangesOverlap(changes[i], changes[i + 1], mergedChangeArr)) {
+          changes[i] = mergedChangeArr[0];
+          changes.splice(i + 1, 1);
+          i--;
+          continue;
+        }
+      }
+      for (let i = changes.length - 1; i >= 0; i--) {
+        const change = changes[i];
+        let originalStop = 0;
+        let modifiedStop = 0;
+        if (i > 0) {
+          const prevChange = changes[i - 1];
+          originalStop = prevChange.originalStart + prevChange.originalLength;
+          modifiedStop = prevChange.modifiedStart + prevChange.modifiedLength;
+        }
+        const checkOriginal = change.originalLength > 0;
+        const checkModified = change.modifiedLength > 0;
+        let bestDelta = 0;
+        let bestScore = this._boundaryScore(change.originalStart, change.originalLength, change.modifiedStart, change.modifiedLength);
+        for (let delta = 1; ; delta++) {
+          const originalStart = change.originalStart - delta;
+          const modifiedStart = change.modifiedStart - delta;
+          if (originalStart < originalStop || modifiedStart < modifiedStop) {
+            break;
+          }
+          if (checkOriginal && !this.OriginalElementsAreEqual(originalStart, originalStart + change.originalLength)) {
+            break;
+          }
+          if (checkModified && !this.ModifiedElementsAreEqual(modifiedStart, modifiedStart + change.modifiedLength)) {
+            break;
+          }
+          const touchingPreviousChange = originalStart === originalStop && modifiedStart === modifiedStop;
+          const score2 = (touchingPreviousChange ? 5 : 0) + this._boundaryScore(originalStart, change.originalLength, modifiedStart, change.modifiedLength);
+          if (score2 > bestScore) {
+            bestScore = score2;
+            bestDelta = delta;
+          }
+        }
+        change.originalStart -= bestDelta;
+        change.modifiedStart -= bestDelta;
+        const mergedChangeArr = [null];
+        if (i > 0 && this.ChangesOverlap(changes[i - 1], changes[i], mergedChangeArr)) {
+          changes[i - 1] = mergedChangeArr[0];
+          changes.splice(i, 1);
+          i++;
+          continue;
+        }
+      }
+      if (this._hasStrings) {
+        for (let i = 1, len = changes.length; i < len; i++) {
+          const aChange = changes[i - 1];
+          const bChange = changes[i];
+          const matchedLength = bChange.originalStart - aChange.originalStart - aChange.originalLength;
+          const aOriginalStart = aChange.originalStart;
+          const bOriginalEnd = bChange.originalStart + bChange.originalLength;
+          const abOriginalLength = bOriginalEnd - aOriginalStart;
+          const aModifiedStart = aChange.modifiedStart;
+          const bModifiedEnd = bChange.modifiedStart + bChange.modifiedLength;
+          const abModifiedLength = bModifiedEnd - aModifiedStart;
+          if (matchedLength < 5 && abOriginalLength < 20 && abModifiedLength < 20) {
+            const t = this._findBetterContiguousSequence(aOriginalStart, abOriginalLength, aModifiedStart, abModifiedLength, matchedLength);
+            if (t) {
+              const [originalMatchStart, modifiedMatchStart] = t;
+              if (originalMatchStart !== aChange.originalStart + aChange.originalLength || modifiedMatchStart !== aChange.modifiedStart + aChange.modifiedLength) {
+                aChange.originalLength = originalMatchStart - aChange.originalStart;
+                aChange.modifiedLength = modifiedMatchStart - aChange.modifiedStart;
+                bChange.originalStart = originalMatchStart + matchedLength;
+                bChange.modifiedStart = modifiedMatchStart + matchedLength;
+                bChange.originalLength = bOriginalEnd - bChange.originalStart;
+                bChange.modifiedLength = bModifiedEnd - bChange.modifiedStart;
+              }
+            }
+          }
+        }
+      }
+      return changes;
+    }
+    _findBetterContiguousSequence(originalStart, originalLength, modifiedStart, modifiedLength, desiredLength) {
+      if (originalLength < desiredLength || modifiedLength < desiredLength) {
+        return null;
+      }
+      const originalMax = originalStart + originalLength - desiredLength + 1;
+      const modifiedMax = modifiedStart + modifiedLength - desiredLength + 1;
+      let bestScore = 0;
+      let bestOriginalStart = 0;
+      let bestModifiedStart = 0;
+      for (let i = originalStart; i < originalMax; i++) {
+        for (let j = modifiedStart; j < modifiedMax; j++) {
+          const score2 = this._contiguousSequenceScore(i, j, desiredLength);
+          if (score2 > 0 && score2 > bestScore) {
+            bestScore = score2;
+            bestOriginalStart = i;
+            bestModifiedStart = j;
+          }
+        }
+      }
+      if (bestScore > 0) {
+        return [bestOriginalStart, bestModifiedStart];
+      }
+      return null;
+    }
+    _contiguousSequenceScore(originalStart, modifiedStart, length) {
+      let score2 = 0;
+      for (let l = 0; l < length; l++) {
+        if (!this.ElementsAreEqual(originalStart + l, modifiedStart + l)) {
+          return 0;
+        }
+        score2 += this._originalStringElements[originalStart + l].length;
+      }
+      return score2;
+    }
+    _OriginalIsBoundary(index) {
+      if (index <= 0 || index >= this._originalElementsOrHash.length - 1) {
+        return true;
+      }
+      return this._hasStrings && /^\s*$/.test(this._originalStringElements[index]);
+    }
+    _OriginalRegionIsBoundary(originalStart, originalLength) {
+      if (this._OriginalIsBoundary(originalStart) || this._OriginalIsBoundary(originalStart - 1)) {
+        return true;
+      }
+      if (originalLength > 0) {
+        const originalEnd = originalStart + originalLength;
+        if (this._OriginalIsBoundary(originalEnd - 1) || this._OriginalIsBoundary(originalEnd)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    _ModifiedIsBoundary(index) {
+      if (index <= 0 || index >= this._modifiedElementsOrHash.length - 1) {
+        return true;
+      }
+      return this._hasStrings && /^\s*$/.test(this._modifiedStringElements[index]);
+    }
+    _ModifiedRegionIsBoundary(modifiedStart, modifiedLength) {
+      if (this._ModifiedIsBoundary(modifiedStart) || this._ModifiedIsBoundary(modifiedStart - 1)) {
+        return true;
+      }
+      if (modifiedLength > 0) {
+        const modifiedEnd = modifiedStart + modifiedLength;
+        if (this._ModifiedIsBoundary(modifiedEnd - 1) || this._ModifiedIsBoundary(modifiedEnd)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    _boundaryScore(originalStart, originalLength, modifiedStart, modifiedLength) {
+      const originalScore = this._OriginalRegionIsBoundary(originalStart, originalLength) ? 1 : 0;
+      const modifiedScore = this._ModifiedRegionIsBoundary(modifiedStart, modifiedLength) ? 1 : 0;
+      return originalScore + modifiedScore;
+    }
+    /**
+     * Concatenates the two input DiffChange lists and returns the resulting
+     * list.
+     * @param The left changes
+     * @param The right changes
+     * @returns The concatenated list
+     */
+    ConcatenateChanges(left, right) {
+      const mergedChangeArr = [];
+      if (left.length === 0 || right.length === 0) {
+        return right.length > 0 ? right : left;
+      } else if (this.ChangesOverlap(left[left.length - 1], right[0], mergedChangeArr)) {
+        const result = new Array(left.length + right.length - 1);
+        MyArray.Copy(left, 0, result, 0, left.length - 1);
+        result[left.length - 1] = mergedChangeArr[0];
+        MyArray.Copy(right, 1, result, left.length, right.length - 1);
+        return result;
+      } else {
+        const result = new Array(left.length + right.length);
+        MyArray.Copy(left, 0, result, 0, left.length);
+        MyArray.Copy(right, 0, result, left.length, right.length);
+        return result;
+      }
+    }
+    /**
+     * Returns true if the two changes overlap and can be merged into a single
+     * change
+     * @param left The left change
+     * @param right The right change
+     * @param mergedChange The merged change if the two overlap, null otherwise
+     * @returns True if the two changes overlap
+     */
+    ChangesOverlap(left, right, mergedChangeArr) {
+      Debug.Assert(left.originalStart <= right.originalStart, "Left change is not less than or equal to right change");
+      Debug.Assert(left.modifiedStart <= right.modifiedStart, "Left change is not less than or equal to right change");
+      if (left.originalStart + left.originalLength >= right.originalStart || left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
+        const originalStart = left.originalStart;
+        let originalLength = left.originalLength;
+        const modifiedStart = left.modifiedStart;
+        let modifiedLength = left.modifiedLength;
+        if (left.originalStart + left.originalLength >= right.originalStart) {
+          originalLength = right.originalStart + right.originalLength - left.originalStart;
+        }
+        if (left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
+          modifiedLength = right.modifiedStart + right.modifiedLength - left.modifiedStart;
+        }
+        mergedChangeArr[0] = new DiffChange(originalStart, originalLength, modifiedStart, modifiedLength);
+        return true;
+      } else {
+        mergedChangeArr[0] = null;
+        return false;
+      }
+    }
+    /**
+     * Helper method used to clip a diagonal index to the range of valid
+     * diagonals. This also decides whether or not the diagonal index,
+     * if it exceeds the boundary, should be clipped to the boundary or clipped
+     * one inside the boundary depending on the Even/Odd status of the boundary
+     * and numDifferences.
+     * @param diagonal The index of the diagonal to clip.
+     * @param numDifferences The current number of differences being iterated upon.
+     * @param diagonalBaseIndex The base reference diagonal.
+     * @param numDiagonals The total number of diagonals.
+     * @returns The clipped diagonal index.
+     */
+    ClipDiagonalBound(diagonal, numDifferences, diagonalBaseIndex, numDiagonals) {
+      if (diagonal >= 0 && diagonal < numDiagonals) {
+        return diagonal;
+      }
+      const diagonalsBelow = diagonalBaseIndex;
+      const diagonalsAbove = numDiagonals - diagonalBaseIndex - 1;
+      const diffEven = numDifferences % 2 === 0;
+      if (diagonal < 0) {
+        const lowerBoundEven = diagonalsBelow % 2 === 0;
+        return diffEven === lowerBoundEven ? 0 : 1;
+      } else {
+        const upperBoundEven = diagonalsAbove % 2 === 0;
+        return diffEven === upperBoundEven ? numDiagonals - 1 : numDiagonals - 2;
+      }
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/position.js
   var Position = class _Position {
     constructor(lineNumber, column) {
       this.lineNumber = lineNumber;
@@ -4867,7 +5050,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/range.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/range.js
   var Range = class _Range {
     constructor(startLineNumber, startColumn, endLineNumber, endColumn) {
       if (startLineNumber > endLineNumber || startLineNumber === endLineNumber && startColumn > endColumn) {
@@ -5238,133 +5421,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/arrays.js
-  function equals(one, other, itemEquals = (a, b) => a === b) {
-    if (one === other) {
-      return true;
-    }
-    if (!one || !other) {
-      return false;
-    }
-    if (one.length !== other.length) {
-      return false;
-    }
-    for (let i = 0, len = one.length; i < len; i++) {
-      if (!itemEquals(one[i], other[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function* groupAdjacentBy(items, shouldBeGrouped) {
-    let currentGroup;
-    let last;
-    for (const item of items) {
-      if (last !== void 0 && shouldBeGrouped(last, item)) {
-        currentGroup.push(item);
-      } else {
-        if (currentGroup) {
-          yield currentGroup;
-        }
-        currentGroup = [item];
-      }
-      last = item;
-    }
-    if (currentGroup) {
-      yield currentGroup;
-    }
-  }
-  function forEachAdjacent(arr, f) {
-    for (let i = 0; i <= arr.length; i++) {
-      f(i === 0 ? void 0 : arr[i - 1], i === arr.length ? void 0 : arr[i]);
-    }
-  }
-  function forEachWithNeighbors(arr, f) {
-    for (let i = 0; i < arr.length; i++) {
-      f(i === 0 ? void 0 : arr[i - 1], arr[i], i + 1 === arr.length ? void 0 : arr[i + 1]);
-    }
-  }
-  function pushMany(arr, items) {
-    for (const item of items) {
-      arr.push(item);
-    }
-  }
-  var CompareResult;
-  (function(CompareResult2) {
-    function isLessThan(result) {
-      return result < 0;
-    }
-    CompareResult2.isLessThan = isLessThan;
-    function isLessThanOrEqual(result) {
-      return result <= 0;
-    }
-    CompareResult2.isLessThanOrEqual = isLessThanOrEqual;
-    function isGreaterThan(result) {
-      return result > 0;
-    }
-    CompareResult2.isGreaterThan = isGreaterThan;
-    function isNeitherLessOrGreaterThan(result) {
-      return result === 0;
-    }
-    CompareResult2.isNeitherLessOrGreaterThan = isNeitherLessOrGreaterThan;
-    CompareResult2.greaterThan = 1;
-    CompareResult2.lessThan = -1;
-    CompareResult2.neitherLessOrGreaterThan = 0;
-  })(CompareResult || (CompareResult = {}));
-  function compareBy(selector, comparator) {
-    return (a, b) => comparator(selector(a), selector(b));
-  }
-  var numberComparator = (a, b) => a - b;
-  function reverseOrder(comparator) {
-    return (a, b) => -comparator(a, b);
-  }
-  var CallbackIterable = class _CallbackIterable {
-    static {
-      this.empty = new _CallbackIterable((_callback) => {
-      });
-    }
-    constructor(iterate) {
-      this.iterate = iterate;
-    }
-    toArray() {
-      const result = [];
-      this.iterate((item) => {
-        result.push(item);
-        return true;
-      });
-      return result;
-    }
-    filter(predicate) {
-      return new _CallbackIterable((cb) => this.iterate((item) => predicate(item) ? cb(item) : true));
-    }
-    map(mapFn) {
-      return new _CallbackIterable((cb) => this.iterate((item) => cb(mapFn(item))));
-    }
-    findLast(predicate) {
-      let result;
-      this.iterate((item) => {
-        if (predicate(item)) {
-          result = item;
-        }
-        return true;
-      });
-      return result;
-    }
-    findLastMaxBy(comparator) {
-      let result;
-      let first = true;
-      this.iterate((item) => {
-        if (first || CompareResult.isGreaterThan(comparator(item, result))) {
-          first = false;
-          result = item;
-        }
-        return true;
-      });
-      return result;
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/uint.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/uint.js
   function toUint8(v) {
     if (v < 0) {
       return 0;
@@ -5384,335 +5441,7 @@
     return v | 0;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/model/prefixSumComputer.js
-  var PrefixSumComputer = class {
-    constructor(values) {
-      this.values = values;
-      this.prefixSum = new Uint32Array(values.length);
-      this.prefixSumValidIndex = new Int32Array(1);
-      this.prefixSumValidIndex[0] = -1;
-    }
-    insertValues(insertIndex, insertValues) {
-      insertIndex = toUint32(insertIndex);
-      const oldValues = this.values;
-      const oldPrefixSum = this.prefixSum;
-      const insertValuesLen = insertValues.length;
-      if (insertValuesLen === 0) {
-        return false;
-      }
-      this.values = new Uint32Array(oldValues.length + insertValuesLen);
-      this.values.set(oldValues.subarray(0, insertIndex), 0);
-      this.values.set(oldValues.subarray(insertIndex), insertIndex + insertValuesLen);
-      this.values.set(insertValues, insertIndex);
-      if (insertIndex - 1 < this.prefixSumValidIndex[0]) {
-        this.prefixSumValidIndex[0] = insertIndex - 1;
-      }
-      this.prefixSum = new Uint32Array(this.values.length);
-      if (this.prefixSumValidIndex[0] >= 0) {
-        this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
-      }
-      return true;
-    }
-    setValue(index, value) {
-      index = toUint32(index);
-      value = toUint32(value);
-      if (this.values[index] === value) {
-        return false;
-      }
-      this.values[index] = value;
-      if (index - 1 < this.prefixSumValidIndex[0]) {
-        this.prefixSumValidIndex[0] = index - 1;
-      }
-      return true;
-    }
-    removeValues(startIndex, count) {
-      startIndex = toUint32(startIndex);
-      count = toUint32(count);
-      const oldValues = this.values;
-      const oldPrefixSum = this.prefixSum;
-      if (startIndex >= oldValues.length) {
-        return false;
-      }
-      const maxCount = oldValues.length - startIndex;
-      if (count >= maxCount) {
-        count = maxCount;
-      }
-      if (count === 0) {
-        return false;
-      }
-      this.values = new Uint32Array(oldValues.length - count);
-      this.values.set(oldValues.subarray(0, startIndex), 0);
-      this.values.set(oldValues.subarray(startIndex + count), startIndex);
-      this.prefixSum = new Uint32Array(this.values.length);
-      if (startIndex - 1 < this.prefixSumValidIndex[0]) {
-        this.prefixSumValidIndex[0] = startIndex - 1;
-      }
-      if (this.prefixSumValidIndex[0] >= 0) {
-        this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
-      }
-      return true;
-    }
-    getTotalSum() {
-      if (this.values.length === 0) {
-        return 0;
-      }
-      return this._getPrefixSum(this.values.length - 1);
-    }
-    /**
-     * Returns the sum of the first `index + 1` many items.
-     * @returns `SUM(0 <= j <= index, values[j])`.
-     */
-    getPrefixSum(index) {
-      if (index < 0) {
-        return 0;
-      }
-      index = toUint32(index);
-      return this._getPrefixSum(index);
-    }
-    _getPrefixSum(index) {
-      if (index <= this.prefixSumValidIndex[0]) {
-        return this.prefixSum[index];
-      }
-      let startIndex = this.prefixSumValidIndex[0] + 1;
-      if (startIndex === 0) {
-        this.prefixSum[0] = this.values[0];
-        startIndex++;
-      }
-      if (index >= this.values.length) {
-        index = this.values.length - 1;
-      }
-      for (let i = startIndex; i <= index; i++) {
-        this.prefixSum[i] = this.prefixSum[i - 1] + this.values[i];
-      }
-      this.prefixSumValidIndex[0] = Math.max(this.prefixSumValidIndex[0], index);
-      return this.prefixSum[index];
-    }
-    getIndexOf(sum) {
-      sum = Math.floor(sum);
-      this.getTotalSum();
-      let low = 0;
-      let high = this.values.length - 1;
-      let mid = 0;
-      let midStop = 0;
-      let midStart = 0;
-      while (low <= high) {
-        mid = low + (high - low) / 2 | 0;
-        midStop = this.prefixSum[mid];
-        midStart = midStop - this.values[mid];
-        if (sum < midStart) {
-          high = mid - 1;
-        } else if (sum >= midStop) {
-          low = mid + 1;
-        } else {
-          break;
-        }
-      }
-      return new PrefixSumIndexOfResult(mid, sum - midStart);
-    }
-  };
-  var PrefixSumIndexOfResult = class {
-    constructor(index, remainder) {
-      this.index = index;
-      this.remainder = remainder;
-      this._prefixSumIndexOfResultBrand = void 0;
-      this.index = index;
-      this.remainder = remainder;
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/model/mirrorTextModel.js
-  var MirrorTextModel = class {
-    constructor(uri, lines, eol, versionId) {
-      this._uri = uri;
-      this._lines = lines;
-      this._eol = eol;
-      this._versionId = versionId;
-      this._lineStarts = null;
-      this._cachedTextValue = null;
-    }
-    dispose() {
-      this._lines.length = 0;
-    }
-    get version() {
-      return this._versionId;
-    }
-    getText() {
-      if (this._cachedTextValue === null) {
-        this._cachedTextValue = this._lines.join(this._eol);
-      }
-      return this._cachedTextValue;
-    }
-    onEvents(e) {
-      if (e.eol && e.eol !== this._eol) {
-        this._eol = e.eol;
-        this._lineStarts = null;
-      }
-      const changes = e.changes;
-      for (const change of changes) {
-        this._acceptDeleteRange(change.range);
-        this._acceptInsertText(new Position(change.range.startLineNumber, change.range.startColumn), change.text);
-      }
-      this._versionId = e.versionId;
-      this._cachedTextValue = null;
-    }
-    _ensureLineStarts() {
-      if (!this._lineStarts) {
-        const eolLength = this._eol.length;
-        const linesLength = this._lines.length;
-        const lineStartValues = new Uint32Array(linesLength);
-        for (let i = 0; i < linesLength; i++) {
-          lineStartValues[i] = this._lines[i].length + eolLength;
-        }
-        this._lineStarts = new PrefixSumComputer(lineStartValues);
-      }
-    }
-    /**
-     * All changes to a line's text go through this method
-     */
-    _setLineText(lineIndex, newValue) {
-      this._lines[lineIndex] = newValue;
-      if (this._lineStarts) {
-        this._lineStarts.setValue(lineIndex, this._lines[lineIndex].length + this._eol.length);
-      }
-    }
-    _acceptDeleteRange(range) {
-      if (range.startLineNumber === range.endLineNumber) {
-        if (range.startColumn === range.endColumn) {
-          return;
-        }
-        this._setLineText(range.startLineNumber - 1, this._lines[range.startLineNumber - 1].substring(0, range.startColumn - 1) + this._lines[range.startLineNumber - 1].substring(range.endColumn - 1));
-        return;
-      }
-      this._setLineText(range.startLineNumber - 1, this._lines[range.startLineNumber - 1].substring(0, range.startColumn - 1) + this._lines[range.endLineNumber - 1].substring(range.endColumn - 1));
-      this._lines.splice(range.startLineNumber, range.endLineNumber - range.startLineNumber);
-      if (this._lineStarts) {
-        this._lineStarts.removeValues(range.startLineNumber, range.endLineNumber - range.startLineNumber);
-      }
-    }
-    _acceptInsertText(position, insertText) {
-      if (insertText.length === 0) {
-        return;
-      }
-      const insertLines = splitLines(insertText);
-      if (insertLines.length === 1) {
-        this._setLineText(position.lineNumber - 1, this._lines[position.lineNumber - 1].substring(0, position.column - 1) + insertLines[0] + this._lines[position.lineNumber - 1].substring(position.column - 1));
-        return;
-      }
-      insertLines[insertLines.length - 1] += this._lines[position.lineNumber - 1].substring(position.column - 1);
-      this._setLineText(position.lineNumber - 1, this._lines[position.lineNumber - 1].substring(0, position.column - 1) + insertLines[0]);
-      const newLengths = new Uint32Array(insertLines.length - 1);
-      for (let i = 1; i < insertLines.length; i++) {
-        this._lines.splice(position.lineNumber + i - 1, 0, insertLines[i]);
-        newLengths[i - 1] = insertLines[i].length + this._eol.length;
-      }
-      if (this._lineStarts) {
-        this._lineStarts.insertValues(position.lineNumber, newLengths);
-      }
-    }
-  };
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordHelper.js
-  var USUAL_WORD_SEPARATORS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
-  function createWordRegExp(allowInWords = "") {
-    let source = "(-?\\d*\\.\\d\\w*)|([^";
-    for (const sep2 of USUAL_WORD_SEPARATORS) {
-      if (allowInWords.indexOf(sep2) >= 0) {
-        continue;
-      }
-      source += "\\" + sep2;
-    }
-    source += "\\s]+)";
-    return new RegExp(source, "g");
-  }
-  var DEFAULT_WORD_REGEXP = createWordRegExp();
-  function ensureValidWordDefinition(wordDefinition) {
-    let result = DEFAULT_WORD_REGEXP;
-    if (wordDefinition && wordDefinition instanceof RegExp) {
-      if (!wordDefinition.global) {
-        let flags = "g";
-        if (wordDefinition.ignoreCase) {
-          flags += "i";
-        }
-        if (wordDefinition.multiline) {
-          flags += "m";
-        }
-        if (wordDefinition.unicode) {
-          flags += "u";
-        }
-        result = new RegExp(wordDefinition.source, flags);
-      } else {
-        result = wordDefinition;
-      }
-    }
-    result.lastIndex = 0;
-    return result;
-  }
-  var _defaultConfig = new LinkedList();
-  _defaultConfig.unshift({
-    maxLen: 1e3,
-    windowSize: 15,
-    timeBudget: 150
-  });
-  function getWordAtText(column, wordDefinition, text, textOffset, config) {
-    wordDefinition = ensureValidWordDefinition(wordDefinition);
-    if (!config) {
-      config = Iterable.first(_defaultConfig);
-    }
-    if (text.length > config.maxLen) {
-      let start = column - config.maxLen / 2;
-      if (start < 0) {
-        start = 0;
-      } else {
-        textOffset += start;
-      }
-      text = text.substring(start, column + config.maxLen / 2);
-      return getWordAtText(column, wordDefinition, text, textOffset, config);
-    }
-    const t1 = Date.now();
-    const pos = column - 1 - textOffset;
-    let prevRegexIndex = -1;
-    let match = null;
-    for (let i = 1; ; i++) {
-      if (Date.now() - t1 >= config.timeBudget) {
-        break;
-      }
-      const regexIndex = pos - config.windowSize * i;
-      wordDefinition.lastIndex = Math.max(0, regexIndex);
-      const thisMatch = _findRegexMatchEnclosingPosition(wordDefinition, text, pos, prevRegexIndex);
-      if (!thisMatch && match) {
-        break;
-      }
-      match = thisMatch;
-      if (regexIndex <= 0) {
-        break;
-      }
-      prevRegexIndex = regexIndex;
-    }
-    if (match) {
-      const result = {
-        word: match[0],
-        startColumn: textOffset + 1 + match.index,
-        endColumn: textOffset + 1 + match.index + match[0].length
-      };
-      wordDefinition.lastIndex = 0;
-      return result;
-    }
-    return null;
-  }
-  function _findRegexMatchEnclosingPosition(wordDefinition, text, pos, stopPos) {
-    let match;
-    while (match = wordDefinition.exec(text)) {
-      const matchIndex = match.index || 0;
-      if (matchIndex <= pos && wordDefinition.lastIndex >= pos) {
-        return match;
-      } else if (stopPos > 0 && matchIndex > stopPos) {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/characterClassifier.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/characterClassifier.js
   var CharacterClassifier = class _CharacterClassifier {
     constructor(_defaultValue) {
       const defaultValue = toUint8(_defaultValue);
@@ -5746,7 +5475,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/languages/linkComputer.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/languages/linkComputer.js
   var Uint8Matrix = class {
     constructor(rows, cols, defaultValue) {
       const data = new Uint8Array(rows * cols);
@@ -6109,7 +5838,7 @@
     return LinkComputer.computeLinks(model);
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/languages/supports/inplaceReplaceSupport.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/languages/supports/inplaceReplaceSupport.js
   var BasicInplaceReplace = class _BasicInplaceReplace {
     constructor() {
       this._defaultValueSet = [
@@ -6190,7 +5919,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/cancellation.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/cancellation.js
   var shortcutEvent = Object.freeze(function(callback, context) {
     const handle = setTimeout(callback.bind(context), 0);
     return { dispose() {
@@ -6286,7 +6015,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/keyCodes.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/keyCodes.js
   var KeyCodeStrMap = class {
     constructor() {
       this._keyCodeToStr = [];
@@ -6638,7 +6367,7 @@
     return (firstPart | chordPart) >>> 0;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/selection.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/selection.js
   var Selection = class _Selection extends Range {
     constructor(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn) {
       super(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn);
@@ -6764,7 +6493,12 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/codiconsUtil.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/types.js
+  function isString(str) {
+    return typeof str === "string";
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/codiconsUtil.js
   var _codiconFontCharacters = /* @__PURE__ */ Object.create(null);
   function register(id, fontCharacter) {
     if (isString(fontCharacter)) {
@@ -6778,7 +6512,7 @@
     return { id };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/codiconsLibrary.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/codiconsLibrary.js
   var codiconsLibrary = {
     add: register("add", 6e4),
     plus: register("plus", 6e4),
@@ -7352,7 +7086,7 @@
     attach: register("attach", 60468)
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/codicons.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/codicons.js
   var codiconsDerived = {
     dialogError: register("dialog-error", "error"),
     dialogWarning: register("dialog-warning", "warning"),
@@ -7389,7 +7123,7 @@
     ...codiconsDerived
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/tokenizationRegistry.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/tokenizationRegistry.js
   var TokenizationRegistry = class {
     constructor() {
       this._tokenizationSupports = /* @__PURE__ */ new Map();
@@ -7506,7 +7240,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/languages.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/languages.js
   var Token = class {
     constructor(offset, type, language) {
       this.offset = offset;
@@ -7951,13 +7685,14 @@
     InlayHintKind3[InlayHintKind3["Parameter"] = 2] = "Parameter";
   })(InlayHintKind || (InlayHintKind = {}));
   var TokenizationRegistry2 = new TokenizationRegistry();
+  var TreeSitterTokenizationRegistry = new TokenizationRegistry();
   var InlineEditTriggerKind;
   (function(InlineEditTriggerKind3) {
     InlineEditTriggerKind3[InlineEditTriggerKind3["Invoke"] = 0] = "Invoke";
     InlineEditTriggerKind3[InlineEditTriggerKind3["Automatic"] = 1] = "Automatic";
   })(InlineEditTriggerKind || (InlineEditTriggerKind = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/standalone/standaloneEnums.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/standalone/standaloneEnums.js
   var AccessibilitySupport;
   (function(AccessibilitySupport2) {
     AccessibilitySupport2[AccessibilitySupport2["Unknown"] = 0] = "Unknown";
@@ -8576,7 +8311,7 @@
     WrappingIndent2[WrappingIndent2["DeepIndent"] = 3] = "DeepIndent";
   })(WrappingIndent || (WrappingIndent = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorBaseApi.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorBaseApi.js
   var KeyMod = class {
     static {
       this.CtrlCmd = 2048;
@@ -8615,7 +8350,20 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/map.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorWorkerHost.js
+  var EditorWorkerHost = class _EditorWorkerHost {
+    static {
+      this.CHANNEL_NAME = "editorWorkerHost";
+    }
+    static getChannel(workerServer) {
+      return workerServer.getChannel(_EditorWorkerHost.CHANNEL_NAME);
+    }
+    static setChannel(workerClient, obj) {
+      workerClient.setChannel(_EditorWorkerHost.CHANNEL_NAME, obj);
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/map.js
   var _a;
   var _b;
   var ResourceMapEntry = class {
@@ -9122,10 +8870,42 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordCharacterClassifier.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordCharacterClassifier.js
   var wordClassifierCache = new LRUCache(10);
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/model.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/objects.js
+  function getAllPropertyNames(obj) {
+    let res = [];
+    while (Object.prototype !== obj) {
+      res = res.concat(Object.getOwnPropertyNames(obj));
+      obj = Object.getPrototypeOf(obj);
+    }
+    return res;
+  }
+  function getAllMethodNames(obj) {
+    const methods = [];
+    for (const prop of getAllPropertyNames(obj)) {
+      if (typeof obj[prop] === "function") {
+        methods.push(prop);
+      }
+    }
+    return methods;
+  }
+  function createProxyObject(methodNames, invoke) {
+    const createProxyMethod = (method) => {
+      return function() {
+        const args = Array.prototype.slice.call(arguments, 0);
+        return invoke(method, args);
+      };
+    };
+    const result = {};
+    for (const methodName of methodNames) {
+      result[methodName] = createProxyMethod(methodName);
+    }
+    return result;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/model.js
   var OverviewRulerLane2;
   (function(OverviewRulerLane3) {
     OverviewRulerLane3[OverviewRulerLane3["Left"] = 1] = "Left";
@@ -9147,7 +8927,7 @@
     InjectedTextCursorStops3[InjectedTextCursorStops3["None"] = 3] = "None";
   })(InjectedTextCursorStops2 || (InjectedTextCursorStops2 = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/model/textModelSearch.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/model/textModelSearch.js
   function leftIsWordBounday(wordSeparators, text, textLength, matchStartIndex, matchLength) {
     if (matchStartIndex === 0) {
       return true;
@@ -9235,7 +9015,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/assert.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/assert.js
   function assertNever(value, message = "Unreachable") {
     throw new Error(message);
   }
@@ -9259,7 +9039,108 @@
     return true;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/services/unicodeTextModelHighlighter.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/wordHelper.js
+  var USUAL_WORD_SEPARATORS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
+  function createWordRegExp(allowInWords = "") {
+    let source = "(-?\\d*\\.\\d\\w*)|([^";
+    for (const sep2 of USUAL_WORD_SEPARATORS) {
+      if (allowInWords.indexOf(sep2) >= 0) {
+        continue;
+      }
+      source += "\\" + sep2;
+    }
+    source += "\\s]+)";
+    return new RegExp(source, "g");
+  }
+  var DEFAULT_WORD_REGEXP = createWordRegExp();
+  function ensureValidWordDefinition(wordDefinition) {
+    let result = DEFAULT_WORD_REGEXP;
+    if (wordDefinition && wordDefinition instanceof RegExp) {
+      if (!wordDefinition.global) {
+        let flags = "g";
+        if (wordDefinition.ignoreCase) {
+          flags += "i";
+        }
+        if (wordDefinition.multiline) {
+          flags += "m";
+        }
+        if (wordDefinition.unicode) {
+          flags += "u";
+        }
+        result = new RegExp(wordDefinition.source, flags);
+      } else {
+        result = wordDefinition;
+      }
+    }
+    result.lastIndex = 0;
+    return result;
+  }
+  var _defaultConfig = new LinkedList();
+  _defaultConfig.unshift({
+    maxLen: 1e3,
+    windowSize: 15,
+    timeBudget: 150
+  });
+  function getWordAtText(column, wordDefinition, text, textOffset, config) {
+    wordDefinition = ensureValidWordDefinition(wordDefinition);
+    if (!config) {
+      config = Iterable.first(_defaultConfig);
+    }
+    if (text.length > config.maxLen) {
+      let start = column - config.maxLen / 2;
+      if (start < 0) {
+        start = 0;
+      } else {
+        textOffset += start;
+      }
+      text = text.substring(start, column + config.maxLen / 2);
+      return getWordAtText(column, wordDefinition, text, textOffset, config);
+    }
+    const t1 = Date.now();
+    const pos = column - 1 - textOffset;
+    let prevRegexIndex = -1;
+    let match = null;
+    for (let i = 1; ; i++) {
+      if (Date.now() - t1 >= config.timeBudget) {
+        break;
+      }
+      const regexIndex = pos - config.windowSize * i;
+      wordDefinition.lastIndex = Math.max(0, regexIndex);
+      const thisMatch = _findRegexMatchEnclosingPosition(wordDefinition, text, pos, prevRegexIndex);
+      if (!thisMatch && match) {
+        break;
+      }
+      match = thisMatch;
+      if (regexIndex <= 0) {
+        break;
+      }
+      prevRegexIndex = regexIndex;
+    }
+    if (match) {
+      const result = {
+        word: match[0],
+        startColumn: textOffset + 1 + match.index,
+        endColumn: textOffset + 1 + match.index + match[0].length
+      };
+      wordDefinition.lastIndex = 0;
+      return result;
+    }
+    return null;
+  }
+  function _findRegexMatchEnclosingPosition(wordDefinition, text, pos, stopPos) {
+    let match;
+    while (match = wordDefinition.exec(text)) {
+      const matchIndex = match.index || 0;
+      if (matchIndex <= pos && wordDefinition.lastIndex >= pos) {
+        return match;
+      } else if (stopPos > 0 && matchIndex > stopPos) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/services/unicodeTextModelHighlighter.js
   var UnicodeTextModelHighlighter = class {
     static computeUnicodeHighlights(model, options, range) {
       const startLine = range ? range.startLineNumber : 1;
@@ -9436,7 +9317,7 @@
     return character === " " || character === "\n" || character === "	";
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputer.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputer.js
   var LinesDiff = class {
     constructor(changes, moves, hitTimeout) {
       this.changes = changes;
@@ -9451,7 +9332,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/offsetRange.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/offsetRange.js
   var OffsetRange = class _OffsetRange {
     static addRange(range, sortedRanges) {
       let i = 0;
@@ -9583,7 +9464,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/arraysFind.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/arraysFind.js
   function findLastMonotonous(array, predicate) {
     const idx = findLastIdxMonotonous(array, predicate);
     return idx === -1 ? void 0 : array[idx];
@@ -9647,7 +9528,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/lineRange.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/lineRange.js
   var LineRange = class _LineRange {
     static fromRangeInclusive(range) {
       return new _LineRange(range.startLineNumber, range.endLineNumber + 1);
@@ -9918,7 +9799,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/textLength.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/textLength.js
   var TextLength = class _TextLength {
     static {
       this.zero = new _TextLength(0, 0);
@@ -9975,7 +9856,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/core/textEdit.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/core/textEdit.js
   var SingleTextEdit = class {
     constructor(range, text) {
       this.range = range;
@@ -9989,7 +9870,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/rangeMapping.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/rangeMapping.js
   var LineRangeMapping = class _LineRangeMapping {
     static inverse(mapping, originalLineCount, modifiedLineCount) {
       const result = [];
@@ -10132,7 +10013,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/legacyLinesDiffComputer.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/legacyLinesDiffComputer.js
   var MINIMUM_MATCHING_CHARACTER_LENGTH = 3;
   var LegacyLinesDiffComputer = class {
     computeDiff(originalLines, modifiedLines, options) {
@@ -10551,7 +10432,133 @@
     };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/diffAlgorithm.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/arrays.js
+  function equals2(one, other, itemEquals = (a, b) => a === b) {
+    if (one === other) {
+      return true;
+    }
+    if (!one || !other) {
+      return false;
+    }
+    if (one.length !== other.length) {
+      return false;
+    }
+    for (let i = 0, len = one.length; i < len; i++) {
+      if (!itemEquals(one[i], other[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function* groupAdjacentBy(items, shouldBeGrouped) {
+    let currentGroup;
+    let last;
+    for (const item of items) {
+      if (last !== void 0 && shouldBeGrouped(last, item)) {
+        currentGroup.push(item);
+      } else {
+        if (currentGroup) {
+          yield currentGroup;
+        }
+        currentGroup = [item];
+      }
+      last = item;
+    }
+    if (currentGroup) {
+      yield currentGroup;
+    }
+  }
+  function forEachAdjacent(arr, f) {
+    for (let i = 0; i <= arr.length; i++) {
+      f(i === 0 ? void 0 : arr[i - 1], i === arr.length ? void 0 : arr[i]);
+    }
+  }
+  function forEachWithNeighbors(arr, f) {
+    for (let i = 0; i < arr.length; i++) {
+      f(i === 0 ? void 0 : arr[i - 1], arr[i], i + 1 === arr.length ? void 0 : arr[i + 1]);
+    }
+  }
+  function pushMany(arr, items) {
+    for (const item of items) {
+      arr.push(item);
+    }
+  }
+  var CompareResult;
+  (function(CompareResult2) {
+    function isLessThan(result) {
+      return result < 0;
+    }
+    CompareResult2.isLessThan = isLessThan;
+    function isLessThanOrEqual(result) {
+      return result <= 0;
+    }
+    CompareResult2.isLessThanOrEqual = isLessThanOrEqual;
+    function isGreaterThan(result) {
+      return result > 0;
+    }
+    CompareResult2.isGreaterThan = isGreaterThan;
+    function isNeitherLessOrGreaterThan(result) {
+      return result === 0;
+    }
+    CompareResult2.isNeitherLessOrGreaterThan = isNeitherLessOrGreaterThan;
+    CompareResult2.greaterThan = 1;
+    CompareResult2.lessThan = -1;
+    CompareResult2.neitherLessOrGreaterThan = 0;
+  })(CompareResult || (CompareResult = {}));
+  function compareBy(selector, comparator) {
+    return (a, b) => comparator(selector(a), selector(b));
+  }
+  var numberComparator = (a, b) => a - b;
+  function reverseOrder(comparator) {
+    return (a, b) => -comparator(a, b);
+  }
+  var CallbackIterable = class _CallbackIterable {
+    static {
+      this.empty = new _CallbackIterable((_callback) => {
+      });
+    }
+    constructor(iterate) {
+      this.iterate = iterate;
+    }
+    toArray() {
+      const result = [];
+      this.iterate((item) => {
+        result.push(item);
+        return true;
+      });
+      return result;
+    }
+    filter(predicate) {
+      return new _CallbackIterable((cb) => this.iterate((item) => predicate(item) ? cb(item) : true));
+    }
+    map(mapFn) {
+      return new _CallbackIterable((cb) => this.iterate((item) => cb(mapFn(item))));
+    }
+    findLast(predicate) {
+      let result;
+      this.iterate((item) => {
+        if (predicate(item)) {
+          result = item;
+        }
+        return true;
+      });
+      return result;
+    }
+    findLastMaxBy(comparator) {
+      let result;
+      let first = true;
+      this.iterate((item) => {
+        if (first || CompareResult.isGreaterThan(comparator(item, result))) {
+          first = false;
+          result = item;
+        }
+        return true;
+      });
+      return result;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/diffAlgorithm.js
   var DiffAlgorithmResult = class _DiffAlgorithmResult {
     static trivial(seq1, seq2) {
       return new _DiffAlgorithmResult([new SequenceDiff(OffsetRange.ofLength(seq1.length), OffsetRange.ofLength(seq2.length))], false);
@@ -10684,7 +10691,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/utils.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/utils.js
   var Array2D = class {
     constructor(width, height) {
       this.width = width;
@@ -10744,7 +10751,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/dynamicProgrammingDiffing.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/dynamicProgrammingDiffing.js
   var DynamicProgrammingDiffing = class {
     compute(sequence1, sequence2, timeout = InfiniteTimeout.instance, equalityScore) {
       if (sequence1.length === 0 || sequence2.length === 0) {
@@ -10820,7 +10827,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/myersDiffAlgorithm.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/algorithms/myersDiffAlgorithm.js
   var MyersDiffAlgorithm = class {
     compute(seq1, seq2, timeout = InfiniteTimeout.instance) {
       if (seq1.length === 0 || seq2.length === 0) {
@@ -10953,7 +10960,7 @@
     }
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/linesSliceCharSequence.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/linesSliceCharSequence.js
   var LinesSliceCharSequence = class {
     constructor(lines, range, considerWhitespaceChanges) {
       this.lines = lines;
@@ -11135,7 +11142,7 @@
     }
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/computeMovedLines.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/computeMovedLines.js
   function computeMovedLines(changes, originalLines, modifiedLines, hashedOriginalLines, hashedModifiedLines, timeout) {
     let { moves, excludedChanges } = computeMovesFromSimpleDeletionsToSimpleInsertions(changes, originalLines, modifiedLines, timeout);
     if (!timeout.isValid()) {
@@ -11361,7 +11368,7 @@
     return moves;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/heuristicSequenceOptimizations.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/heuristicSequenceOptimizations.js
   function optimizeSequenceDiffs(sequence1, sequence2, sequenceDiffs) {
     let result = sequenceDiffs;
     result = joinSequenceDiffsByShifting(sequence1, sequence2, result);
@@ -11669,7 +11676,7 @@
     return newDiffs;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/lineSequence.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/lineSequence.js
   var LineSequence2 = class {
     constructor(trimmedHash, lines) {
       this.trimmedHash = trimmedHash;
@@ -11701,14 +11708,14 @@
     return i;
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/defaultLinesDiffComputer.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/defaultLinesDiffComputer/defaultLinesDiffComputer.js
   var DefaultLinesDiffComputer = class {
     constructor() {
       this.dynamicProgrammingDiffing = new DynamicProgrammingDiffing();
       this.myersDiffingAlgorithm = new MyersDiffAlgorithm();
     }
     computeDiff(originalLines, modifiedLines, options) {
-      if (originalLines.length <= 1 && equals(originalLines, modifiedLines, (a, b) => a === b)) {
+      if (originalLines.length <= 1 && equals2(originalLines, modifiedLines, (a, b) => a === b)) {
         return new LinesDiff([], [], false);
       }
       if (originalLines.length === 1 && originalLines[0].length === 0 || modifiedLines.length === 1 && modifiedLines[0].length === 0) {
@@ -11906,13 +11913,13 @@
     return new LineRangeMapping(new LineRange(sequenceDiff.seq1Range.start + 1, sequenceDiff.seq1Range.endExclusive + 1), new LineRange(sequenceDiff.seq2Range.start + 1, sequenceDiff.seq2Range.endExclusive + 1));
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputers.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/diff/linesDiffComputers.js
   var linesDiffComputers = {
     getLegacy: () => new LegacyLinesDiffComputer(),
     getDefault: () => new DefaultLinesDiffComputer()
   };
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/base/common/color.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/color.js
   function roundFloat(number, decimalPoints) {
     const decimal = Math.pow(10, decimalPoints);
     return Math.round(number * decimal) / decimal;
@@ -12372,7 +12379,7 @@
     })(Format = Color2.Format || (Color2.Format = {}));
   })(Color || (Color = {}));
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/languages/defaultDocumentColorsComputer.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/languages/defaultDocumentColorsComputer.js
   function _parseCaptureGroups(captureGroups) {
     const values = [];
     for (const captureGroup of captureGroups) {
@@ -12493,7 +12500,7 @@
     return computeColors(model);
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/services/findSectionHeaders.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/services/findSectionHeaders.js
   var markRegex = new RegExp("\\bMARK:\\s*(.*)$", "d");
   var trimDashesRegex = /^-+|-+$/g;
   function findSectionHeaders(model, options) {
@@ -12565,7 +12572,506 @@
     return { text, hasSeparatorLine };
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/symbols.js
+  var MicrotaskDelay = Symbol("MicrotaskDelay");
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/base/common/async.js
+  var runWhenGlobalIdle;
+  var _runWhenIdle;
+  (function() {
+    if (typeof globalThis.requestIdleCallback !== "function" || typeof globalThis.cancelIdleCallback !== "function") {
+      _runWhenIdle = (_targetWindow, runner) => {
+        setTimeout0(() => {
+          if (disposed) {
+            return;
+          }
+          const end = Date.now() + 15;
+          const deadline = {
+            didTimeout: true,
+            timeRemaining() {
+              return Math.max(0, end - Date.now());
+            }
+          };
+          runner(Object.freeze(deadline));
+        });
+        let disposed = false;
+        return {
+          dispose() {
+            if (disposed) {
+              return;
+            }
+            disposed = true;
+          }
+        };
+      };
+    } else {
+      _runWhenIdle = (targetWindow, runner, timeout) => {
+        const handle = targetWindow.requestIdleCallback(runner, typeof timeout === "number" ? { timeout } : void 0);
+        let disposed = false;
+        return {
+          dispose() {
+            if (disposed) {
+              return;
+            }
+            disposed = true;
+            targetWindow.cancelIdleCallback(handle);
+          }
+        };
+      };
+    }
+    runWhenGlobalIdle = (runner) => _runWhenIdle(globalThis, runner);
+  })();
+  var Promises;
+  (function(Promises2) {
+    async function settled(promises) {
+      let firstError = void 0;
+      const result = await Promise.all(promises.map((promise) => promise.then((value) => value, (error) => {
+        if (!firstError) {
+          firstError = error;
+        }
+        return void 0;
+      })));
+      if (typeof firstError !== "undefined") {
+        throw firstError;
+      }
+      return result;
+    }
+    Promises2.settled = settled;
+    function withAsyncBody(bodyFn) {
+      return new Promise(async (resolve2, reject) => {
+        try {
+          await bodyFn(resolve2, reject);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+    Promises2.withAsyncBody = withAsyncBody;
+  })(Promises || (Promises = {}));
+  var AsyncIterableObject = class _AsyncIterableObject {
+    static fromArray(items) {
+      return new _AsyncIterableObject((writer) => {
+        writer.emitMany(items);
+      });
+    }
+    static fromPromise(promise) {
+      return new _AsyncIterableObject(async (emitter) => {
+        emitter.emitMany(await promise);
+      });
+    }
+    static fromPromises(promises) {
+      return new _AsyncIterableObject(async (emitter) => {
+        await Promise.all(promises.map(async (p) => emitter.emitOne(await p)));
+      });
+    }
+    static merge(iterables) {
+      return new _AsyncIterableObject(async (emitter) => {
+        await Promise.all(iterables.map(async (iterable) => {
+          for await (const item of iterable) {
+            emitter.emitOne(item);
+          }
+        }));
+      });
+    }
+    static {
+      this.EMPTY = _AsyncIterableObject.fromArray([]);
+    }
+    constructor(executor, onReturn) {
+      this._state = 0;
+      this._results = [];
+      this._error = null;
+      this._onReturn = onReturn;
+      this._onStateChanged = new Emitter();
+      queueMicrotask(async () => {
+        const writer = {
+          emitOne: (item) => this.emitOne(item),
+          emitMany: (items) => this.emitMany(items),
+          reject: (error) => this.reject(error)
+        };
+        try {
+          await Promise.resolve(executor(writer));
+          this.resolve();
+        } catch (err) {
+          this.reject(err);
+        } finally {
+          writer.emitOne = void 0;
+          writer.emitMany = void 0;
+          writer.reject = void 0;
+        }
+      });
+    }
+    [Symbol.asyncIterator]() {
+      let i = 0;
+      return {
+        next: async () => {
+          do {
+            if (this._state === 2) {
+              throw this._error;
+            }
+            if (i < this._results.length) {
+              return { done: false, value: this._results[i++] };
+            }
+            if (this._state === 1) {
+              return { done: true, value: void 0 };
+            }
+            await Event.toPromise(this._onStateChanged.event);
+          } while (true);
+        },
+        return: async () => {
+          this._onReturn?.();
+          return { done: true, value: void 0 };
+        }
+      };
+    }
+    static map(iterable, mapFn) {
+      return new _AsyncIterableObject(async (emitter) => {
+        for await (const item of iterable) {
+          emitter.emitOne(mapFn(item));
+        }
+      });
+    }
+    map(mapFn) {
+      return _AsyncIterableObject.map(this, mapFn);
+    }
+    static filter(iterable, filterFn) {
+      return new _AsyncIterableObject(async (emitter) => {
+        for await (const item of iterable) {
+          if (filterFn(item)) {
+            emitter.emitOne(item);
+          }
+        }
+      });
+    }
+    filter(filterFn) {
+      return _AsyncIterableObject.filter(this, filterFn);
+    }
+    static coalesce(iterable) {
+      return _AsyncIterableObject.filter(iterable, (item) => !!item);
+    }
+    coalesce() {
+      return _AsyncIterableObject.coalesce(this);
+    }
+    static async toPromise(iterable) {
+      const result = [];
+      for await (const item of iterable) {
+        result.push(item);
+      }
+      return result;
+    }
+    toPromise() {
+      return _AsyncIterableObject.toPromise(this);
+    }
+    /**
+     * The value will be appended at the end.
+     *
+     * **NOTE** If `resolve()` or `reject()` have already been called, this method has no effect.
+     */
+    emitOne(value) {
+      if (this._state !== 0) {
+        return;
+      }
+      this._results.push(value);
+      this._onStateChanged.fire();
+    }
+    /**
+     * The values will be appended at the end.
+     *
+     * **NOTE** If `resolve()` or `reject()` have already been called, this method has no effect.
+     */
+    emitMany(values) {
+      if (this._state !== 0) {
+        return;
+      }
+      this._results = this._results.concat(values);
+      this._onStateChanged.fire();
+    }
+    /**
+     * Calling `resolve()` will mark the result array as complete.
+     *
+     * **NOTE** `resolve()` must be called, otherwise all consumers of this iterable will hang indefinitely, similar to a non-resolved promise.
+     * **NOTE** If `resolve()` or `reject()` have already been called, this method has no effect.
+     */
+    resolve() {
+      if (this._state !== 0) {
+        return;
+      }
+      this._state = 1;
+      this._onStateChanged.fire();
+    }
+    /**
+     * Writing an error will permanently invalidate this iterable.
+     * The current users will receive an error thrown, as will all future users.
+     *
+     * **NOTE** If `resolve()` or `reject()` have already been called, this method has no effect.
+     */
+    reject(error) {
+      if (this._state !== 0) {
+        return;
+      }
+      this._state = 2;
+      this._error = error;
+      this._onStateChanged.fire();
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/model/prefixSumComputer.js
+  var PrefixSumComputer = class {
+    constructor(values) {
+      this.values = values;
+      this.prefixSum = new Uint32Array(values.length);
+      this.prefixSumValidIndex = new Int32Array(1);
+      this.prefixSumValidIndex[0] = -1;
+    }
+    insertValues(insertIndex, insertValues) {
+      insertIndex = toUint32(insertIndex);
+      const oldValues = this.values;
+      const oldPrefixSum = this.prefixSum;
+      const insertValuesLen = insertValues.length;
+      if (insertValuesLen === 0) {
+        return false;
+      }
+      this.values = new Uint32Array(oldValues.length + insertValuesLen);
+      this.values.set(oldValues.subarray(0, insertIndex), 0);
+      this.values.set(oldValues.subarray(insertIndex), insertIndex + insertValuesLen);
+      this.values.set(insertValues, insertIndex);
+      if (insertIndex - 1 < this.prefixSumValidIndex[0]) {
+        this.prefixSumValidIndex[0] = insertIndex - 1;
+      }
+      this.prefixSum = new Uint32Array(this.values.length);
+      if (this.prefixSumValidIndex[0] >= 0) {
+        this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
+      }
+      return true;
+    }
+    setValue(index, value) {
+      index = toUint32(index);
+      value = toUint32(value);
+      if (this.values[index] === value) {
+        return false;
+      }
+      this.values[index] = value;
+      if (index - 1 < this.prefixSumValidIndex[0]) {
+        this.prefixSumValidIndex[0] = index - 1;
+      }
+      return true;
+    }
+    removeValues(startIndex, count) {
+      startIndex = toUint32(startIndex);
+      count = toUint32(count);
+      const oldValues = this.values;
+      const oldPrefixSum = this.prefixSum;
+      if (startIndex >= oldValues.length) {
+        return false;
+      }
+      const maxCount = oldValues.length - startIndex;
+      if (count >= maxCount) {
+        count = maxCount;
+      }
+      if (count === 0) {
+        return false;
+      }
+      this.values = new Uint32Array(oldValues.length - count);
+      this.values.set(oldValues.subarray(0, startIndex), 0);
+      this.values.set(oldValues.subarray(startIndex + count), startIndex);
+      this.prefixSum = new Uint32Array(this.values.length);
+      if (startIndex - 1 < this.prefixSumValidIndex[0]) {
+        this.prefixSumValidIndex[0] = startIndex - 1;
+      }
+      if (this.prefixSumValidIndex[0] >= 0) {
+        this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
+      }
+      return true;
+    }
+    getTotalSum() {
+      if (this.values.length === 0) {
+        return 0;
+      }
+      return this._getPrefixSum(this.values.length - 1);
+    }
+    /**
+     * Returns the sum of the first `index + 1` many items.
+     * @returns `SUM(0 <= j <= index, values[j])`.
+     */
+    getPrefixSum(index) {
+      if (index < 0) {
+        return 0;
+      }
+      index = toUint32(index);
+      return this._getPrefixSum(index);
+    }
+    _getPrefixSum(index) {
+      if (index <= this.prefixSumValidIndex[0]) {
+        return this.prefixSum[index];
+      }
+      let startIndex = this.prefixSumValidIndex[0] + 1;
+      if (startIndex === 0) {
+        this.prefixSum[0] = this.values[0];
+        startIndex++;
+      }
+      if (index >= this.values.length) {
+        index = this.values.length - 1;
+      }
+      for (let i = startIndex; i <= index; i++) {
+        this.prefixSum[i] = this.prefixSum[i - 1] + this.values[i];
+      }
+      this.prefixSumValidIndex[0] = Math.max(this.prefixSumValidIndex[0], index);
+      return this.prefixSum[index];
+    }
+    getIndexOf(sum) {
+      sum = Math.floor(sum);
+      this.getTotalSum();
+      let low = 0;
+      let high = this.values.length - 1;
+      let mid = 0;
+      let midStop = 0;
+      let midStart = 0;
+      while (low <= high) {
+        mid = low + (high - low) / 2 | 0;
+        midStop = this.prefixSum[mid];
+        midStart = midStop - this.values[mid];
+        if (sum < midStart) {
+          high = mid - 1;
+        } else if (sum >= midStop) {
+          low = mid + 1;
+        } else {
+          break;
+        }
+      }
+      return new PrefixSumIndexOfResult(mid, sum - midStart);
+    }
+  };
+  var PrefixSumIndexOfResult = class {
+    constructor(index, remainder) {
+      this.index = index;
+      this.remainder = remainder;
+      this._prefixSumIndexOfResultBrand = void 0;
+      this.index = index;
+      this.remainder = remainder;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/model/mirrorTextModel.js
+  var MirrorTextModel = class {
+    constructor(uri, lines, eol, versionId) {
+      this._uri = uri;
+      this._lines = lines;
+      this._eol = eol;
+      this._versionId = versionId;
+      this._lineStarts = null;
+      this._cachedTextValue = null;
+    }
+    dispose() {
+      this._lines.length = 0;
+    }
+    get version() {
+      return this._versionId;
+    }
+    getText() {
+      if (this._cachedTextValue === null) {
+        this._cachedTextValue = this._lines.join(this._eol);
+      }
+      return this._cachedTextValue;
+    }
+    onEvents(e) {
+      if (e.eol && e.eol !== this._eol) {
+        this._eol = e.eol;
+        this._lineStarts = null;
+      }
+      const changes = e.changes;
+      for (const change of changes) {
+        this._acceptDeleteRange(change.range);
+        this._acceptInsertText(new Position(change.range.startLineNumber, change.range.startColumn), change.text);
+      }
+      this._versionId = e.versionId;
+      this._cachedTextValue = null;
+    }
+    _ensureLineStarts() {
+      if (!this._lineStarts) {
+        const eolLength = this._eol.length;
+        const linesLength = this._lines.length;
+        const lineStartValues = new Uint32Array(linesLength);
+        for (let i = 0; i < linesLength; i++) {
+          lineStartValues[i] = this._lines[i].length + eolLength;
+        }
+        this._lineStarts = new PrefixSumComputer(lineStartValues);
+      }
+    }
+    /**
+     * All changes to a line's text go through this method
+     */
+    _setLineText(lineIndex, newValue) {
+      this._lines[lineIndex] = newValue;
+      if (this._lineStarts) {
+        this._lineStarts.setValue(lineIndex, this._lines[lineIndex].length + this._eol.length);
+      }
+    }
+    _acceptDeleteRange(range) {
+      if (range.startLineNumber === range.endLineNumber) {
+        if (range.startColumn === range.endColumn) {
+          return;
+        }
+        this._setLineText(range.startLineNumber - 1, this._lines[range.startLineNumber - 1].substring(0, range.startColumn - 1) + this._lines[range.startLineNumber - 1].substring(range.endColumn - 1));
+        return;
+      }
+      this._setLineText(range.startLineNumber - 1, this._lines[range.startLineNumber - 1].substring(0, range.startColumn - 1) + this._lines[range.endLineNumber - 1].substring(range.endColumn - 1));
+      this._lines.splice(range.startLineNumber, range.endLineNumber - range.startLineNumber);
+      if (this._lineStarts) {
+        this._lineStarts.removeValues(range.startLineNumber, range.endLineNumber - range.startLineNumber);
+      }
+    }
+    _acceptInsertText(position, insertText) {
+      if (insertText.length === 0) {
+        return;
+      }
+      const insertLines = splitLines(insertText);
+      if (insertLines.length === 1) {
+        this._setLineText(position.lineNumber - 1, this._lines[position.lineNumber - 1].substring(0, position.column - 1) + insertLines[0] + this._lines[position.lineNumber - 1].substring(position.column - 1));
+        return;
+      }
+      insertLines[insertLines.length - 1] += this._lines[position.lineNumber - 1].substring(position.column - 1);
+      this._setLineText(position.lineNumber - 1, this._lines[position.lineNumber - 1].substring(0, position.column - 1) + insertLines[0]);
+      const newLengths = new Uint32Array(insertLines.length - 1);
+      for (let i = 1; i < insertLines.length; i++) {
+        this._lines.splice(position.lineNumber + i - 1, 0, insertLines[i]);
+        newLengths[i - 1] = insertLines[i].length + this._eol.length;
+      }
+      if (this._lineStarts) {
+        this._lineStarts.insertValues(position.lineNumber, newLengths);
+      }
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/services/textModelSync/textModelSync.impl.js
+  var STOP_SYNC_MODEL_DELTA_TIME_MS = 60 * 1e3;
+  var WorkerTextModelSyncServer = class {
+    constructor() {
+      this._models = /* @__PURE__ */ Object.create(null);
+    }
+    getModel(uri) {
+      return this._models[uri];
+    }
+    getModels() {
+      const all = [];
+      Object.keys(this._models).forEach((key) => all.push(this._models[key]));
+      return all;
+    }
+    $acceptNewModel(data) {
+      this._models[data.url] = new MirrorModel(URI.parse(data.url), data.lines, data.EOL, data.versionId);
+    }
+    $acceptModelChanged(uri, e) {
+      if (!this._models[uri]) {
+        return;
+      }
+      const model = this._models[uri];
+      model.onEvents(e);
+    }
+    $acceptRemovedModel(uri) {
+      if (!this._models[uri]) {
+        return;
+      }
+      delete this._models[uri];
+    }
+  };
   var MirrorModel = class extends MirrorTextModel {
     get uri() {
       return this._uri;
@@ -12736,48 +13242,38 @@
       }
     }
   };
-  var EditorSimpleWorker = class _EditorSimpleWorker {
-    constructor(host, foreignModuleFactory) {
-      this._host = host;
-      this._models = /* @__PURE__ */ Object.create(null);
-      this._foreignModuleFactory = foreignModuleFactory;
-      this._foreignModule = null;
+
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js
+  var isESM2 = true;
+  var BaseEditorSimpleWorker = class {
+    constructor() {
+      this._workerTextModelSyncServer = new WorkerTextModelSyncServer();
     }
     dispose() {
-      this._models = /* @__PURE__ */ Object.create(null);
     }
     _getModel(uri) {
-      return this._models[uri];
+      return this._workerTextModelSyncServer.getModel(uri);
     }
     _getModels() {
-      const all = [];
-      Object.keys(this._models).forEach((key) => all.push(this._models[key]));
-      return all;
+      return this._workerTextModelSyncServer.getModels();
     }
-    acceptNewModel(data) {
-      this._models[data.url] = new MirrorModel(URI.parse(data.url), data.lines, data.EOL, data.versionId);
+    $acceptNewModel(data) {
+      this._workerTextModelSyncServer.$acceptNewModel(data);
     }
-    acceptModelChanged(strURL, e) {
-      if (!this._models[strURL]) {
-        return;
-      }
-      const model = this._models[strURL];
-      model.onEvents(e);
+    $acceptModelChanged(uri, e) {
+      this._workerTextModelSyncServer.$acceptModelChanged(uri, e);
     }
-    acceptRemovedModel(strURL) {
-      if (!this._models[strURL]) {
-        return;
-      }
-      delete this._models[strURL];
+    $acceptRemovedModel(uri) {
+      this._workerTextModelSyncServer.$acceptRemovedModel(uri);
     }
-    async computeUnicodeHighlights(url, options, range) {
+    async $computeUnicodeHighlights(url, options, range) {
       const model = this._getModel(url);
       if (!model) {
         return { ranges: [], hasMore: false, ambiguousCharacterCount: 0, invisibleCharacterCount: 0, nonBasicAsciiCharacterCount: 0 };
       }
       return UnicodeTextModelHighlighter.computeUnicodeHighlights(model, options, range);
     }
-    async findSectionHeaders(url, options) {
+    async $findSectionHeaders(url, options) {
       const model = this._getModel(url);
       if (!model) {
         return [];
@@ -12785,13 +13281,13 @@
       return findSectionHeaders(model, options);
     }
     // ---- BEGIN diff --------------------------------------------------------------------------
-    async computeDiff(originalUrl, modifiedUrl, options, algorithm) {
+    async $computeDiff(originalUrl, modifiedUrl, options, algorithm) {
       const original = this._getModel(originalUrl);
       const modified = this._getModel(modifiedUrl);
       if (!original || !modified) {
         return null;
       }
-      const result = _EditorSimpleWorker.computeDiff(original, modified, options, algorithm);
+      const result = EditorSimpleWorker.computeDiff(original, modified, options, algorithm);
       return result;
     }
     static computeDiff(originalTextModel, modifiedTextModel, options, algorithm) {
@@ -12843,7 +13339,7 @@
     static {
       this._diffLimit = 1e5;
     }
-    async computeMoreMinimalEdits(modelUrl, edits, pretty) {
+    async $computeMoreMinimalEdits(modelUrl, edits, pretty) {
       const model = this._getModel(modelUrl);
       if (!model) {
         return edits;
@@ -12881,7 +13377,7 @@
         if (original === text) {
           continue;
         }
-        if (Math.max(text.length, original.length) > _EditorSimpleWorker._diffLimit) {
+        if (Math.max(text.length, original.length) > EditorSimpleWorker._diffLimit) {
           result.push({ range, text });
           continue;
         }
@@ -12905,7 +13401,7 @@
       return result;
     }
     // ---- END minimal edits ---------------------------------------------------------------
-    async computeLinks(modelUrl) {
+    async $computeLinks(modelUrl) {
       const model = this._getModel(modelUrl);
       if (!model) {
         return null;
@@ -12913,7 +13409,7 @@
       return computeLinks(model);
     }
     // --- BEGIN default document colors -----------------------------------------------------------
-    async computeDefaultDocumentColors(modelUrl) {
+    async $computeDefaultDocumentColors(modelUrl) {
       const model = this._getModel(modelUrl);
       if (!model) {
         return null;
@@ -12923,7 +13419,7 @@
     static {
       this._suggestionsLimit = 1e4;
     }
-    async textualSuggest(modelUrls, leadingWord, wordDef, wordDefFlags) {
+    async $textualSuggest(modelUrls, leadingWord, wordDef, wordDefFlags) {
       const sw = new StopWatch();
       const wordDefRegExp = new RegExp(wordDef, wordDefFlags);
       const seen = /* @__PURE__ */ new Set();
@@ -12938,7 +13434,7 @@
               continue;
             }
             seen.add(word);
-            if (seen.size > _EditorSimpleWorker._suggestionsLimit) {
+            if (seen.size > EditorSimpleWorker._suggestionsLimit) {
               break outer;
             }
           }
@@ -12947,7 +13443,7 @@
     }
     // ---- END suggest --------------------------------------------------------------------------
     //#region -- word ranges --
-    async computeWordRanges(modelUrl, range, wordDef, wordDefFlags) {
+    async $computeWordRanges(modelUrl, range, wordDef, wordDefFlags) {
       const model = this._getModel(modelUrl);
       if (!model) {
         return /* @__PURE__ */ Object.create(null);
@@ -12976,7 +13472,7 @@
       return result;
     }
     //#endregion
-    async navigateValueSet(modelUrl, range, up, wordDef, wordDefFlags) {
+    async $navigateValueSet(modelUrl, range, up, wordDef, wordDefFlags) {
       const model = this._getModel(modelUrl);
       if (!model) {
         return null;
@@ -12999,10 +13495,21 @@
       const result = BasicInplaceReplace.INSTANCE.navigateValueSet(range, selectionText, wordRange, word, up);
       return result;
     }
+  };
+  var EditorSimpleWorker = class extends BaseEditorSimpleWorker {
+    constructor(_host, _foreignModuleFactory) {
+      super();
+      this._host = _host;
+      this._foreignModuleFactory = _foreignModuleFactory;
+      this._foreignModule = null;
+    }
+    async $ping() {
+      return "pong";
+    }
     // ---- BEGIN foreign module support --------------------------------------------------------------------------
-    loadForeignModule(moduleId, createData, foreignHostMethods) {
+    $loadForeignModule(moduleId, createData, foreignHostMethods) {
       const proxyMethodRequest = (method, args) => {
-        return this._host.fhr(method, args);
+        return this._host.$fhr(method, args);
       };
       const foreignHost = createProxyObject(foreignHostMethods, proxyMethodRequest);
       const ctx = {
@@ -13015,10 +13522,21 @@
         this._foreignModule = this._foreignModuleFactory(ctx, createData);
         return Promise.resolve(getAllMethodNames(this._foreignModule));
       }
-      return Promise.reject(new Error(`Unexpected usage`));
+      return new Promise((resolve2, reject) => {
+        const onModuleCallback = (foreignModule) => {
+          this._foreignModule = foreignModule.create(ctx, createData);
+          resolve2(getAllMethodNames(this._foreignModule));
+        };
+        if (!isESM2) {
+          __require([`${moduleId}`], onModuleCallback, reject);
+        } else {
+          const url = FileAccess.asBrowserUri(`${moduleId}.js`).toString(true);
+          import(`${url}`).then(onModuleCallback).catch(reject);
+        }
+      });
     }
     // foreign method request
-    fmr(method, args) {
+    $fmr(method, args) {
       if (!this._foreignModule || typeof this._foreignModule[method] !== "function") {
         return Promise.reject(new Error("Missing requestHandler or method: " + method));
       }
@@ -13033,7 +13551,7 @@
     globalThis.monaco = createMonacoBaseAPI();
   }
 
-  // node_modules/.pnpm/monaco-editor@0.51.0/node_modules/monaco-editor/esm/vs/editor/editor.worker.js
+  // node_modules/.pnpm/monaco-editor@0.52.0/node_modules/monaco-editor/esm/vs/editor/editor.worker.js
   var initialized = false;
   function initialize(foreignModule) {
     if (initialized) {
@@ -13042,7 +13560,7 @@
     initialized = true;
     const simpleWorker = new SimpleWorkerServer((msg) => {
       globalThis.postMessage(msg);
-    }, (host) => new EditorSimpleWorker(host, foreignModule));
+    }, (workerServer) => new EditorSimpleWorker(EditorWorkerHost.getChannel(workerServer), foreignModule));
     globalThis.onmessage = (e) => {
       simpleWorker.onmessage(e.data);
     };
