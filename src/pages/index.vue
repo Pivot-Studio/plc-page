@@ -27,7 +27,7 @@ let monaco: PlMonaco;
 let code = ref("");
 let runResult = ref("");
 function gotoEmail() {
-  window.location.href = "mailto:lang@pivotstudio.cn";
+  window.location.href = "mailto:mstmole@163.com";
 }
 
 const terminal = new Terminal({
@@ -140,9 +140,9 @@ watch(
         <img class="left" src="@/assets/socialite.jpg" />
         <div class="detail-describe right">
           Pivot lang is still developing and we long for every geek
-          joingus,completing the language together.If you are interested in
-          pivot lang,click the button and write the email to
-          <span style="color: white">lang@pivotstudio.cn</span>
+          joingus, completing the language together. If you are interested in
+          pivot lang, click the button and write the email to
+          <span style="color: white">mstmole@163.com</span>
           introduce yourself now!
         </div>
       </div>

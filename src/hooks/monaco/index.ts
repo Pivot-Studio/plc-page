@@ -165,8 +165,8 @@ function initializeMonaco() {
     tokenizer: {
       root: [
         // [/if|while|for|return|else|break|continue|struct|fn|let|use|const|true|false|impl|self|trait|pub|where|macro|type|as|is*/, "keyword"],
-        [/struct|fn|let|use|const|true|false|impl|self|trait|pub|macro|type|as|is/, 'keyword'],
-        [/if|while|for|return|else|break|continue|where/, 'keyword.control'],
+        [/struct|fn|let|use|const|true|false|impl|self|trait|pub|macro|type|async|await|as|is/, 'keyword'],
+        [/if|while|for|return|else|break|continue|where|match/, 'keyword.control'],
         [/\".*\"/, 'string'],
         [/\[[a-zA-Z 0-9:]+\]/, 'custom-date'],
       ],
