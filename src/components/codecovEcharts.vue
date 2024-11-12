@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import * as echarts from "echarts";
 import { ref, Ref, onMounted, inject } from "vue";
 import { getSunBurstData, getTotalCov, SunBurstData } from "@/hooks/codecov";
 const covchartsDom = ref<HTMLInputElement | null>(null);
@@ -9,40 +8,42 @@ const totalCovTarget = ref("Pivot Lang");
 const isMobile = inject("isMobile") as boolean;
 
 onMounted(async () => {
-  const data = getSunBurstData(await getTotalCov());
-  totalCov.value = data.coverage;
-  const option = {
-    tooltip: {
-      trigger: "item",
-    },
-    series: {
-      type: "sunburst",
-      sort: undefined,
+  import("echarts").then(async (echarts) => {
+    const data = getSunBurstData(await getTotalCov());
+    totalCov.value = data.coverage;
+    const option = {
       tooltip: {
-        formatter: handleCovChange,
+        trigger: "item",
       },
-      emphasis: {
-        disable: true,
+      series: {
+        type: "sunburst",
+        sort: undefined,
+        tooltip: {
+          formatter: handleCovChange,
+        },
+        emphasis: {
+          disable: true,
+        },
+        data: data.children,
+        label: {
+          formatter: "",
+          show: false,
+        },
+        levels: [],
       },
-      data: data.children,
-      label: {
-        formatter: "",
-        show: false,
-      },
-      levels: [],
-    },
-  };
-  const myChart = echarts.init(covchartsDom.value as HTMLElement);
-  const loadEcharts = () => {
-    const { top, bottom } = (
-      covchartsDom.value as HTMLElement
-    ).getBoundingClientRect();
-    if (top < window.innerHeight && bottom > 0) {
-      window.removeEventListener("scroll", loadEcharts);
-      myChart.setOption(option);
-    }
-  };
-  window.addEventListener("scroll", loadEcharts);
+    };
+    const myChart = echarts.init(covchartsDom.value as HTMLElement);
+    const loadEcharts = () => {
+      const { top, bottom } = (
+        covchartsDom.value as HTMLElement
+      ).getBoundingClientRect();
+      if (top < window.innerHeight && bottom > 0) {
+        window.removeEventListener("scroll", loadEcharts);
+        myChart.setOption(option);
+      }
+    };
+    window.addEventListener("scroll", loadEcharts);
+  });
   // myChart.setOption(option);
 });
 

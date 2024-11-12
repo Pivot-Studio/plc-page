@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PlMonaco } from "@pivot-lang/create-monaco";
 import axios from "axios";
 import { nextTick } from "vue";
 import { onMounted, ref } from "vue";

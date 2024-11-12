@@ -15,7 +15,7 @@ import {
 import { ref, onMounted, watch } from "vue";
 import { basicCode } from "@/constant";
 import { memberList } from "@/constant";
-import createMonaco, { PlMonaco } from "@pivot-lang/create-monaco";
+// import createMonaco, { PlMonaco } from "@pivot-lang/create-monaco";
 import CodeBlock from "@/components/codeBlock.vue";
 import { cp } from "fs";
 import "xterm/css/xterm.css";
@@ -23,9 +23,12 @@ import { Terminal } from "xterm";
 
 const tabVal = ref("hello world");
 const tabList = basicCode.map((item) => item.title);
-let monaco: PlMonaco;
 let code = ref("");
 let runResult = ref("");
+let initialized = ref(false);
+let watchCallback = (val:string) => {
+  console.log('not initialized yet...');
+};
 function gotoEmail() {
   window.location.href = "mailto:mstmole@163.com";
 }
@@ -47,23 +50,29 @@ function handleOutput(re: string) {
 }
 
 onMounted(async () => {
-  monaco = createMonaco(
-    document.getElementById("container")!,
-    basicCode[0].code
-  );
   code.value = basicCode[0].code;
-  monaco.editor.onDidChangeModelContent(() => {
-    code.value = monaco.editor.getModel()!.getValue();
+  import("@pivot-lang/create-monaco").then(pl=>{
+    let monaco = pl.default(
+      document.getElementById("container")!,
+      basicCode[0].code
+    );
+    monaco.editor.onDidChangeModelContent(() => {
+      code.value = monaco.editor.getModel()!.getValue();
+    });
+    terminal.open(document.querySelector(".code-block") as HTMLElement);
+    terminal.resize(44, 17);
+    watchCallback =   (val) => {
+      const code1 = basicCode.find((item) => item.title === val)?.code || "";
+      code.value = code1;
+      monaco.setContent(code1);
+    };
+    initialized.value = true;
   });
-  terminal.open(document.querySelector(".code-block") as HTMLElement);
-  terminal.resize(44, 17);
 });
 watch(
   () => tabVal.value,
   (val) => {
-    const code1 = basicCode.find((item) => item.title === val)?.code || "";
-    code.value = code1;
-    monaco.setContent(code1);
+    watchCallback(val);
   }
 );
 </script>
@@ -71,17 +80,17 @@ watch(
 <template>
   <div class="container">
     <Nav></Nav>
-    <FirstPage :monaco="monaco"></FirstPage>
+    <FirstPage></FirstPage>
     <div id="code-show">
       <div class="gradient-font title">Enjoy coding pivot lang now!</div>
       <div class="detail-describe">
         With the help of Web Assembly technology, we are able to provide support
         for some of the Pivot Lang syntax in the browser for you to experience.
       </div>
-      <div class="code-now-container">
+      <div v-show="initialized" class="code-now-container">
         <div class="code-box">
           <TabList
-            @updateVal="(val) => (tabVal = val)"
+            @updateVal="(val:string) => (tabVal = val)"
             @updateOutput="handleOutput"
             :tablist="tabList"
             :val="tabVal"
@@ -96,6 +105,9 @@ watch(
           <div class="code-block"></div>
         </div>
       </div>
+      <div v-show="!initialized" class="code-now-container">
+        <div class="spinner"></div>
+      </div> 
     </div>
     <div id="advantage">
       <div class="gradient-font title">Immix Garbage Collector</div>
@@ -333,5 +345,19 @@ watch(
       background-color: #222; // 轨道颜色
     }
   }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin: auto;
 }
 </style>
