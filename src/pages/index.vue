@@ -51,8 +51,8 @@ function handleOutput(re: string) {
 
 onMounted(async () => {
   code.value = basicCode[0].code;
-  import("@pivot-lang/create-monaco").then(pl=>{
-    let monaco = pl.default(
+  import("@pivot-lang/create-monaco").then(async pl=>{
+    let monaco = await pl.default(
       document.getElementById("container")!,
       basicCode[0].code
     );

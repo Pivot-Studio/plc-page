@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import * as echarts from 'echarts';
 import { ref, Ref, onMounted } from 'vue';
 const echartsDom = ref<HTMLInputElement | null>(null);
 const option = {
@@ -40,15 +39,17 @@ const option = {
   ],
 };
 onMounted(() => {
-  const myChart = echarts.init(echartsDom.value as HTMLElement);
-  const loadEcharts = () => {
-    const { top, bottom } = (echartsDom.value as HTMLElement).getBoundingClientRect();
-    if (top < window.innerHeight && bottom > 0) {
-      window.removeEventListener('scroll', loadEcharts);
-      myChart.setOption(option);
-    }
-  };
-  window.addEventListener('scroll', loadEcharts);
+  import('echarts').then(async (echarts) => {
+    const myChart = echarts.init(echartsDom.value as HTMLElement);
+    const loadEcharts = () => {
+      const { top, bottom } = (echartsDom.value as HTMLElement).getBoundingClientRect();
+      if (top < window.innerHeight && bottom > 0) {
+        window.removeEventListener('scroll', loadEcharts);
+        myChart.setOption(option);
+      }
+    };
+    window.addEventListener('scroll', loadEcharts);
+  });
 });
 function gotoBenchmark() {
   window.open('https://pivotlang.tech/docs/systemlib/immix.html#%E6%80%A7%E8%83%BD');

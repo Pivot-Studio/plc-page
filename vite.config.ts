@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 import wasm from 'vite-plugin-wasm';
-import monacoEditorPlugin from 'vite-plugin-monaco-editor';
+// import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import { prismjsPlugin } from 'vite-plugin-prismjs';
 
@@ -12,7 +12,7 @@ export default defineConfig({
     vue(),
     topLevelAwait(),
     wasm(),
-    (monacoEditorPlugin as any).default({}),
+    // (monacoEditorPlugin as any).default({}),
     prismjsPlugin({
       languages: ['bash'],
       plugins: ['line-numbers', 'copy-to-clipboard'], //官网有其他功能,这里开启行数和复制按钮功能
@@ -36,4 +36,13 @@ export default defineConfig({
     },
   },
   base: process.env.NODE_ENV === 'production' ? '/' : '/',
+  worker: {
+    rollupOptions: {
+        output: {
+            format: "iife",
+            inlineDynamicImports: true,
+        }
+    },
+    plugins: [wasm(), topLevelAwait()]
+},
 });

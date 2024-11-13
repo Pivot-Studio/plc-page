@@ -1,7 +1,7 @@
-import * as pl from '@pivot-lang/pivot-lang';
+// import * as pl from '@pivot-lang/pivot-lang';
 import * as monaco from 'monaco-editor';
 import * as tp from 'vscode-languageserver-types';
-import monacotp from 'monaco-editor';
+import wrapper from './workerWrapper';
 
 interface Diagnostic {
   code: number;
@@ -41,12 +41,17 @@ export class PlMonaco {
       suggestOnTriggerCharacters: true,
       model: this.model,
     });
-    initializeEditor(this.editor, code, uri);
+    this.code = code;
     this.uri = uri;
   }
   private uri: string;
   editor: monaco.editor.IStandaloneCodeEditor;
   private model: monaco.editor.ITextModel;
+  private code: string;
+
+  async initialize() {
+    await initializeEditor(this.editor, this.code, this.uri);
+  }
   setContent(code: string) {
     this.editor.revealLine(0);
     this.model.applyEdits([{
@@ -59,9 +64,11 @@ export class PlMonaco {
 // 暂不支持同时创建多个Monaco的DOM
 let created = false;
 let plMonaco: PlMonaco;
-export default function createPlMonaco(container: HTMLElement, code: string = '') {
+export default async function createPlMonaco(container: HTMLElement, code: string = '') {
   if (!created) {
+    legend = await wrapper.get_legend();
     plMonaco = new PlMonaco(container, code, `http://www.test.com/main.pi`);
+    await plMonaco.initialize();
     created = true;
   }
   return plMonaco;
@@ -71,35 +78,35 @@ export default function createPlMonaco(container: HTMLElement, code: string = ''
 let first = true;
 function initializeDocumentSemanticTokensProvider() {
   monaco.languages.registerDocumentSemanticTokensProvider('pivot-lang', {
-    provideDocumentSemanticTokens: (m, id, token) => {
+    provideDocumentSemanticTokens: async (m, id, token) => {
       if (first) {
         first = false;
-        let tokens = pl.get_semantic_tokens_full();
+        let tokens = await wrapper.get_semantic_tokens_full();
         // console.log(tokens);
         let a: any = {
           resultId: null,
-          data: JSON.parse(tokens).data,
+          data: tokens.data,
         };
         return a;
       }
-      let tokens = pl.get_semantic_tokens();
+      let tokens = await wrapper.get_semantic_tokens();
       // console.error(tokens);
       return {
         resultId: null,
-        edits: JSON.parse(tokens).edits,
+        edits: tokens.edits,
       };
     },
     getLegend: () => {
-      let legend = pl.get_legend();
-      // console.error(legend);
-      return JSON.parse(legend);
+      return legend;
     },
-    releaseDocumentSemanticTokens: () => {},
+    releaseDocumentSemanticTokens: () => { },
   });
 }
 
-function initializeEditor(editor: monaco.editor.IStandaloneCodeEditor, code: string, uri: string) {
-  let resp: Diags = JSON.parse(pl.set_init_content(code));
+let legend: monaco.languages.SemanticTokensLegend;
+
+async function initializeEditor(editor: monaco.editor.IStandaloneCodeEditor, code: string, uri: string) {
+  let resp: Diags = await wrapper.set_init_content(code);
   let markers = resp.diagnostics.map((d, n, a) => {
     let sev = monaco.MarkerSeverity.Warning;
     if (d.severity === 1) {
@@ -115,7 +122,7 @@ function initializeEditor(editor: monaco.editor.IStandaloneCodeEditor, code: str
     };
   });
   monaco.editor.setModelMarkers(editor.getModel()!, 'pivot-lang', markers);
-  editor.getModel()?.onDidChangeContent((e) => {
+  editor.getModel()?.onDidChangeContent(async (e) => {
     let re = e.changes.map((change) => {
       return {
         range: tp.Range.create(change.range.startLineNumber - 1, change.range.startColumn - 1, change.range.endLineNumber - 1, change.range.endColumn - 1),
@@ -123,8 +130,8 @@ function initializeEditor(editor: monaco.editor.IStandaloneCodeEditor, code: str
         rangeLength: change.rangeLength,
       };
     });
-    let resp: Diags = JSON.parse(
-      pl.on_change_doc(
+    let resp: Diags = await
+      wrapper.on_change_doc(
         JSON.stringify({
           textDocument: {
             version: 0,
@@ -132,8 +139,7 @@ function initializeEditor(editor: monaco.editor.IStandaloneCodeEditor, code: str
           },
           contentChanges: re,
         })
-      )
-    );
+      );
     // console.log(resp);
 
     let markers = resp.diagnostics.map((d, n, a) => {
@@ -199,19 +205,19 @@ function initializeMonaco() {
   });
 
   enum colorType {
-    chalky= '#E5C07B',
-    coral= '#e06c75',
-    dark= '#5c6370',
-    error= '#f44747',
-    fountainBlue= '#56b6c2',
-    green= '#98c379',
-    invalid= '#ffffff',
-    lightDark= '#7f848e',
-    lightWhite= '#abb2bf',
-    malibu= '#61afef',
-    purple= '#c678dd',
-    whiskey= '#d19a66',
-    deepRed= '#BE5046',
+    chalky = '#E5C07B',
+    coral = '#e06c75',
+    dark = '#5c6370',
+    error = '#f44747',
+    fountainBlue = '#56b6c2',
+    green = '#98c379',
+    invalid = '#ffffff',
+    lightDark = '#7f848e',
+    lightWhite = '#abb2bf',
+    malibu = '#61afef',
+    purple = '#c678dd',
+    whiskey = '#d19a66',
+    deepRed = '#BE5046',
   }
   // Define a new theme that contains only rules that match this language
   monaco.editor.defineTheme('pltheme', {
@@ -247,30 +253,40 @@ function initializeMonaco() {
   });
 
   monaco.languages.registerInlayHintsProvider('pivot-lang', {
-    provideInlayHints(model, range, token) {
-      // console.log(JSON.parse(pl.get_inlay_hints()))
-      let hints: tp.InlayHint[] = JSON.parse(pl.get_inlay_hints());
+    provideInlayHints: async (model, range, token) => {
+      let hints: tp.InlayHint[] = await wrapper.get_inlay_hints();
       console.error(hints);
       return {
         hints: hints.map((h) => {
+          let label: string | monaco.languages.InlayHintLabelPart[];
+          if (typeof h.label === 'string') {
+            label = h.label;
+          } else {
+            label = h.label.map((l) => {
+              return {
+                label: l.value,
+                tooltip: l.tooltip,
+              };
+            });
+          }
           return {
             kind: h.kind,
-            label: h.label,
+            label: label,
             position: {
               lineNumber: h.position.line + 1,
               column: h.position.character + 1,
             },
           };
         }),
-        dispose: () => {},
-      } as any;
+        dispose: () => { },
+      } as monaco.languages.InlayHintList;
     },
   });
 
   // Register a completion item provider for the new language
   monaco.languages.registerCompletionItemProvider('pivot-lang', {
     triggerCharacters: ['.', ':'],
-    provideCompletionItems: (model, position, ctx) => {
+    provideCompletionItems: async (model, position, ctx) => {
       var word = model.getWordUntilPosition(position);
       var range = {
         startLineNumber: position.lineNumber,
@@ -278,7 +294,7 @@ function initializeMonaco() {
         startColumn: word.startColumn,
         endColumn: word.endColumn,
       };
-      let dynamic_suggestions = JSON.parse(pl.get_completions());
+      let dynamic_suggestions = await wrapper.get_completions();
       // console.warn(dynamic_suggestions);
       for (let sug of dynamic_suggestions) {
         sug.insertTextRules = 0;
@@ -287,7 +303,7 @@ function initializeMonaco() {
             sug.kind = monaco.languages.CompletionItemKind.Keyword;
             break;
           case 3:
-            
+
             sug.kind = monaco.languages.CompletionItemKind.Function;
             sug.insertTextRules = monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
             break;
@@ -407,15 +423,15 @@ function initializeMonaco() {
     },
   });
   monaco.languages.registerDefinitionProvider('pivot-lang', {
-    provideDefinition: (model, position, token) => {
-      let re: tp.Location | any[] = JSON.parse(
-        pl.go_to_def(
+    provideDefinition: async (model, position, token) => {
+      let re: tp.Location | any[] = await
+        wrapper.go_to_def(
           JSON.stringify({
             line: position.lineNumber - 1,
             character: position.column - 1,
           })
         )
-      );
+        ;
       if (re instanceof Array) {
         return [];
       }
@@ -429,15 +445,14 @@ function initializeMonaco() {
     },
   });
   monaco.languages.registerReferenceProvider('pivot-lang', {
-    provideReferences: (model, position, context, token) => {
-      let re: tp.Location[] = JSON.parse(
-        pl.get_refs(
-          JSON.stringify({
-            line: position.lineNumber - 1,
-            character: position.column - 1,
-          })
-        )
-      );
+    provideReferences: async (model, position, context, token) => {
+      let re: tp.Location[] = await wrapper.get_refs(
+        JSON.stringify({
+          line: position.lineNumber - 1,
+          character: position.column - 1,
+        })
+      )
+        ;
       console.log(re);
       let refs = re.map((r, n, a) => {
         let uri = monaco.Uri.parse(r.uri);
