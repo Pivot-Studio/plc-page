@@ -7,7 +7,7 @@ function gotoGithub() {
 <template>
   <div class="container" @click="gotoGithub">
     <div>
-      <img class="avatar" :src="props.avatar" />
+      <img class="avatar" loading="lazy" :src="props.avatar" />
     </div>
     <div class="name">{{ props.name }}</div>
     <div>{{ props.identity }}</div>

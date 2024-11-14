@@ -15,6 +15,7 @@ import {
 import { ref, onMounted, watch } from "vue";
 import { basicCode } from "@/constant";
 import { memberList } from "@/constant";
+import { isElementInViewport } from "@/hooks/detectElm";
 // import createMonaco, { PlMonaco } from "@pivot-lang/create-monaco";
 import CodeBlock from "@/components/codeBlock.vue";
 import { cp } from "fs";
@@ -26,6 +27,7 @@ const tabList = basicCode.map((item) => item.title);
 let code = ref("");
 let runResult = ref("");
 let initialized = ref(false);
+let startLoad = ref(false);
 let watchCallback = (val:string) => {
   console.log('not initialized yet...');
 };
@@ -51,22 +53,27 @@ function handleOutput(re: string) {
 
 onMounted(async () => {
   code.value = basicCode[0].code;
-  import("@pivot-lang/create-monaco").then(async pl=>{
-    let monaco = await pl.default(
-      document.getElementById("container")!,
-      basicCode[0].code
-    );
-    monaco.editor.onDidChangeModelContent(() => {
-      code.value = monaco.editor.getModel()!.getValue();
-    });
-    terminal.open(document.querySelector(".code-block") as HTMLElement);
-    terminal.resize(44, 17);
-    watchCallback =   (val) => {
-      const code1 = basicCode.find((item) => item.title === val)?.code || "";
-      code.value = code1;
-      monaco.setContent(code1);
-    };
-    initialized.value = true;
+  window.addEventListener("scroll", () => {
+    if (!startLoad.value && isElementInViewport(document.getElementById("spinner")!)) {
+      startLoad.value = true;
+      import("@pivot-lang/create-monaco").then(async pl=>{
+        let monaco = await pl.default(
+          document.getElementById("container")!,
+          basicCode[0].code
+        );
+        monaco.editor.onDidChangeModelContent(() => {
+          code.value = monaco.editor.getModel()!.getValue();
+        });
+        terminal.open(document.querySelector(".code-block") as HTMLElement);
+        terminal.resize(44, 17);
+        watchCallback =   (val) => {
+          const code1 = basicCode.find((item) => item.title === val)?.code || "";
+          code.value = code1;
+          monaco.setContent(code1);
+        };
+        initialized.value = true;
+      });
+    }
   });
 });
 watch(
@@ -105,7 +112,7 @@ watch(
           <div class="code-block"></div>
         </div>
       </div>
-      <div v-show="!initialized" class="code-now-container">
+      <div v-show="!initialized" id="spinner" class="code-now-container">
         <div class="spinner"></div>
       </div> 
     </div>
@@ -118,7 +125,7 @@ watch(
         to be highly concurrent and to exploit the locality of reference
         patterns in modern programs.
       </div>
-      <GcEcharts></GcEcharts>
+      <GcEcharts v-if="startLoad"></GcEcharts>
     </div>
     <div id="advantage">
       <div class="gradient-font title">Reliability</div>
@@ -127,14 +134,14 @@ watch(
         We have a large number of unit tests and integration tests to ensure
         that the coverage of the code is as high as possible.
       </div>
-      <CodeCovEcharts></CodeCovEcharts>
+      <CodeCovEcharts v-if="startLoad"></CodeCovEcharts>
     </div>
     <CrossPlatforms></CrossPlatforms>
     <VscSupportShow></VscSupportShow>
     <div id="team">
       <div class="gradient-font title">Meet The Team</div>
       <div class="team-card">
-        <div class="card-container">
+        <div v-if="startLoad" class="card-container">
           <MemberCard
             v-for="member in memberList"
             :key="member.name"

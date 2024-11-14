@@ -20,7 +20,7 @@ function scrollToCode() {
       <div class="detail-describe">Rust-like grammar with GC.</div>
     </div>
     <div v-show="sizeCnt <= 1" class="background-container">
-      <img src="@/assets/background.jpg" />
+      <img fetchpriority="high" src="@/assets/background.jpg" />
     </div>
     <div class="bottom">
       <div class="start-button" @click="scrollToCode" style="cursor: pointer">Try It</div>
@@ -40,6 +40,7 @@ function scrollToCode() {
     position: absolute;
     top: 200px;
     left: 100px;
+    z-index: 100;
     @media (max-width: 960px) {
       position: absolute;
       top: 100px;
