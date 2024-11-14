@@ -1,20 +1,34 @@
 import { Ref, ref } from 'vue';
-import DeviceDetector from 'device-detector-js';
 
 type osType = 'linux' | 'windows' | 'apple' | 'other';
 
-const deviceDetector = new DeviceDetector();
+
+
+function getOS(): osType {
+  const userAgent = window.navigator.userAgent,
+
+    platform = (window.navigator as any)?.userAgentData?.platform || window.navigator.platform,
+    macosPlatforms = ['macOS', 'Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+    windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+    iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+  let os:osType = 'other';
+
+  if (macosPlatforms.indexOf(platform) !== -1) {
+    os = 'apple';
+  } else if (iosPlatforms.indexOf(platform) !== -1) {
+    os = 'other';
+  } else if (windowsPlatforms.indexOf(platform) !== -1) {
+    os = 'windows';
+  } else if (/Android/.test(userAgent)) {
+    os = 'other';
+  } else if (/Linux/.test(platform)) {
+    os = 'linux';
+  }
+
+  return os;
+}
 
 export const useDetectDeviceType = () => {
-  const deviceType = ref<osType>('other');
-  const useAgent = navigator.userAgent;
-  const name = deviceDetector.parse(useAgent).os?.name;
-  if (name === 'Mac') {
-    deviceType.value = 'apple';
-  } else if (name?.includes('Windows')) {
-    deviceType.value = 'windows';
-  } else if (name?.includes('Linux') || name?.includes('Debian') || name?.includes('Ubuntu')) {
-    deviceType.value = 'linux';
-  }
+  const deviceType = ref<osType>(getOS());
   return deviceType;
 };
